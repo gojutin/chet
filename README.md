@@ -1,7 +1,8 @@
- #Chet
+#Chet
+
+###A chatbot app built with React & Redux
 
 ##[Try the demo](http://chet.surge.sh)
-###A chatbot app built with React & Redux
 
 ###This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
