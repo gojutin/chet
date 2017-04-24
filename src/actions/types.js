@@ -1,0 +1,5 @@
+export const FETCH_DATA = 'FETCH_DATA';
+export const LOADING = 'LOADING';
+export const GENERATE_RESPONSE = 'GENERATE_RESPONSE';
+export const START_TYPING = 'START_TYPING';
+export const HANDLE_INPUT_CHANGE = 'HANDLE_INPUT_CHANGE';
