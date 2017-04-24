@@ -1,12 +1,12 @@
-#Chet
+# Chet
 
-###A chatbot app built with React & Redux
+### A chatbot app built with React & Redux
 
-##[Try the demo](http://chet.surge.sh)
+## [Try the demo](http://chet.surge.sh)
 
-###This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+### This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-####Main libraries used in this project:
+#### Main libraries used in this project:
 
  Library | What it does
 ------------ | -------------
@@ -18,11 +18,11 @@
 
 <h2 name="getting-started">Download the source code</h2>
 
-###**Step 1**
+### **Step 1**
 
 `git clone https://github.com/gojutin/chet `
 
-###**Step 2**
+### **Step 2**
 
 Create a new Firebase database at [https://firebase.google.com/](https://firebase.google.com/).
 
@@ -30,7 +30,7 @@ In the Firebase Console, change the Firebase rules to `true` for the **".read"**
 
 Add your Firebase config object to `src/db.js`.
 
-###**Step 3**
+### **Step 3**
 
 `cd chet `
 
