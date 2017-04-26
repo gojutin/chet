@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { fetchData, addValue, onInputChange } from '../actions/index';
+import { fetchData, sayHi, goChet, onInputChange } from '../actions/index';
 import App from '../app';
 
 export default connect(
@@ -10,4 +10,4 @@ export default connect(
    inputValue: state.inputValue,
    loading: state.loading,
   }),
-{fetchData, addValue, onInputChange})(App)
+{fetchData, sayHi, goChet, onInputChange})(App)

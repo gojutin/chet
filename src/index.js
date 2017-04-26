@@ -11,14 +11,17 @@ import { Provider } from 'react-redux';
 import reducer from './reducers/index';
 import thunk from 'redux-thunk';
 
-  const store = createStore(
-   reducer,
-   compose(
-    applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-   )
-  );
+  var getComposeEnhancers = () => {
+    if (window.navigator.userAgent.includes('Chrome')) {
+      return compose(
+        applyMiddleware(thunk)
+        ,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+      );
+    }
+    return compose(applyMiddleware(thunk) );
+  };
 
+  var store = createStore(reducer, getComposeEnhancers() );
 
 render(
   <Provider store={store}>

@@ -7,7 +7,7 @@ export default ({response, loading, typing}) =>
     { loading 
         ? <WobblySpinner />
         : <TypeWriter typing={typing} minDelay={100}>
-            <h1 className="text-success" style={{fontSize: 4 + "em"}}>{response.term}</h1>
+            <h1 style={{color: "#31a531"}}>{response.term}</h1>
           </TypeWriter>
     } 
   </div>
