@@ -1,10 +1,10 @@
 # Chet
 
-### A chatbot app built with React & Redux
+## A chatbot app built with React & Redux
 
-## [Try the app here](http://chet.surge.sh)
+### [Try the app here](http://chet.surge.sh)
 
-### This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+#### This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 #### Main libraries used in this project:
 
@@ -12,21 +12,20 @@
 ------------ | -------------
 [React](https://facebook.github.io/react/) | Manages the view layer and responsible for all DOM manipulation
 [Redux](http://redux.js.org/) | Manages domain and form state
-[Reactstrap](https://reactstrap.github.io/)  | Provides styles Bootstrap 4 components
-
+[Reactstrap](https://reactstrap.github.io/) | Provides styled Bootstrap 4 components
 [Firebase](https://firebase.google.com/) | Realtime NoSQL database used to store the persistant data.
 
 <h2 name="getting-started">Getting Started</h2>
 
 ### **Step 1**
 
-`git clone https://github.com/gojutin/chet `
+`git clone https://github.com/gojutin/chet`
 
 ### **Step 2**
 
 Create a new Firebase database at [https://firebase.google.com/](https://firebase.google.com/).
 
-In the Firebase Console, change the Firebase rules to `true` for the **".read"** and **".write"** properties in the **Rules** tab of your database. ***This is not recommended in a production application***
+In the Firebase Console, change the Firebase rules to `true` for the **".read"** and **".write"** properties in the **Rules** tab of your database. 
 
 Add your Firebase config object to `src/db.js`.
 
@@ -40,5 +39,5 @@ Add your Firebase config object to `src/db.js`.
 
 Open `localhost:3000` in your browser.
 
-***Open the console to see the match strength % and time to complete your queries.***
+*Open the console to see the match strength percentage and completion time of each query.*
 
