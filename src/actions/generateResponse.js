@@ -31,11 +31,11 @@ export const generateResponse = (values, term, refKey, dispatch) => {
       // console.log("best match", bestMatch[0])
       return exactMatch[0];
 
-    } else if (matchedByWord.length > 0) {
+    } else if (matchedByWord.length > 0 && wordSlice !== "") {
       // second option is to check the inputValue against all values while removing
       // one word from the end of the inputValue at a time
       // i.e. "How are you?", "How are", "How" ...
-      // console.log("Matched By Word", matchedByWord[0])
+      console.log(`Matched By Word. Found "${wordSlice}" in "${matchedByWord[0]["term"]}"`)
       console.info("Match Strength- " + Math.floor(charSlice.length / term.length * 100) + "%")
       return matchedByWord.sort((a, b) => b.term.length - a.term.length)[0];
 
@@ -43,7 +43,7 @@ export const generateResponse = (values, term, refKey, dispatch) => {
       // third option is to check the inputValue against all values while removing
       // one character from the end of the inputValue at a time
       // i.e. "Hi there", "Hi ther", "Hi the", "Hi th" ...
-      // console.log("matchedByChar", matchedByChar[0])
+      console.log(`Matched By Character set. Found "${charSlice}" in "${matchedByChar[0]["term"]}"`)
       console.info("Match Strength- " + Math.floor(charSlice.length / term.length * 100) + "%")
       return matchedByChar.sort((a, b) => b.term.length - a.term.length)[0];
 
@@ -53,7 +53,7 @@ export const generateResponse = (values, term, refKey, dispatch) => {
       const randomIndex = Math.floor(Math.random() * values.length);
       const randomValue = values[randomIndex];
       console.log("Match Strength- 0%")
-      // console.log("random match", randomValue)
+      console.log("random match", randomValue)
       return randomValue;
 
     } else {
@@ -71,17 +71,19 @@ export const generateResponse = (values, term, refKey, dispatch) => {
       if (!sorted) {
         return { term, id: refKey}
     } else {
-        if (sorted.length < 3) {
+        if (sorted.length < 1) {
             return sorted[0];
         } else if (sorted.length >=3 && sorted.length < 10 ) {
-            const randomResponse = Math.floor(Math.random * 3)
+            const randomResponse = Math.floor(Math.random * 2)
             return sorted[randomResponse >= 0 ? randomResponse : 0];
         } else {
-            const randomResponse = Math.floor(Math.random * 5)
+            const randomResponse = Math.floor(Math.random * 3)
             return sorted[randomResponse >= 0 ? randomResponse : 0];
         }
       }
     };
+
+    console.info("Generated Response", sortedResponses())
   
   dispatch({
     type: types.LOADING,

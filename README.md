@@ -39,5 +39,5 @@ Add your Firebase config object to `src/db.js`.
 
 Open `localhost:3000` in your browser.
 
-*Open the console to see the match strength percentage and completion time of each query.*
+*Open the console to see the match strength percentage, generated response and completion time of each query.*
 

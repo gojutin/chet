@@ -20,6 +20,7 @@ export default ({ goChet, inputValue, values, response, onInputChange }) => {
       return;
     }
     goChet(inputValue, values, response.id)
+    console.log("# of values: ", values.length)
   }
 
   const handleChange = (e) => {
