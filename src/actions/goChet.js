@@ -15,10 +15,7 @@ export const goChet = (term, values, responseId) => {
             type: types.LOADING,
             payload: true,
         })
-        dispatch({
-            type: types.START_TYPING,
-            payload: -1,
-        })
+        dispatch({ type: types.STOP_TYPING })
 
         // Save the key of the new value at the top of the function 
         //so that it can be referenced outside of the function
@@ -26,6 +23,7 @@ export const goChet = (term, values, responseId) => {
 
         // Check if this value has already been submitted.
         const existingValue = values.filter((value) =>
+            // (value.term ? value.term : "") === term)
             (value.term ? value.term.toLowerCase() : "") === term.toLowerCase())
 
         if (existingValue.length === 0) {
@@ -42,18 +40,18 @@ export const goChet = (term, values, responseId) => {
                 })
             }).then(_ => {
                 handlePrevResponse(term, values, responseId, refKey)
-                    .then(() => {
-                        generateResponse(values, term, refKey, dispatch);
+                    .then((valKey) => {
+                        generateResponse(values, term, valKey, dispatch);
                     })
             })
         } else {
 
             handlePrevResponse(term, values, responseId, existingValue[0]["id"])
-                .then(() => {
-                    generateResponse(values, term, refKey, dispatch);
+                .then((valKey) => {
+                    generateResponse(values, term, valKey, dispatch);
                 })
         }
-        console.timeEnd("Total Time")
+        console.timeEnd("Total Time");
     }
     
 }

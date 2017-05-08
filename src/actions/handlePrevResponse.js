@@ -31,6 +31,6 @@ export const handlePrevResponse = (term, values, responseId, refKey) => {
           count: 1,
         })
     }
-    resolve();
+    resolve(refKey);
   })
 }

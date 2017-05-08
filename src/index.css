@@ -1,3 +1,152 @@
+html, 
 body {
   font-family: 'Cutive Mono', monospace;
+  height: 100%;
+}
+
+input:hover, input:focus {
+  outline: 0;
+}
+
+.slices {
+	height: 200px;
+	overflow-y:auto;
+	-webkit-overflow-scrolling: touch;
+}
+                            
+h5 {
+	line-height: 1.5em !important;
+}
+
+.speech-bubble-user {
+  font-size: 1.1em;
+	position: relative;
+	background: #e8e8e8;
+	border-radius: 1em;
+  text-align: left;
+  padding: 0px;
+  padding-left: 20px;
+	padding-right: 20px;
+  padding-top: 15px;
+	padding-bottom: .5px;
+  width: 85%;
+}
+
+.speech-bubble-user:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 11px solid transparent;
+	border-right-color: #e8e8e8;
+	border-left: 0;
+	border-top: 0;
+	margin-top: -5.5px;
+	margin-left: -11px;
+}
+
+.speech-bubble-chet {
+  text-align: left;
+  font-size: 1.1em;
+	position: relative;
+	background: rgb(49, 165, 49);
+	border-radius: 1em;
+  margin: 10px;
+  padding: 0px;
+  padding-left: 20px;
+	padding-right: 20px;
+  padding-top: 15px;
+	padding-bottom: .5px;
+  width: 85%;
+}
+
+.speech-bubble-chet:after {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 11px solid transparent;
+	border-left-color: rgb(49, 165, 49);
+	border-right: 0;
+	border-top: 0;
+	margin-top: -5.5px;
+	margin-right: -11px;
+}
+
+
+@-webkit-keyframes fadeIt {
+  0%   { background-color: #FFFFFF; }
+  50%  { background-color: #2b2c2d; }
+  100% { background-color: #000; }
+}
+@-moz-keyframes fadeIt {
+  0%   { background-color: #FFFFFF; }
+  50%  { background-color: #2b2c2d; }
+  100% { background-color: #000; }
+}
+@-o-keyframes fadeIt {
+  0%   { background-color: #FFFFFF; }
+  50%  { background-color: #2b2c2d; }
+  100% { background-color: #000; }
+}
+@keyframes fadeIt {
+  0%   { background-color: #FFFFFF; }
+  50%  { background-color: #2b2c2d; }
+  100% { background-color: #000; }
+}
+
+.animatedBackgroundBlack{    
+    background-image:none !important;
+    -webkit-animation: fadeIt 0.5s ease-in forwards; 
+       -moz-animation: fadeIt 0.5s ease-in forwards; 
+         -o-animation: fadeIt 0.5s ease-in forwards; 
+            animation: fadeIt 0.5s ease-in forwards; 
+}
+
+@-webkit-keyframes fadeWhite {
+  0%   { background-color: #2b2c2d; }
+  50%  { background-color: lightgray; }
+  100% { background-color: #fff; }
+}
+@-moz-keyframes fadeWhite {
+  0%   { background-color: #2b2c2d; }
+  50%  { background-color: lightgray; }
+  100% { background-color: #fff; }
+}
+@-o-keyframes fadeWhite {
+  0%   { background-color: #2b2c2d; }
+  50%  { background-color: lightgray; }
+  100% { background-color: #fff; }
+}
+@keyframes fadeWhite {
+  0%   { background-color: #2b2c2d; }
+  50%  { background-color: lightgray; }
+  100% { background-color: #fff; }
+}
+
+.animatedBackgroundWhite{    
+    background-image:none !important;
+    -webkit-animation: fadeWhite 0.5s ease-out forwards; 
+       -moz-animation: fadeWhite 0.5s ease-out forwards; 
+         -o-animation: fadeWhite 0.5s ease-out forwards; 
+            animation: fadeWhite 0.5s ease-out forwards; 
+}
+
+.convoMessageEnter {
+    transform: scale(.6) translateX(-25%);
+    transition: transform 0.3s ease-out;
+}
+
+.convoMessageLeave {
+    transform: scale(1);
+    transition: transform 0.3s ease-out;
+}
+
+.responseAnimation {
+    transform: scale(1.9);
+    transition: transform 4s ease-out;
 }

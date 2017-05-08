@@ -1,5 +1,6 @@
 import { goChet } from './goChet';
 import { fetchData } from './fetchData';
+import { startConversation, saveToConversation, clearEmptyConversations } from './conversation';
 import * as types from './types';
 
 const onInputChange = value => {
@@ -9,26 +10,26 @@ const onInputChange = value => {
       payload: value,
     })
   }
-}
+};
 
 const sayHi = () => {
   return dispatch => {
     dispatch({
       type: types.GENERATE_RESPONSE,
       payload: {
-        term: "Hi, human :)",
+        term: "Hi :)",
       },
     })
-    dispatch({
-      type: types.START_TYPING,
-      payload: 1
-    })
+    dispatch({ type: types.START_TYPING })
   }
-}
+};
 
 export {
   sayHi,
   fetchData,
   goChet,
   onInputChange,
+  startConversation,
+  saveToConversation,
+  clearEmptyConversations,
 };

@@ -2,7 +2,7 @@
 
 ## A chatbot app built with React & Redux
 
-### [Try the app here](http://chet.surge.sh)
+### [Meet Chet](http://chet.surge.sh)
 
 #### This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
@@ -39,5 +39,4 @@ Add your Firebase config object to `src/db.js`.
 
 Open `localhost:3000` in your browser.
 
-*Open the console to see the match strength percentage, generated response and completion time of each query.*
 
