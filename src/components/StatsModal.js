@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { Modal, ModalBody, Progress } from 'reactstrap';
 
-class InfoModal extends Component {
+class StatsModal extends Component {
 	 state = {
     showInfoModal: false,
     showSlices: false,
@@ -24,7 +24,7 @@ class InfoModal extends Component {
 
 	render() {
 		const { showInfoModal, showSlices } = this.state;
-    const { response, slices } = this.props;
+    const { response, slices, name } = this.props;
 		return (
 			<div>
 				<i 
@@ -35,8 +35,8 @@ class InfoModal extends Component {
 			 <Modal 
             isOpen={showInfoModal} 
             toggle={this.toggleInfoModal} 
-            className="text-center"
-            style={{maxHeight: "100vh"}}
+            className="text-center modal-shadow"
+            style={{maxHeight: "90vh"}}
           >
             <ModalBody 
               className="text-center" 
@@ -60,7 +60,7 @@ class InfoModal extends Component {
               
                 { !response.matchedTo &&
                   <p>
-                    Chet scanned "
+                    {name ? name: "Chet"} scanned "
                       <span className="text-primary">{response.userValue}</span>
                     " against {response.phrases} unique phrases and found an exact match.
                   </p>
@@ -69,7 +69,7 @@ class InfoModal extends Component {
                 { response.matchedTo &&
                 <div>
                   <p>
-                  Chet has never seen this before so he sliced it into {slices.length} different variations and scanned each one against {response.phrases} unique phrases and found the closest match of "
+                  {name ? name: "Chet"} has never seen this phrase before so it was sliced into {slices.length} different variations and each one scanned against {response.phrases} unique phrases to find the closest match of "
                   <span className="text-primary">{response.matched}</span>
                   "
                   { !response.matchedTo &&
@@ -85,7 +85,7 @@ class InfoModal extends Component {
                 
                   <i className="fa fa-arrow-down text-primary" />
                   <p>
-                    Chet responded with "<span className="text-primary">{response.term}</span>" out of {response.responseChoiceCount} possible response
+                    {name ? name: "Chet"} responded with "<span className="text-primary">{response.term}</span>" out of {response.responseChoiceCount} possible response
                     {response.responseChoiceCount !== 1 && <span>s</span>}.
                   </p>
 
@@ -137,4 +137,4 @@ export default connect(
 
   }),
   null
-  )(InfoModal)
+  )(StatsModal)

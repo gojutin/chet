@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 
-import { withCookies } from 'react-cookie';
 
 // components
 import Form from './components/Form';
 import Response from './components/Response';
 import Conversation from './components/Conversation';
 import AgreementModal from './components/AgreementModal';
+import Footer from './components/footer/Footer';
 
-class App extends Component {
+export default class App extends Component {
 
   state = {
     showConversation: false,
@@ -62,24 +62,45 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchData();
-    this.props.startConversation().then(() => {
-      this.props.clearEmptyConversations(this.props.conversations, this.props.conversationId);
+    const { valuesId, convoId } = this.props.db;
+    this.props.fetchData(valuesId);
+    this.props.authWatch();
+    this.props.startConversation(convoId).then(() => {
+      this.props.clearEmptyConversations(this.props.conversations, this.props.conversationId, convoId);
       // this.props.sayHi();
     })
-    
+  }
+
+  handleBabyChet = () => {
+    // const { valuesId, convoId } = this.props.db
+    this.props.babyChet(this.props.userInfo.uid, this.props.babyChetMode)
+      .then(db => {
+
+        const { valuesId, convoId } = db;
+        this.props.fetchData(valuesId);
+        this.props.startConversation(convoId).then(() => {
+          this.props.clearEmptyConversations(this.props.conversations, this.props.conversationId, convoId);
+      // this.props.sayHi();
+        });
+      })
+  }
+
+  handleWipeBabyChetsMind = () => {
+    const { valuesId, convoId, id } = this.props.db;
+    this.props.wipeBabyChetsMind(valuesId, convoId, id)
+  }
+
+  handleSaveSettings = (name, color) => {
+    const { db } = this.props;
+    this.props.saveDetails(db, name, color);
   }
 
   render() {
-    const { thisConversation, response, delay, cookies } = this.props;
-    const { showConversation, delayConversation, nightMode, animatedClass } = this.state;
-    const headerStyle = {
-      fontFamily: 'Righteous, Cutive Mono, monospace',
-      margin: 0,
-      fontSize: 3 + "em",
-    };
+    const { thisConversation, response, delay, db, babyChetMode, loading, typing, slices } = this.props;
+    const { showConversation, delayConversation, nightMode, animatedClass, } = this.state;
+    const { name } = db;
 
-    return (
+  return (
 
       <div
         className={`text-center ${animatedClass}`}
@@ -87,111 +108,87 @@ class App extends Component {
           width: 100 + "%",
           height: 100 + "%",
           minHeight: "100vh",
-          margin: 0,        
+          margin: 0,
         }}
       >
-
+      {/*<img src="whitenoise.gif" width={200} />*/}
         <div
           style={{
             color: nightMode ? "#2a96c7" : "#2a96c7",
           }}
         >
           <Row style={{ maxWidth: "100vw", margin: 0 }}>
-            <Col xs={{ size: 6, offset: 3 }}>
-              {/*<i 
-              className="fa fa-comments-o fa-4x" 
-              style={{ marginTop: 15 + "px" }} 
-            />*/}
-              <img
-                src="chet_icon.png"
-                alt="Chet Logo"
-                height={75}
-                style={{ marginTop: 15 + "%" }}
-              />
+            <Col xs={12}>
+              {babyChetMode
+                ? <div>
+                  <i
+                    className="fa fa-child fa-5x"
+                    style={{
+                      marginTop: 4.65 + "%",
+                      fontSize: 69 + "px",
+                      color: db.color ? db.color : "gray",
+                    }}
+                  />
+                  {name &&
+                    <h1 style={{ color: db.color ? db.color : "gray", paddingTop: 5 + "px" }}>{name ? name: "my chatbot"}</h1>
+                  }
+                  </div>
+                : 
+                <img
+                  src="chet_logo.png"
+                  alt="Chet Logo"
+                  height={120}
+                  style={{ marginTop: 5 + "%" }}
+                  className="visible"
+                />
+              }
             </Col>
-
-
           </Row>
-
-          <h1 style={headerStyle} >
-            chet
-          </h1>
         </div>
-        <Container style={{ paddingBottom: 30 + "px", height: 100 + "%", minHeight: 100 + "%"}}>
+        <Container
+          style={{
+            paddingBottom: 30 + "px",
+            height: 100 + "%",
+            minHeight: 100 + "%"
+          }}
+        >
 
-          <Form
-            {...this.props}
-          />
-      
-            <Col xs={12} md={{size:8, offset:2}}>
-          <Response
-            {...this.props}
-            showConversation={showConversation}
-          />
-            </Col>
-        
+          <Form {...this.props} dbId={db.valuesId} dbConvoId={db.convoId} />
 
+          <Col xs={12} md={{ size: 8, offset: 2 }}>
+            <Response
+              {...this.props}
+              showConversation={showConversation}
+              term={response.term}
+              loading={loading}
+              typing={typing}
+            />
+          </Col>
           <Conversation
             thisConversation={thisConversation}
             delayConversation={delayConversation}
             responseId={response.id}
+            slices={slices}
             delay={delay}
+            name={name}
           />
           <br />
 
-          <AgreementModal
-            cookies={cookies}
-          />
-
-          {
-            /* THIS IS A FULL LIST OF THE VALUES
-            this.props.values && 
-            this.props.values.map(value => 
-              <p key={value.id}>{value.term}</p>) 
-            */
-          }
+          <AgreementModal />
 
         </Container>
 
-        {/*FOOTER*/}
-
-        <div 
-          style={{ 
-            position: "fixed", 
-            bottom: 0, 
-            height: 50 + "px", 
-            width: 100 + "%", 
-            padding: 5 + "px",
-          }}
-          className={animatedClass}
-        >
-          <div style={{ paddingTop: 4 + "px" }}>
-
-            { thisConversation &&
-              thisConversation.exchanges &&
-              thisConversation.exchanges.length > 0 &&
-
-              <i
-                onClick={this.toggleConversation}
-                className="fa fa-tasks fa-2x"
-                style={{
-                  cursor: "pointer",
-                  color: showConversation ? "#ffbb33" : "gray",
-                  marginRight: 40 + "px",
-                }}
-              />
-            }
-
-            <i
-              className={`fa fa-moon-o fa-2x ${nightMode ? "text-warning" : ""}`}
-              onClick={this.toggleNightMode}
-              style={{ color: "gray", cursor: "pointer" }}
-            />
-          </div>
-        </div>
+        <Footer
+          {...this.props}
+          toggleNightMode={this.toggleNightMode}
+          handleBabyChet={this.handleBabyChet}
+          handleSaveSettings={this.handleSaveSettings}
+          toggleConversation={this.toggleConversation}
+          animatedClass={animatedClass}
+          nightMode={nightMode}
+          handleWipeBabyChetsMind={this.handleWipeBabyChetsMind}
+        />
       </div>
     );
   }
 }
-
-export default withCookies(App);

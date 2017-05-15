@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './db';
 import './index.css';
 import App from './containers/app-container';
-import { CookiesProvider } from 'react-cookie';
 
 // Is this still necessary?
 var injectTapEventPlugin = require("react-tap-event-plugin");
@@ -32,9 +31,7 @@ import thunk from 'redux-thunk';
 
 render(
   <Provider store={store}>
-    <CookiesProvider>
-      <App />
-    </CookiesProvider>
+    <App />
   </Provider>,
   document.getElementById('root')
 );

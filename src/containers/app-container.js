@@ -2,11 +2,17 @@ import { connect } from 'react-redux';
 import { 
     fetchData, 
     sayHi, 
+    login,
+    logout,
     goChet, 
     onInputChange, 
     startConversation, 
     saveToConversation,
     clearEmptyConversations,
+    babyChet,
+    saveDetails,
+    authWatch,
+    wipeBabyChetsMind,
   } from '../actions/index';
 
 import App from '../app';
@@ -16,6 +22,7 @@ const filterThisConversation = (conversations, id) => {
 };
 
 export default connect(
+  // State
  state => ({ 
    values: state.values, 
    response: state.response, 
@@ -26,21 +33,25 @@ export default connect(
    conversations: state.conversations,
    thisConversation: filterThisConversation(state.conversations, state.conversationId),
    delay: state.delay,
-   phrases: state.response.phrases,
-   matched: state.response.matched,
-   matchedTo: state.response.matchedTo,
-   strength: state.response.strength,
-   responseCount: state.response.responseCount,
-   responseChoiceCount: state.response.responseChoiceCount,
-
+   userInfo: state.userInfo,
+   db: state.db,
+   babyChetMode: state.babyChetMode,
   }),
+
+  // Actions
   {
     fetchData, 
     sayHi, 
+    login,
+    logout,
     goChet, 
     onInputChange, 
     startConversation, 
     saveToConversation, 
-    clearEmptyConversations
+    clearEmptyConversations,
+    babyChet,
+    saveDetails,
+    authWatch,
+    wipeBabyChetsMind
   }
   )(App)

@@ -5,16 +5,16 @@ import * as types from './types';
 
 const db = firebase.database();
 
-export const goChet = (term, values, responseId) => {
+export const goChet = (term, values, responseId, dbId, dbConvoId) => {
 
     // Set loading to true so that we can show the spinner
     return dispatch => {
         console.time("Total Time");
-
-        dispatch({
+          dispatch({
             type: types.LOADING,
             payload: true,
-        })
+          })
+
         dispatch({ type: types.STOP_TYPING })
 
         // Save the key of the new value at the top of the function 
@@ -27,11 +27,11 @@ export const goChet = (term, values, responseId) => {
             (value.term ? value.term.toLowerCase() : "") === term.toLowerCase())
 
         if (existingValue.length === 0) {
-            db.ref('values').push({
+            db.ref(dbId).push({
                 term,
             }).then(ref => {
                 refKey = ref.key;
-                db.ref('values/' + ref.key).child("responses").set({
+                db.ref(dbId + '/' + ref.key).child("responses").set({
                     [refKey]: {
                         term: term,
                         id: refKey,
@@ -39,16 +39,16 @@ export const goChet = (term, values, responseId) => {
                     }
                 })
             }).then(_ => {
-                handlePrevResponse(term, values, responseId, refKey)
+                handlePrevResponse(term, values, responseId, refKey, dbId)
                     .then((valKey) => {
-                        generateResponse(values, term, valKey, dispatch);
+                        generateResponse(values, term, valKey, dispatch, dbConvoId);
                     })
             })
         } else {
 
-            handlePrevResponse(term, values, responseId, existingValue[0]["id"])
+            handlePrevResponse(term, values, responseId, existingValue[0]["id"], dbId)
                 .then((valKey) => {
-                    generateResponse(values, term, valKey, dispatch);
+                    generateResponse(values, term, valKey, dispatch, dbConvoId);
                 })
         }
         console.timeEnd("Total Time");

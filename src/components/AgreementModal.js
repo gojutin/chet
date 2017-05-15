@@ -1,55 +1,64 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 
 import { Input, Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
+
+import Terms from './Terms';
 
 export default class AgreementModal extends Component {
 
 	state = {
 		showModal: false,
 		checkBox: false,
+		showTerms: false,
 	}
 
 	componentDidMount() {
-		const cookie = this.props.cookies.get('hideModal')
-		if (cookie !== "true") {
+		if (localStorage.chet !== "true") {
 			this.toggleModal();
 		}
 	}
 
 	toggleModal = () => {
-    this.setState(prevState => ({
-      showModal: !prevState.showModal
-    }))
-  }
+		this.setState(prevState => ({
+			showModal: !prevState.showModal
+		}))
+	}
 
-	handleCookie = () => {
-		const { cookies } = this.props;
+	toggleTerms = () => {
+		this.setState(prevState => ({
+			showTerms: !prevState.showTerms
+		}))
+	}
+
+	handleAgreement = () => {
 		this.setState(prevState => ({
 			checkBox: !prevState.checkBox
 		}), () => {
 			if (this.state.checkBox) {
-				cookies.set('hideModal', true);
+				const rightNow = moment().format('MMMM Do YYYY');
+				localStorage.setItem("chet", true);
+				localStorage.setItem("time", rightNow);
 			} else {
-				cookies.set('hideModal', false);
+				localStorage.setItem("chet", false)
 			}
 		})
 	}
 
 	render() {
-		const { showModal } = this.state;
+		const { showModal, showTerms, checkBox } = this.state;
 
 		return (
-			<Modal isOpen={showModal} className="text-center">
+			<Modal isOpen={showModal} className="text-center scroll modal-shadow" style={{maxHeight: 90 + "vh"}} >
 				<ModalBody>
-					<h2>Hi, I'm Chet.</h2>
+					<h1 style={{ fontFamily: "Caveat Brush, monospace" }}>Hi, I'm Chet.</h1>
 					<br />
-					<h5>
-						I learn from conversations and I don't always know what is inappropriate.
-              </h5>
-					<br />
-					<h5>
+					<p>
+						I learn from conversations and don't always know what is inappropriate.
+          </p>
+					<p>
 						Please forgive me if I say anything to offend you.
-              </h5>
+          </p>
 				</ModalBody>
 
 				<ModalFooter>
@@ -57,17 +66,46 @@ export default class AgreementModal extends Component {
 						block
 						size="lg"
 						color="primary"
+						disabled={!checkBox}
 						onClick={this.toggleModal}
-						style={{ cursor: "pointer" }}
+						style={{ 
+							cursor: checkBox ? "pointer" : "not-allowed", 
+							height: 100 + "%", 
+							whiteSpace: "normal" }}
 					>
-						It's okay, I understand!
+						It's okay, Chet. I totally get it.
               </Button>
 				</ModalFooter>
 
-				<div style={{ marginBottom: 10 + "px" }}>
-					<Input type="checkbox" value="hi" onClick={this.handleCookie} />
-					<span style={{ paddingLeft: 8 + "px" }}>Don't show this message again</span>
+				<div style={{ marginBottom: 10 + "px", padding: 5 + "px"}}>
+					<Input
+						type="checkbox"
+						value="hi"
+						className="pull-left"
+						onClick={this.handleAgreement}
+						style={{ height: 20 + "px", width: 20 + "px" }}
+					/>
+					<p
+						style={{
+							paddingLeft: 8 + "px",
+							display: "inline",
+						}}
+					>
+						I agree to the
+							<span
+							className="text-primary"
+							style={{ cursor: "pointer", paddingLeft: 5 + "px" }}
+							onClick={this.toggleTerms}
+						>
+							terms &amp; conditions / privacy policy</span>.
+					</p>
 				</div>
+				{showTerms &&
+					<div>
+						<hr />
+						<Terms />
+					</div>
+				}
 			</Modal>
 		)
 	}

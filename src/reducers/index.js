@@ -3,7 +3,7 @@ import * as types from '../actions/types';
 
 const values = (state=false, action) => {
   switch(action.type) {
-    case types.FETCH_DATA:
+    case types.FETCH_VALUES:
       return action.payload;
     default:
       return state;
@@ -14,6 +14,8 @@ const response = (state={}, action) => {
   switch(action.type) {
     case types.GENERATE_RESPONSE:
       return action.payload;
+    case types.CLEAR_RESPONSE:
+      return {term: ""};
     default:
       return state;
   }
@@ -52,6 +54,8 @@ const conversationId = (state=null, action) => {
   switch(action.type) {
     case types.START_CONVERSATION:
       return action.payload;
+    case types.CLEAR_CONVERSATION:
+      return "";
     default:
       return state;
   }
@@ -86,6 +90,43 @@ const slices = (state="", action) => {
   }
 };
 
+const userInfo = (state="", action) => {
+  switch(action.type) {
+    case types.GET_USER_INFO:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+const initialDbValue = {
+  userId : "",
+  valuesId : "values",
+  convoId : "conversations",
+}
+
+const db = (state = initialDbValue, action) => {
+  switch(action.type) {
+    case types.UPDATE_DB:
+      return action.payload;
+    case types.RESET_DB:
+      return {
+        valuesId: "values",
+        convoId: "conversations"
+      };
+    default:
+      return state;
+  }
+}
+
+const babyChetMode = (state = false, action) => {
+    switch(action.type) {
+      case types.BABY_CHET_MODE:
+        return action.payload;
+      default:
+        return state;
+  }
+}
 
 export default combineReducers({
   values,
@@ -97,4 +138,7 @@ export default combineReducers({
   conversations,
   delay,
   slices,
+  userInfo,
+  db,
+  babyChetMode
 });

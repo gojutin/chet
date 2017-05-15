@@ -3,9 +3,9 @@ import * as types from './types';
 
 const db = firebase.database();
 
-export const fetchData = () => {
+export const fetchData = (dbRef) => {
   return dispatch => {
-    db.ref('values').orderByChild("value").on('value', snap => {
+    db.ref(dbRef).orderByChild("value").on('value', snap => {
       let valuesArray = [];
       snap.forEach(value => {
         valuesArray.push({
@@ -15,9 +15,11 @@ export const fetchData = () => {
         });
       });
       dispatch({
-        type: types.FETCH_DATA,
+        type: types.FETCH_VALUES,
         payload: valuesArray,
-      });
+      });  
     })
   }
 }
+
+

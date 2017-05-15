@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Row, Col } from 'reactstrap';
 import Loader from 'react-dots-loader';
-import InfoModal from './InfoModal';
+import StatsModal from './StatsModal';
 
-export default ({ message, children, type, delay }) => {
+export default ({ message, children, type, delay, name }) => {
 
 		const bubbleClass = () => {
 			switch (type) {
@@ -40,7 +40,7 @@ export default ({ message, children, type, delay }) => {
 						<p style={{ color: "white" }}> {message} </p>
 					</Col>
 						<Col xs={2}>
-							<InfoModal />
+							<StatsModal name={name} />
 						</Col>
 				</Row>
 			}

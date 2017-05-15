@@ -2,21 +2,22 @@ import React from 'react';
 import { Row, Col } from 'reactstrap';
 
 
-export default ({ goChet, inputValue, values, response, onInputChange, conversationId, loading, showConversation }) => {
+export default ({ goChet, inputValue, values, response, onInputChange, conversationId, loading, showConversation, dbId, dbConvoId }) => {
 
   let textInput = null;
 
-  function focus() {
+  const handleFocus = () => {
     setTimeout(() => {
-      return textInput ? textInput.focus() : ""
-    }, 1000)
+      if (textInput) {
+        return textInput.focus()
+      }
+    }, 1)
   }
 
   const handleSubmit = e => {
     e.preventDefault();
     if (!inputValue) { return; }
-    goChet(inputValue, values, response.id, conversationId );
-    focus();
+    goChet(inputValue, values, response.id, dbId, dbConvoId );
   }
 
   const handleChange = (e) => {
@@ -24,7 +25,8 @@ export default ({ goChet, inputValue, values, response, onInputChange, conversat
   };
 
   const inputStyle = {
-    fontSize: 1.8 + "em",
+    fontSize: 1.2 + "em",
+    lineHeight: 1.8 + "em",
     border: "1px solid black",
     borderRadius: 5 + "px",
     width: 100 + "%",
@@ -33,7 +35,7 @@ export default ({ goChet, inputValue, values, response, onInputChange, conversat
     marginBottom: 20 + "px",
     paddingLeft: 20 + "px",
     paddingRight: 20 + "px",
-    fontFamily:  "Cutive Mono, monospace"
+    fontFamily:  "Comfortaa, sans-serif"
   };
   
   return (
@@ -44,6 +46,7 @@ export default ({ goChet, inputValue, values, response, onInputChange, conversat
             type="text"
             value={inputValue}
             onChange={handleChange}
+            onKeyDown={() => handleFocus()}
             style={inputStyle}
             disabled={loading}
             ref={(input) => { textInput = input; }}

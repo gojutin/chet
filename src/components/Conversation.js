@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import Loader from 'react-dots-loader';
 import 'react-dots-loader/index.css';
 import { Row, Col } from 'reactstrap';
 
 // Components
 import Bubble from './Bubble';
-import InfoModal from './InfoModal';
 
 export default class Conversation extends Component {
 
   render() {
-    const { thisConversation, delayConversation, responseId, delay } = this.props;
+    const { thisConversation, delayConversation, responseId, delay, name } = this.props;
 
     return (
       <div>
@@ -29,6 +27,7 @@ export default class Conversation extends Component {
                             message={exchange.chetSays.term}
                             type="response"
                             delay={delay}
+                            name={name}
                           />
                       }
 
@@ -57,7 +56,7 @@ export default class Conversation extends Component {
           </div>
         }
         
-          </div>
+      </div>
     );
   }
 }
