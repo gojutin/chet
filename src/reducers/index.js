@@ -30,6 +30,15 @@ const inputValue = (state="", action) => {
   }
 };
 
+const inputError = (state="", action) => {
+  switch(action.type) {
+    case types.HANDLE_INPUT_ERROR:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 const typing = (state=-1, action) => {
   switch(action.type) {
     case types.START_TYPING:
@@ -108,7 +117,7 @@ const initialDbValue = {
 const db = (state = initialDbValue, action) => {
   switch(action.type) {
     case types.UPDATE_DB:
-      return action.payload;
+      return Object.assign({}, state, action.payload);
     case types.RESET_DB:
       return {
         valuesId: "values",
@@ -132,6 +141,7 @@ export default combineReducers({
   values,
   response,
   inputValue,
+  inputError,
   typing,
   loading,
   conversationId,

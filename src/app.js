@@ -92,7 +92,7 @@ export default class App extends Component {
 
   handleSaveSettings = (name, color) => {
     const { db } = this.props;
-    this.props.saveDetails(db, name, color);
+    this.props.saveDetails(db, name, color)
   }
 
   render() {
@@ -130,7 +130,7 @@ export default class App extends Component {
                     }}
                   />
                   {name &&
-                    <h1 style={{ color: db.color ? db.color : "gray", paddingTop: 5 + "px" }}>{name ? name: "my chatbot"}</h1>
+                    <h1 style={{ color: "gray", paddingTop: 5 + "px" }}>{name ? name: "my chatbot"}</h1>
                   }
                   </div>
                 : 
@@ -153,7 +153,11 @@ export default class App extends Component {
           }}
         >
 
-          <Form {...this.props} dbId={db.valuesId} dbConvoId={db.convoId} />
+          <Form 
+            {...this.props} 
+            dbId={db.valuesId} 
+            dbConvoId={db.convoId} 
+          />
 
           <Col xs={12} md={{ size: 8, offset: 2 }}>
             <Response
@@ -173,6 +177,7 @@ export default class App extends Component {
             name={name}
           />
           <br />
+          <br />
 
           <AgreementModal />
 
@@ -185,6 +190,7 @@ export default class App extends Component {
           handleSaveSettings={this.handleSaveSettings}
           toggleConversation={this.toggleConversation}
           animatedClass={animatedClass}
+          showConversation={showConversation}
           nightMode={nightMode}
           handleWipeBabyChetsMind={this.handleWipeBabyChetsMind}
         />

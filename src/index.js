@@ -15,15 +15,16 @@ import { Provider } from 'react-redux';
 import reducer from './reducers/index';
 import thunk from 'redux-thunk';
 
+const reduxDevTools = true;
   var getComposeEnhancers = () => {
 
    // Comment out the if statement when running a production build
-    // if (window.navigator.userAgent.includes('Chrome')) {
-    //   return compose(
-    //     applyMiddleware(thunk)
-    //     ,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-    //   );
-    // }
+    if (window.navigator.userAgent.includes('Chrome') && reduxDevTools) {
+      return compose(
+        applyMiddleware(thunk)
+        ,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+      );
+    }
    return compose(applyMiddleware(thunk) );
   };
 

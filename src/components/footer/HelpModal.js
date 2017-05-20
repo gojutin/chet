@@ -40,25 +40,25 @@ export default class HelpModal extends Component {
     const FAQS = [
       {
         q: "Do I have to sign in to use Chet?",
-        a: "Nope. Chet is available for anyone and everyone. However, logging in is required to create and train your own chatbot. You can login with Google, Facebook, Twitter or Github.",
+        a: "Nope. Chet is available for anyone to use. However, logging in is required to create and train your own chatbot. You can log in with Google, Facebook, Twitter, or Github.",
       },
       {
         q: "What is the difference between Chet and my chatbot?",
-        a: "Under the hood, they both process information and generate responses in exactly the same way. And they both start their existense with no concept of language. The difference is that Chet is available to the public and has been learning for a while now, while your chatbot is brand new with no concept of language. Chet and your chatbot do not share any information.",
+        a: "They both process information and generate responses in exactly the same way and both begin their existense with no concept of language. The difference is that Chet is available to the public and has been learning for a while now, while your chatbot is brand new and doesn't know anything. Chet and your chatbot do not share any information.",
       },
        {
-        q: "Is my chatbot's memory saved?",
-        a: "Yup. Every conversation is saved so your chatbot continues to learn from each exchange that you have over time. You can always wipe your chatbot's mind and start over.",
-      },
-      {
-        q: "What programming language is Chet written in?",
-        a: "Chet is written entirely in JavaScript using React and Redux to manage the view and Firebase to store the persisted data.",
+        q: "Does my chatbot remember our conversations?",
+        a: "Yup. Your chatbot remembers every conversation and gets a little bit smarter with each exchange. At first, the responses may not make much sense, but you should see them improve over time. Of course, you can always wipe your chatbot's mind and start over at any time.",
       },
     ]
 
     return (
       <div style={{ display: "inline" }}>
-        <i className="fa fa-question-circle fa-2x" onClick={this.toggleModal} style={{ color: "gray", cursor: "pointer" }} />
+        <i 
+          className={`fa fa-question-circle fa-2x ${showModal ? "text-warning" : ""}`}
+          onClick={this.toggleModal} 
+          style={{ color: "gray", cursor: "pointer" }} 
+        />
         <Modal isOpen={showModal} className="text-center scroll modal-shadow" style={{ maxHeight: "90vh" }} toggle={this.toggleModal} >
           <ModalBody
             style={{
@@ -86,28 +86,20 @@ export default class HelpModal extends Component {
                   tabNumber="2"
                   activeTab={activeTab}
                 >
-                  Chet
+                  FAQ
                 </HelpTab>
                 <HelpTab 
                   toggleTab={this.toggle}
                   tabNumber="3"
                   activeTab={activeTab}
                 >
-                  FAQ
-                </HelpTab>
-                <HelpTab 
-                  toggleTab={this.toggle}
-                  tabNumber="4"
-                  activeTab={activeTab}
-                >
-                  Terms
+                  Privacy Policy
                 </HelpTab>
               </Nav>
 
               <TabContent activeTab={this.state.activeTab}>
                 <TabPane tabId="1">
-                  <Row>
-                    
+                  <Row>   
                     <Col sm="12" style={{ padding: 10 + "px" }} >
                       <i className="fa fa-moon-o fa-2x text-warning" />
                       <h5 className="text-primary">Light or dark theme</h5>
@@ -125,7 +117,7 @@ export default class HelpModal extends Component {
                       <i className="fa fa-cog fa-2x text-warning" />
                       <h5 className="text-primary">Chatbot settings</h5>
                       <p>( requires login )</p>
-                      <p>Give your chatbot a name or a color. See it's stats or wipe its mind and start over.</p>
+                      <p>Give your chatbot a name or a color. See it's stats or wipe it's mind and start over.</p>
                       <hr />
                       <i className="fa fa-tasks fa-2x text-warning" />
                       <h5 className="text-primary">Conversation view</h5>
@@ -141,21 +133,6 @@ export default class HelpModal extends Component {
                 <TabPane tabId="2">
                   <Row>
                     <Col sm="12" style={{ padding: 20 + "px" }}>
-                      <h5 className="text-primary">
-                        Chet is a chatbot that learns from you.
-								</h5>
-                      <p>
-                        Chet has no pre-conceived knowledge of language and learns everything by analyzing the input values received during conversations with people like you.
-								</p>
-                  <p>
-                        Chet has no pre-conceived knowledge of language and learns everything by analyzing the input values received during conversations with people like you.
-								</p>
-                    </Col>
-                  </Row>
-                </TabPane>
-                <TabPane tabId="3">
-                  <Row>
-                    <Col sm="12" style={{ padding: 20 + "px" }}>
                       {FAQS.map(({ q, a }) =>
                         <div key={q}>
                           <h5 className="text-primary">{q}</h5>
@@ -164,10 +141,22 @@ export default class HelpModal extends Component {
                         </div>
                       )
                       }
+                      <h5 className="text-primary">
+                        What programming language is Chet written in?
+                      </h5>
+                      <p>
+                        Chet is written in JavaScript using
+                         <a href="https://facebook.github.io/react/" target="_blank" > React </a>
+                         and 
+                         <a href="http://redux.js.org/" target="_blank" > Redux</a>
+                         . The data is stored in 
+                        <a href="https://firebase.google.com/" target="_blank" > Firebase</a>.
+                      </p>
+                      <hr />
                     </Col>
                   </Row>
                 </TabPane>
-                <TabPane tabId="4">
+                <TabPane tabId="3">
                   <Row>
                     <Col sm="12" style={{ padding: 20 + "px" }}>
                       <Terms />
@@ -176,11 +165,7 @@ export default class HelpModal extends Component {
                 </TabPane>
               </TabContent>
             </div>
-
-
           </ModalBody>
-
-
         </Modal>
       </div>
     )

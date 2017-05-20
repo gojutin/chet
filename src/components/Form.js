@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col } from 'reactstrap';
 
 
-export default ({ goChet, inputValue, values, response, onInputChange, conversationId, loading, showConversation, dbId, dbConvoId }) => {
+export default ({ goChet, inputValue, values, response, onInputChange, conversationId, loading, showConversation, dbId, dbConvoId, inputError }) => {
 
   let textInput = null;
 
@@ -11,12 +11,12 @@ export default ({ goChet, inputValue, values, response, onInputChange, conversat
       if (textInput) {
         return textInput.focus()
       }
-    }, 1)
+    }, 100)
   }
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (!inputValue) { return; }
+    if (!inputValue ) { return; }
     goChet(inputValue, values, response.id, dbId, dbConvoId );
   }
 
@@ -25,7 +25,7 @@ export default ({ goChet, inputValue, values, response, onInputChange, conversat
   };
 
   const inputStyle = {
-    fontSize: 1.2 + "em",
+    fontSize: 1.3 + "em",
     lineHeight: 1.8 + "em",
     border: "1px solid black",
     borderRadius: 5 + "px",
@@ -51,6 +51,11 @@ export default ({ goChet, inputValue, values, response, onInputChange, conversat
             disabled={loading}
             ref={(input) => { textInput = input; }}
           />
+          { inputError &&
+            <p className="text-warning">
+              {inputError}
+            </p>
+          }
         </form>
       </Col>
     </Row>

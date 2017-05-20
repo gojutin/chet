@@ -28,6 +28,7 @@ export default connect(
    response: state.response, 
    typing: state.typing,
    inputValue: state.inputValue,
+   inputError: state.inputError,
    loading: state.loading,
    conversationId: state.conversationId,
    conversations: state.conversations,

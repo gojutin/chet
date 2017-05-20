@@ -12,10 +12,21 @@ import {
 
 const onInputChange = value => {
   return dispatch => {
-    dispatch({
-      type: types.HANDLE_INPUT_CHANGE,
-      payload: value,
-    })
+    if (value.length > 90) {
+      dispatch({
+        type: types.HANDLE_INPUT_ERROR,
+        payload: "Oops, you ran out of space :( ",
+      })
+    } else {
+      dispatch({
+        type: types.HANDLE_INPUT_ERROR,
+        payload: "",
+      })
+      dispatch({
+        type: types.HANDLE_INPUT_CHANGE,
+        payload: value,
+      })
+    } 
   }
 };
 

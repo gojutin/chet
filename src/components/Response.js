@@ -1,7 +1,7 @@
 import React from 'react';
 import TypeWriter from 'react-typewriter';
-import WobblySpinner from 'react-wobbly-spinner';
 import {Collapse} from 'react-collapse';
+import Loader from 'react-dots-loader';
 
 export default ({ loading, typing, showConversation, term } ) => {
   
@@ -12,12 +12,12 @@ export default ({ loading, typing, showConversation, term } ) => {
         style={{minHeight: "50vh"}} 
         className={showConversation ? "convoMessageEnter": "convoMessageLeave"}>
         { loading &&
-            <div style={{marginTop: 5 + "px"}}>
-                <WobblySpinner diameter={40} />
-            </div>
+            <div style={{ paddingBottom: 12 + "px" }}>
+					    <Loader size={8} color="green" />
+				    </div>
         }
         { !loading && term !== "" &&
-            <TypeWriter typing={typing} minDelay={100}>
+            <TypeWriter typing={typing} >
                 <h2 
                   style={{color: "#31a531", fontFamily: "Source Code Pro, monospace"}} 
                   className={showConversation ? "convoMessageLeave": ""}

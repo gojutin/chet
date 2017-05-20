@@ -10,7 +10,7 @@ export default ({color, onClick, dbColor, selectedColor}) => {
 			
 	}
 	return (
-		<div style={{display: "inline", padding: 0, margin: 0}}>
+		<div style={{display: "inline", padding: 0,}}>
 			{ (theColor() === color) &&
 				<i 
 					className="fa fa-child fa-2x" 
@@ -19,8 +19,8 @@ export default ({color, onClick, dbColor, selectedColor}) => {
 							marginLeft: 5 + "px", 
 							marginRight: 5 + "px", 
 							cursor: "pointer",
-							border: `1px solid ${color}`,
-							borderRadius: 4 + "px"
+							width: 30 + "px"
+
 						}}
 					onClick={() => onClick(color)}
 				/>
@@ -28,12 +28,13 @@ export default ({color, onClick, dbColor, selectedColor}) => {
 			}
 			{ theColor() !== color  &&
 				<i 
-					className="fa fa-child fa-2x" 
+					className="fa fa-circle fa-2x" 
 					style={{
 							color, 
 							marginLeft: 5 + "px", 
 							marginRight: 5 + "px", 
-							cursor: "pointer"
+							cursor: "pointer",
+							width: 30 + "px"
 						}}
 					onClick={() => onClick(color)}
 				/>

@@ -29,7 +29,11 @@ class StatsModal extends Component {
 			<div>
 				<i 
 					className="fa fa-info-circle pull-right" 
-					style={{marginTop: 5 + "px", color: "lightgray", cursor: "pointer"}}
+					style={{
+            marginTop: 18 + "px", 
+            color: showInfoModal ? "#ffbb33" : "lightgray", 
+            cursor: "pointer"
+          }}
 					onClick={this.toggleInfoModal}
         />
 			 <Modal 
@@ -57,19 +61,23 @@ class StatsModal extends Component {
                  You typed "<span className="text-primary">{response.userValue}</span>".
                 </p>
                 <i className="fa fa-arrow-down text-primary" />
+
+                { !response.phrases &&
+                  <p>Congratulations, {name ? name: "Chet"} just learned their first thing ever!</p>
+                }
               
                 { !response.matchedTo &&
                   <p>
                     {name ? name: "Chet"} scanned "
                       <span className="text-primary">{response.userValue}</span>
-                    " against {response.phrases} unique phrases and found an exact match.
+                    " against {response.phrases} known phrases and found an exact match.
                   </p>
                 }
                 
-                { response.matchedTo &&
+                { response.matchedTo && !!response.phrases &&
                 <div>
                   <p>
-                  {name ? name: "Chet"} has never seen this phrase before so it was sliced into {slices.length} different variations and each one scanned against {response.phrases} unique phrases to find the closest match of "
+                  {name ? name: "Chet"} has never seen this phrase before so it was sliced into {slices.length} different variations and each one scanned against {response.phrases} uknown phrases to find the closest match of "
                   <span className="text-primary">{response.matched}</span>
                   "
                   { !response.matchedTo &&
@@ -98,12 +106,24 @@ class StatsModal extends Component {
                   </div>
                 
                 <br/>
+
                 { slices.length > 0 && 
-                  <i
-                    className={`fa fa-pie-chart fa-2x ${showSlices && "text-warning"}`}
+                  <div 
+                    style={{color: "gray", cursor: "pointer"}} 
+                    className={showSlices ? "text-warning" : ""}
                     onClick={this.toggleShowSlices}
-                  />
+                  >
+                    <div>
+                      <i
+                        className={`fa fa-pie-chart fa-2x ${showSlices && "text-warning"}`}
+                      />
+                    </div>
+                  
+                  {showSlices ? "hide" : "show"} slices
+                
+                  </div>
                 }
+
                 
                 {showSlices && 
 

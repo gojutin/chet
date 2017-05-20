@@ -11,6 +11,10 @@ export const goChet = (term, values, responseId, dbId, dbConvoId) => {
     return dispatch => {
         console.time("Total Time");
           dispatch({
+            type: types.HANDLE_INPUT_ERROR,
+            payload: "",
+          })
+          dispatch({
             type: types.LOADING,
             payload: true,
           })
@@ -22,9 +26,7 @@ export const goChet = (term, values, responseId, dbId, dbConvoId) => {
         let refKey;
 
         // Check if this value has already been submitted.
-        const existingValue = values.filter((value) =>
-            // (value.term ? value.term : "") === term)
-            (value.term ? value.term.toLowerCase() : "") === term.toLowerCase())
+        const existingValue = values.filter((value) => value.term === term );
 
         if (existingValue.length === 0) {
             db.ref(dbId).push({

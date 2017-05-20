@@ -15,3 +15,4 @@ export const UPDATE_DB = 'UPDATE_DB';
 export const RESET_DB = 'RESET_DB';
 export const BABY_CHET_MODE = 'BABY_CHET_MODE';
 export const GET_USER_INFO = 'GET_USER_INFO';
+export const HANDLE_INPUT_ERROR = 'HANDLE_INPUT_ERROR';

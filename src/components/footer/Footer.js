@@ -28,19 +28,26 @@ export default (props) => {
 				height: 55 + "px",
 				width: 100 + "%",
 				padding: 5 + "px",
+				color: animatedClass ? animatedClass : "white",
 			}}
       className={animatedClass}
     >
 			<div style={{ paddingTop: 8 + "px" }}>
 				<Row className="text-center">
 
-
-					<Col xs={{ size: 2 }} md={{ size: 1, offset: 3 }} id="moon">
+					<Col 
+						xs={{ size: 2 }} 
+						md={{ size: 1, offset: 4 }} 
+						id="moon"
+					>
 						<FooterIcon
 							type="moon-o"
 							condition={nightMode}
 							onClick={toggleNightMode}
 						/>
+					</Col>
+					<Col xs={2} md={1}>
+						<HelpModal />
 					</Col>
 
 				<Col xs={2} md={1} id="google">
@@ -54,27 +61,20 @@ export default (props) => {
 				</Col>
 
 					<Col xs={2} md={1}>
-						{userInfo &&
-							<i
-								className={`fa fa-child fa-2x`}
-								onClick={() => handleBabyChet()}
-								style={{ color: babyChetMode ? color : "gray", cursor: "pointer" }}
-							/>
-						}
-					</Col>
-					<Col xs={2} md={1}>
-						{ babyChetMode &&
+						{ userInfo &&
 							<SettingsModal 
 								handleSubmit={handleSaveSettings} 
 								dbColor={color} 
 								dbName={name} 
 								values={values}
 								conversations={conversations}
+								babyChetMode={babyChetMode}
+								handleBabyChet={handleBabyChet}
 								handleWipeBabyChetsMind={handleWipeBabyChetsMind}
 							/>
 						}
 					</Col>
-					<Col xs={2} md={1}>
+					{/*<Col xs={2} md={1}>
 						{ thisConversation &&
 							thisConversation.exchanges &&
 							thisConversation.exchanges.length > 0 &&
@@ -85,10 +85,8 @@ export default (props) => {
 								onClick={toggleConversation}
 							/>
 						}
-					</Col>
-					<Col xs={2} md={1}>
-						<HelpModal />
-					</Col>
+					</Col>*/}
+					
 				</Row>
 			</div>
 

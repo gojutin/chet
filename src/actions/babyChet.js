@@ -4,17 +4,25 @@ import randomID from "random-id";
 const db = firebase.database();
 
 export const saveDetails = (_db, name, color) => {
-	
 	return dispatch => {
-		if (!name) {
-			name="my chatbot"
-		}
-		const { id } = _db;
-		db.ref("babyChets").child(id).update({ name, color })
-		.then(() => {
-			dispatch({
-				type: types.UPDATE_DB,
-				payload: Object.assign({}, _db, {name, color})
+		return new Promise((resolve, reject) => { 
+			if (!name) {
+				name="my chatbot"
+			}
+			if (!color) {
+				color="#ffbb33"
+			}
+			const { id } = _db;
+			db.ref("babyChets").child(id).update({ name, color })
+			.then(() => {
+				dispatch({
+					type: types.UPDATE_DB,
+					payload: Object.assign({}, _db, {name, color})
+				})
+				resolve();
+			})
+			.catch(() => {
+				reject();
 			})
 		})
 	}	
@@ -98,22 +106,17 @@ export const wipeBabyChetsMind = (valuesId, convoId, uid) => {
 			.then(() => {
 				db.ref(convoId).remove()
 					.then(() => {
-						db.ref("babyChets").child(uid).update({name: "my chatbot", color: "#ffbb33"})
-						.then(() => {
 							dispatch({
 							type: types.UPDATE_DB,
 								payload: {
 									valuesId,
 									convoId,
-									name: "my chatbot",
-									color: "#ffbb33",
 								}
 							})
 							dispatch({
 								type: types.CLEAR_RESPONSE
 							})
 						})		
-					})
 			}).catch((err) => alert(err.reason ? err.reason : err))
 		}
 	}

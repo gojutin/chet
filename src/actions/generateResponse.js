@@ -17,13 +17,10 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
   let strength;
   let responseChoiceCount;
   let responseCount;
+
   const findBestMatch = () => {
 
-    const exactMatch = values.filter(value => 
-      value.term.toLowerCase() === term.toLowerCase()
-        || 
-      value.term.toLowerCase() === term.split("").splice(1, -1).join("").toLowerCase()
-    );
+    const exactMatch = values.filter(value => value.term === term );
 
     if (exactMatch.length > 0 ) {
       matched = term;
@@ -32,7 +29,7 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
       return exactMatch[0];
     }
 
-    const stringToArray = term.toLowerCase().split("");
+    const stringToArray = term.split("");
       const len = stringToArray.length;
       let i = 0;
       
@@ -54,7 +51,7 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
       slicesArray.sort((a,b) => b.length - a.length);
        slicesArray.map(slice => {
         return values.map(val => {
-          if (val.term.toLowerCase().includes(slice) ){
+          if (val.term.includes(slice) ){
             finalSlices.push(slice);
             return finArr.push(val);
           }
@@ -130,20 +127,17 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
       dispatch({
         type: types.START_DELAY,
       })
-    }, 1000)
+    }, 500)
+
+    dispatch({ type: types.START_TYPING });
 
     window.setTimeout(() => {
       dispatch({
         type: types.LOADING,
         payload: false,
       });
-    }, 250)
+    }, 500)
 
-    
-
-   
-    dispatch({ type: types.START_TYPING });
-    
     dispatch({
       type: types.HANDLE_INPUT_CHANGE,
       payload: "",
