@@ -5,17 +5,18 @@ import './db';
 import './index.css';
 import App from './containers/app-container';
 
-// Is this still necessary?
-var injectTapEventPlugin = require("react-tap-event-plugin");
-injectTapEventPlugin();
-
 // Redux
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import reducer from './reducers/index';
 import thunk from 'redux-thunk';
 
-const reduxDevTools = true;
+// Is this still necessary?
+var injectTapEventPlugin = require("react-tap-event-plugin");
+injectTapEventPlugin();
+
+
+const reduxDevTools = false;
   var getComposeEnhancers = () => {
 
    // Comment out the if statement when running a production build

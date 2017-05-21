@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { 
-    fetchData, 
+    fetchPhrases, 
     sayHi, 
     login,
     logout,
@@ -8,7 +8,6 @@ import {
     onInputChange, 
     startConversation, 
     saveToConversation,
-    clearEmptyConversations,
     babyChet,
     saveDetails,
     authWatch,
@@ -26,22 +25,16 @@ export default connect(
  state => ({ 
    values: state.values, 
    response: state.response, 
-   typing: state.typing,
-   inputValue: state.inputValue,
-   inputError: state.inputError,
-   loading: state.loading,
-   conversationId: state.conversationId,
+   input: state.input,
    conversations: state.conversations,
-   thisConversation: filterThisConversation(state.conversations, state.conversationId),
-   delay: state.delay,
-   userInfo: state.userInfo,
+   thisConversation: filterThisConversation(state.conversations, state.db.conversationId),
    db: state.db,
    babyChetMode: state.babyChetMode,
   }),
 
   // Actions
   {
-    fetchData, 
+    fetchPhrases, 
     sayHi, 
     login,
     logout,
@@ -49,7 +42,6 @@ export default connect(
     onInputChange, 
     startConversation, 
     saveToConversation, 
-    clearEmptyConversations,
     babyChet,
     saveDetails,
     authWatch,

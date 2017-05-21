@@ -3,7 +3,7 @@ import { Row, Col } from 'reactstrap';
 import Loader from 'react-dots-loader';
 import StatsModal from './StatsModal';
 
-export default ({ message, children, type, delay, name,  }) => {
+export default ({ message, children, type, name, response  }) => {
 
 		const bubbleClass = () => {
 			switch (type) {
@@ -20,13 +20,13 @@ export default ({ message, children, type, delay, name,  }) => {
 	return (
 		<div className={bubbleClass()}>
 
-			{!delay && type === "response" &&
+			{response && !response.delay && type === "response" &&
 				<div style={{padding: 14 + "px"}}>
 					<Loader size={8} color="green" />
 				</div>
 			}
 
-			{!delay && type !== "response" &&
+			{type !== "response" &&
 				<Row>
 					<Col xs={12}>
 						<p style={{ color: type === "chet" ? "white" : "black", margin: 5,padding: 8 }}> {message} </p>
@@ -34,7 +34,7 @@ export default ({ message, children, type, delay, name,  }) => {
 				</Row>
 			}
 
-			{delay && type === "response" &&
+			{response && response.delay && type === "response" &&
 				<Row>
 					<Col xs={10}>
 						<p style={{ color: "white", margin: 5,padding: 8 }}> {message} </p>

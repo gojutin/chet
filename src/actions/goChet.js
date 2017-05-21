@@ -1,6 +1,6 @@
 import firebase from 'firebase';
-import { handlePrevResponse } from './handlePrevResponse';
-import { generateResponse } from './generateResponse';
+import { handlePrevResponse } from './response';
+import { generateResponse } from './response';
 import * as types from './types';
 
 const db = firebase.database();

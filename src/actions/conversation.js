@@ -7,37 +7,46 @@ let convoKey;
 
 export const startConversation = (dbConvoId) => {
   // First we fetch all of the conversations and save them to our store
+  let convoArray;
   return dispatch => {
-    return new Promise ((resolve, reject) => {
-      db.ref(dbConvoId).on('value', snap => {
-        let conversationsArray = [];
-        snap.forEach(value => {
-          conversationsArray.push({
-            id: value.key,
-            createdAt: value.val().createdAt,
-            exchanges: value.val().exchanges ? Object.values(value.val().exchanges).reverse() : [],
-          });
+    db.ref(dbConvoId).on('value', snap => {
+      let conversationsArray = [];
+      snap.forEach(value => {
+        conversationsArray.push({
+          id: value.key,
+          createdAt: value.val().createdAt,
+          exchanges: value.val().exchanges ? Object.values(value.val().exchanges).reverse() : [],
         });
-        dispatch({
-          type: types.FETCH_CONVERSATIONS,
-          payload: conversationsArray,
-        });
-        
-      })
-
-      // Now we create a new conversation and save the Id to the store
-      const timestamp = firebase.database.ServerValue.TIMESTAMP;
+      });
+      dispatch({
+        type: types.FETCH_CONVERSATIONS,
+        payload: conversationsArray,
+      });
+      convoArray = conversationsArray.slice();
       
-      db.ref(dbConvoId).push({ createdAt: timestamp }).then(ref => {
+    })
+
+    // Now we create a new conversation and save the Id to the store
+    const timestamp = firebase.database.ServerValue.TIMESTAMP;
+    
+    db.ref(dbConvoId).push({ createdAt: timestamp })
+      .then(ref => {
         convoKey = ref.key;
         dispatch({
-          type: types.START_CONVERSATION,
-          payload: ref.key,
+          type: types.UPDATE_DB,
+          payload: {conversationId: ref.key},
         })
-        }).then(() => {
-          resolve();
-        }).catch(err => window.alert(err.reason || err));
-    })
+
+        // clear empty conversations
+        const filteredByEmptyValues = convoArray.filter(val => {
+          return val.exchanges.length === 0 && val.id !== ref.key;
+        })
+      
+      filteredByEmptyValues.map(({ id }) => {
+        return db.ref(dbConvoId).child(id).remove()
+          .catch(err => console.log(err));
+      })
+      }).catch(err => window.alert(err.reason || err));
   } 
 }
 
@@ -52,28 +61,4 @@ export const saveToConversation = (exchange, dbConvoId) => {
     .catch(err => window.alert(err.reason || err))
 }
 
-export const clearConversation = () => {
-  return dispatch => {
-    dispatch({
-      type: types.CLEAR_CONVERSATION
-    })
-  }
-}
 
-export const clearEmptyConversations = (conversations, id, dbId) => {
-
-      // Now we filter the empty conversations and delete them from the database one by one
-      // This is outside of the Firebase on() method so it only fires once when the page
-      // is initially rendered
-      return dispatch => {
-
-        const filteredByEmptyValues = conversations.filter(val => {
-          return val.exchanges.length === 0 && val.id !== id;
-        })
-        
-        filteredByEmptyValues.map(({ id }) => {
-          return db.ref(dbId).child(id).remove()
-            .catch(err => console.log(err));
-        })
-      }
-}

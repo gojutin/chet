@@ -14,20 +14,19 @@ export default class SettingsModal extends Component {
 		name: "",
 		color: "",
 		showConfirmWipe: false,
-		showValues: false,
-		stats:{},
 		activeTab: "1",
 		sleepMode: false,
+		showSave: false,
 	}
 
 	componentDidMount() {
 		const { dbName, dbColor } = this.props;
 		this.handleSleepMode()
 		.then(() => {
-			this.setState(prevState => ({
+			this.setState({
 				name: dbName ? dbName : "",
 				color: dbColor ? dbColor : "",
-			}))
+			})
 		})
 	}
 
@@ -35,6 +34,7 @@ export default class SettingsModal extends Component {
 		const name = generateName();
 		this.setState({
 			name,
+			showSave: true,
 		}, () => {
 			this.handleSubmit();
 		})
@@ -49,8 +49,6 @@ export default class SettingsModal extends Component {
 	handleWipe = () => {
 		this.setState(prevState => ({
       	showConfirmWipe: !prevState.showConfirmWipe,
-				name: this.props.dbName,
-				color: this.props.dbColor,
     }));
 		this.props.handleWipeBabyChetsMind();
 	}
@@ -62,6 +60,7 @@ export default class SettingsModal extends Component {
 				showModal: !prevState.showModal,
 				name: dbName ? dbName : "",
 				color: dbColor ? dbColor : "",
+				showSave: false,
 			}))
 		} else if (!this.state.sleepMode && !babyChetMode) {
 			this.setState(prevState => ({
@@ -78,6 +77,7 @@ export default class SettingsModal extends Component {
 	handleChange = (e) => {
 		this.setState({
 			name: e.target.value,
+			showSave: true,
 		}, () => {
 			this.handleSubmit();
 		})
@@ -100,6 +100,7 @@ export default class SettingsModal extends Component {
 	handleColor = (color) => {
 		this.setState({
 			color,
+			showSave: true,
 		}, () => {
 			this.handleSubmit();
 		})
@@ -125,29 +126,21 @@ export default class SettingsModal extends Component {
     }
   }
 
-	removeDuplicates = arr => {
-		let i,
-				len=arr.length,
-				out=[],
-				obj={};
-
-		for (i=0;i<len;i++) {
-			obj[arr[i]]=0;
-		}
-		for (i in obj) {
-			out.push(i);
-		}
-		return out;
-}
-
+	handleLogout = () => {
+		this.props.logout().then(() => {
+			if (this.props.babyChetMode) {
+				this.props.handleBabyChet();
+			}	
+		});
+	}
 	render() {
 
-		const { showModal, name, showConfirmWipe, color, activeTab } = this.state;
-		const { dbName, values, conversations, babyChetMode } = this.props;
+		const { showModal, name, showConfirmWipe, color, activeTab, showSave } = this.state;
+		const { dbName, values, conversations, babyChetMode, db} = this.props;
 		const colors = [
-			"#f44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", 
+			"#f44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#03A9F4", "#00BCD4", 
 			"#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", 
-			"#795548", "#9E9E9E", "#424242", "#607D8B",
+			"#795548", "#9E9E9E", "#607D8B",
 		];
 
 
@@ -161,64 +154,28 @@ export default class SettingsModal extends Component {
 			/>
 		)
 
-		// WORD AND STATS LOGIC... MOVE THIS SOMEWHERE ELSE??
-
-		let wordsArr = [];
-		let wordCount;
-		values.map(value => wordsArr.push(value.term));
-		const splitWords = wordsArr.join(" ").split(" ");
-		const dupsRemoved = this.removeDuplicates(splitWords);
-
-		if (dupsRemoved.length < 2 && dupsRemoved[0] === "") {
-			wordCount = 0;
-		} else {
-			wordCount = dupsRemoved.length;
-		}
-
-		const percentage = ((wordCount / 20000)*100).toFixed(1)
-
-		const phase = () => {
-			if ( wordCount < 500 ) {
-				return {
-					phase: "baby",
-					progress: 5,
-					size: "",
-				}
-			} else if (wordCount < 2000) {
-				return {
-					phase: "toddler",
-					size: "fa-2x",
-				}
-			} else if (wordCount < 3000) {
-				return {
-					phase: "kid",
-					size: "fa-3x",
-				}
-			} else if (wordCount < 20000) {
-				return {
-					phase: "teenager",
-					size: "fa-4x",
-				}
-			} else {
-				return {
-					phase: "all grown up",
-					size: "fa-5x",
-				}
-			}
-		}
-
 		return (
 			<div style={{display: "inline"}}>
-				<i className={`fa fa-2x ${babyChetMode || showModal ? "text-warning fa-child": "fa-bed"}`} onClick={this.toggleModal} style={{ color: "gray", cursor: "pointer" }} />
-				<Modal isOpen={showModal} className="text-center modal-shadow" toggle={this.toggleModal} >
+				
+				<i className={`fa fa-2x fa-child ${babyChetMode ? "text-warning" : ""}`}
+				onClick={this.toggleModal} style={{ cursor: "pointer", color: "gray" }} />
+
+				<Modal 
+					isOpen={showModal} 
+					className="text-center modal-shadow" 
+					toggle={this.toggleModal} 
+					style={{maxHeight: 90 + "vh"}}
+				>
 					<ModalBody style={{fontFamily: "Comfortaa, monospace"}}>
 						<i 
-							className="fa fa-times text-danger pull-right" 
-							style={{cursor: "pointer"}} 
+							className={`fa pull-right ${showSave ? "fa-check-square-o text-success": "fa-times text-danger"}`}
+							style={{
+								cursor: "pointer",
+								fontSize: 1.3 + "em"
+							}}
 							onClick={this.toggleModal}
 						/>
 
-								
 						  <Nav tabs style={{ cursor: "pointer"}}>
 	
                 <SettingsTab 
@@ -298,23 +255,39 @@ export default class SettingsModal extends Component {
 						}
 						</div>
 
-
-						<Button
-								size="lg"
-								onClick={this.handleSleepMode}
-								style={{ cursor: "pointer", width: 200 + "px", marginTop: 15 + "px"}}
-								className="text-center"
-							>
-								Switch to Chet
-						</Button>
-							
-							{/*<Button
-								color="success"
-								onClick={this.handleSubmit}
-								style={{ cursor: "pointer", width: 150 + "px"}}
-							>
-								Save
-						</Button>*/}	
+						<Row>
+							<Col xs={12} md={6}>
+								<Button
+										block
+										size="lg"
+										onClick={this.handleSleepMode}
+										style={{ cursor: "pointer", marginTop: 10 + "px"}}
+										className="text-center"
+									>
+										Switch to Chet
+								</Button>
+						  </Col>
+							<Col xs={12} md={6}>
+									<Button
+									block
+									size="lg"
+									onClick={this.handleLogout}
+									style={{ cursor: "pointer", marginTop: 10 + "px"}}
+									className="text-center"
+								>
+								<img
+									src={db.photo}
+									alt="Profile pic"
+									height={28}
+									style={{
+										borderRadius: 50 + "%",
+										marginRight: 10 + "px"
+									}}
+								/>
+									Logout
+								</Button>
+							</Col>
+						</Row>
 						</div>
 						}
 						</TabPane>
@@ -322,38 +295,28 @@ export default class SettingsModal extends Component {
 					<TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="2">
 
-							{ !!values.length &&
+							{ !!values.length && db.phase &&
 								<div >
 									<br />
 									<div style={{color}}>
 											<i 
-												className={`fa fa-child ${phase().size}`}
+												className={`fa fa-child ${db.phase.size}`}
 											/>
-											<p>{phase().phase}</p>
+											<p>{db.phase.phase}</p>
 									</div>
-									<Row>
-										<Col xs={2}>
-											<p className="pull-right">baby</p>
-										</Col>
-										<Col xs={8}>
 											<Progress 
 												animated 
 												color="success" 
-												value={percentage} 
+												value={db.growthPercentage} 
 												style={{marginTop: 5 + "px"}}
 											/>
-										</Col>
-										<Col xs={2}>
-											<p className="pull-left">adult</p>
-										</Col>
-									</Row>
 								</div>
 							}
 						<br />
 						<Row>
 							<Col xs={4} style={{borderRight: "1px solid lightgray"}}>
 								<p>Words</p>
-								<h4 className="text-primary">{wordCount}</h4>
+								<h4 className="text-primary">{db.wordCount}</h4>
 							</Col>
 							<Col xs={4} style={{borderRight: "1px solid lightgray"}}>
 								<p>Phrases</p>
@@ -364,47 +327,6 @@ export default class SettingsModal extends Component {
 								<h4 className="text-primary">{conversations.length < 2 ? 0 : conversations.length - 1}</h4>
 							</Col>
 							</Row>
-							<div>	
-								<br />
-										{/*<h4> Milestones:</h4>
-										<Row style={{color: "lightgray", marginTop: 20 + "px"}}>
-											<Col xs={6} className="pull-right">
-											<div>
-											<i className="fa fa-trophy fa-2x text-warning" />
-											</div>
-											<p>baby</p>
-										</Col>
-										<Col xs={6} style={{color: phase().phase === "toddler" ? "#ffbb33" : "lightgray"}} >
-											<div>
-												<i 
-													className="fa fa-trophy fa-2x"
-												/>
-											</div>
-											<p>toddler</p>
-										</Col>
-										</Row>
-										<Row style={{color: "lightgray", marginTop: 20 + "px"}}>
-										
-										<Col xs={{size: 2, offset: 3}}>
-											<div>
-												<i className="fa fa-trophy fa-2x" />
-											</div>
-											<p>kiddo</p>
-										</Col>
-										<Col xs={2}>
-											<div>
-												<i className="fa fa-trophy fa-2x" />
-											</div>
-											<p>teen</p>
-										</Col>
-										<Col xs={2}>
-											<div>
-												<i className="fa fa-trophy fa-2x" />
-											</div>
-											<p>wadult</p>
-										</Col>
-									</Row>*/}
-								</div>
 
 							</TabPane>
 					</TabContent>

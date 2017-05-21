@@ -94,7 +94,7 @@ export const babyChet = (userId, babyChetMode) => {
 				type: types.CLEAR_RESPONSE,
 			})
 			dispatch({
-				type: types.STOP_TYPING,
+				type: types.START_TYPING,
 			})
 		})
 	}

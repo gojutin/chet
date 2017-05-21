@@ -15,7 +15,11 @@ export const logout = () => {
 
 export const login = (providerName) => {
   return dispatch => {
-		return new Promise ((resolve, reject) => {
+		dispatch({
+			type: types.UPDATE_DB,
+			payload: {loggingIn: true},
+		})
+
     let provider;
     switch(providerName) {
 			case "facebook":
@@ -34,14 +38,20 @@ export const login = (providerName) => {
         break;
     }
     firebase.auth().signInWithPopup(provider)
-      .then((res) => resolve())
-      .catch(err => {
-				resolve()
-        console.log(err.reason? err.reason : err)
-      })
+      .then((res) =>{
+				dispatch({
+					type: types.UPDATE_DB,
+					payload: {loggingIn: false},
+				})
 			})
+      .catch(err => {
+        console.log(err.reason? err.reason : err)
+				dispatch({
+					type: types.UPDATE_DB,
+					payload: {loggingIn: false},
+				})
+      })
     }
-	
   }
 
 	export const authWatch = () => {
@@ -59,7 +69,7 @@ export const login = (providerName) => {
 								photo: profile.photoURL,
 							}
 							return dispatch({
-								type: types.GET_USER_INFO,
+								type: types.UPDATE_DB,
 								payload: userInfo,
 							})
 						});

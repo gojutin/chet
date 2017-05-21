@@ -1,14 +1,9 @@
 import * as types from './types';
 import { goChet } from './goChet';
 import { saveDetails, babyChet, wipeBabyChetsMind } from './babyChet';
-import { fetchData } from './fetchData';
+import { fetchPhrases } from './phrases';
 import { login, logout, authWatch } from './auth';
-import { 
-    startConversation, 
-    saveToConversation, 
-    clearEmptyConversations, 
-    clearConversation 
-  } from './conversation';
+import { startConversation, saveToConversation } from './conversation';
 
 const onInputChange = value => {
   return dispatch => {
@@ -46,15 +41,13 @@ export {
   sayHi,
   login,
   logout,
-  fetchData,
+  fetchPhrases,
   goChet,
   onInputChange,
   startConversation,
   saveToConversation,
-  clearEmptyConversations,
   babyChet,
   saveDetails,
-  clearConversation,
   authWatch,
   wipeBabyChetsMind,
 };

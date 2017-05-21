@@ -9,8 +9,7 @@ import Bubble from './Bubble';
 export default class Conversation extends Component {
 
   render() {
-    const { thisConversation, delayConversation, responseId, delay, name } = this.props;
-
+    const { thisConversation, delayConversation, response, name } = this.props;
     return (
       <div>
 
@@ -24,11 +23,11 @@ export default class Conversation extends Component {
                 >
                   <Row>
                     <Col xs={12} md={{ size: 8, offset: 2 }}>
-                      {exchange.chetSays.id === responseId && i === 0 &&
+                      {exchange.chetSays.id === response.id && i === 0 &&
                         <Bubble
                             message={exchange.chetSays.term}
                             type="response"
-                            delay={delay}
+                            response={response}
                             name={name}
                             i={i}
                           />
@@ -39,6 +38,7 @@ export default class Conversation extends Component {
                           <Bubble
                             textColor="white"
                             type="chet"
+                            response={response}
                             message={exchange.chetSays.term}
                             index={i}
                           />
@@ -60,7 +60,7 @@ export default class Conversation extends Component {
           </div>
         }
         
-        <ScrollToTop showUnder={160}>
+        <ScrollToTop showUnder={220}>
           <div className="text-warning text-center">
             <i className="fa fa-arrow-circle-up fa-2x" />
           </div>

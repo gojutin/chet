@@ -63,25 +63,18 @@ export default class App extends Component {
 
   componentDidMount() {
     const { valuesId, convoId } = this.props.db;
-    this.props.fetchData(valuesId);
+    this.props.fetchPhrases(valuesId);
     this.props.authWatch();
-    this.props.startConversation(convoId).then(() => {
-      this.props.clearEmptyConversations(this.props.conversations, this.props.conversationId, convoId);
-      // this.props.sayHi();
-    })
+    this.props.startConversation(convoId);
   }
 
   handleBabyChet = () => {
-    // const { valuesId, convoId } = this.props.db
-    this.props.babyChet(this.props.userInfo.uid, this.props.babyChetMode)
+    const { db, babyChetMode } = this.props;
+    this.props.babyChet(db.uid, babyChetMode)
       .then(db => {
-
         const { valuesId, convoId } = db;
-        this.props.fetchData(valuesId);
-        this.props.startConversation(convoId).then(() => {
-          this.props.clearEmptyConversations(this.props.conversations, this.props.conversationId, convoId);
-      // this.props.sayHi();
-        });
+        this.props.fetchPhrases(valuesId);
+        this.props.startConversation(convoId);
       })
   }
 
@@ -96,7 +89,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { thisConversation, response, delay, db, babyChetMode, loading, typing, slices } = this.props;
+    const { thisConversation, response, db, babyChetMode, slices } = this.props;
     const { showConversation, delayConversation, nightMode, animatedClass, } = this.state;
     const { name } = db;
 
@@ -111,7 +104,6 @@ export default class App extends Component {
           margin: 0,
         }}
       >
-      {/*<img src="whitenoise.gif" width={200} />*/}
         <div
           style={{
             color: nightMode ? "#2a96c7" : "#2a96c7",
@@ -119,7 +111,7 @@ export default class App extends Component {
         >
           <Row style={{ maxWidth: "100vw", margin: 0 }}>
             <Col xs={12}>
-              {babyChetMode
+              { babyChetMode
                 ? <div>
                   <i
                     className="fa fa-child fa-5x"
@@ -130,7 +122,7 @@ export default class App extends Component {
                     }}
                   />
                   {name &&
-                    <h1 style={{ color: "gray", paddingTop: 5 + "px" }}>{name ? name: "my chatbot"}</h1>
+                    <h2 style={{ color: "gray", paddingTop: 5 + "px" }}>{name ? name: "my chatbot"}</h2>
                   }
                   </div>
                 : 
@@ -155,25 +147,20 @@ export default class App extends Component {
 
           <Form 
             {...this.props} 
-            dbId={db.valuesId} 
-            dbConvoId={db.convoId} 
           />
 
           <Col xs={12} md={{ size: 8, offset: 2 }}>
             <Response
-              {...this.props}
               showConversation={showConversation}
-              term={response.term}
-              loading={loading}
-              typing={typing}
+              response={response}
             />
           </Col>
+
           <Conversation
             thisConversation={thisConversation}
             delayConversation={delayConversation}
-            responseId={response.id}
+            response={response}
             slices={slices}
-            delay={delay}
             name={name}
           />
           <br />

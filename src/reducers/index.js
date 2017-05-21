@@ -3,7 +3,7 @@ import * as types from '../actions/types';
 
 const values = (state=false, action) => {
   switch(action.type) {
-    case types.FETCH_VALUES:
+    case types.FETCH_PHRASES:
       return action.payload;
     default:
       return state;
@@ -13,58 +13,30 @@ const values = (state=false, action) => {
 const response = (state={}, action) => {
   switch(action.type) {
     case types.GENERATE_RESPONSE:
-      return action.payload;
+      return Object.assign({}, state, action.payload);
+    case types.START_TYPING:
+      return Object.assign({}, state, {typing: 1});
+    case types.STOP_TYPING:
+      return Object.assign({}, state, {typing: 0});
     case types.CLEAR_RESPONSE:
       return {term: ""};
+    case types.START_DELAY:
+      return Object.assign({}, state, {delay: true});
+    case types.STOP_DELAY:
+      return Object.assign({}, state, {delay: false});
+    case types.LOADING:
+      return Object.assign({}, state, {loading: action.payload});
     default:
       return state;
   }
 };
 
-const inputValue = (state="", action) => {
+const input = (state={}, action) => {
   switch(action.type) {
     case types.HANDLE_INPUT_CHANGE:
-      return action.payload;
-    default:
-      return state;
-  }
-};
-
-const inputError = (state="", action) => {
-  switch(action.type) {
+      return Object.assign({}, state, {value: action.payload});
     case types.HANDLE_INPUT_ERROR:
-      return action.payload;
-    default:
-      return state;
-  }
-};
-
-const typing = (state=-1, action) => {
-  switch(action.type) {
-    case types.START_TYPING:
-      return 1;
-    case types.STOP_TYPING:
-      return 0;
-    default:
-      return state;
-  }
-};
-
-const loading = (state=false, action) => {
-  switch(action.type) {
-    case types.LOADING:
-      return action.payload;
-    default:
-      return state;
-  }
-};
-
-const conversationId = (state=null, action) => {
-  switch(action.type) {
-    case types.START_CONVERSATION:
-      return action.payload;
-    case types.CLEAR_CONVERSATION:
-      return "";
+      return Object.assign({}, state, {error: action.payload});
     default:
       return state;
   }
@@ -79,29 +51,9 @@ const conversations = (state=[], action) => {
   }
 };
 
-const delay = (state=[], action) => {
-  switch(action.type) {
-    case types.START_DELAY:
-      return true;
-    case types.STOP_DELAY:
-      return false;
-    default:
-      return state;
-  }
-};
-
 const slices = (state="", action) => {
   switch(action.type) {
     case types.SAVE_SLICES:
-      return action.payload;
-    default:
-      return state;
-  }
-};
-
-const userInfo = (state="", action) => {
-  switch(action.type) {
-    case types.GET_USER_INFO:
       return action.payload;
     default:
       return state;
@@ -121,7 +73,7 @@ const db = (state = initialDbValue, action) => {
     case types.RESET_DB:
       return {
         valuesId: "values",
-        convoId: "conversations"
+        convoId: "conversations",
       };
     default:
       return state;
@@ -140,15 +92,9 @@ const babyChetMode = (state = false, action) => {
 export default combineReducers({
   values,
   response,
-  inputValue,
-  inputError,
-  typing,
-  loading,
-  conversationId,
+  input,
   conversations,
-  delay,
   slices,
-  userInfo,
   db,
-  babyChetMode
+  babyChetMode,
 });

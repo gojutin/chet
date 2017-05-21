@@ -49,14 +49,13 @@ export default class AgreementModal extends Component {
 		const { showModal, showTerms, checkBox } = this.state;
 
 		return (
-			<Modal isOpen={showModal} className="text-center scroll modal-shadow" style={{maxHeight: 90 + "vh"}} >
-				<ModalBody>
-					<h1 
-						style={{ fontFamily: "Caveat Brush, monospace" }}
+			<Modal isOpen={showModal} className="text-center scroll modal-shadow" style={{maxHeight: 90 + "%"}} >
+				<ModalBody style={{fontFamily: "Source Code Pro, monospace"}}>
+					<h2 
 						className="text-warning"
 					>
 						Hi, I'm Chet.
-					</h1>
+					</h2>
 					<br />
 					<p>
 						I learn from conversations and don't always know what is inappropriate.

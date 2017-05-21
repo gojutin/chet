@@ -2,7 +2,10 @@ import React from 'react';
 import { Row, Col } from 'reactstrap';
 
 
-export default ({ goChet, inputValue, values, response, onInputChange, conversationId, loading, showConversation, dbId, dbConvoId, inputError }) => {
+export default ({ goChet, input, values, response, onInputChange, db, }) => {
+
+  const { valuesId, convoId } = db;
+  const { id, loading } = response;
 
   let textInput = null;
 
@@ -16,8 +19,8 @@ export default ({ goChet, inputValue, values, response, onInputChange, conversat
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (!inputValue ) { return; }
-    goChet(inputValue, values, response.id, dbId, dbConvoId );
+    if (!input.value ) { return; }
+    goChet(input.value, values, id, valuesId, convoId );
   }
 
   const handleChange = (e) => {
@@ -44,16 +47,16 @@ export default ({ goChet, inputValue, values, response, onInputChange, conversat
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            value={inputValue}
+            value={input.value}
             onChange={handleChange}
             onKeyDown={() => handleFocus()}
             style={inputStyle}
             disabled={loading}
             ref={(input) => { textInput = input; }}
           />
-          { inputError &&
+          { input.error &&
             <p className="text-warning">
-              {inputError}
+              {input.error}
             </p>
           }
         </form>
