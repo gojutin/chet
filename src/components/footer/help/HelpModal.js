@@ -3,7 +3,7 @@ import React from 'react';
 import { Modal, ModalBody, TabContent, TabPane, Nav, Row, Col } from 'reactstrap';
 
 // components
-import Terms from '../Terms';
+import Terms from '../../Terms';
 import HelpTab from './HelpTab';
 import FAQ from './FAQ';
 
@@ -16,14 +16,14 @@ const helpTabs = [
 export default ({showHelpModal, toggleHelpModal, activeHelpTab, toggleHelpTabs }) => 
   <Modal 
     isOpen={showHelpModal} 
-    className="text-center scroll modal-shadow" 
-    style={{ maxHeight: 80 + "%", overflow: "auto" }} 
+    className="text-center modal-shadow" 
     toggle={toggleHelpModal} 
   >
     <ModalBody
       style={{
         fontFamily: "Comfortaa, Righteous, sans-serif",
-        border: "2px solid lightgray"
+        border: "2px solid lightgray",
+        maxHeight: 80 + "vh"
       }}
       className="scroll"
     >

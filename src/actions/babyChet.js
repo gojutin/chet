@@ -120,3 +120,4 @@ export const wipeBabyChetsMind = (valuesId, convoId, uid) => {
 			}).catch((err) => alert(err.reason ? err.reason : err))
 		}
 	}
+

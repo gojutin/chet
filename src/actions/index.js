@@ -1,9 +1,10 @@
 import * as types from './types';
 import { goChet } from './goChet';
 import { saveDetails, babyChet, wipeBabyChetsMind } from './babyChet';
+import { saveSettings } from './settings';
 import { fetchPhrases } from './phrases';
 import { login, logout, authWatch } from './auth';
-import { startConversation, saveToConversation } from './conversation';
+import { startConversation, saveToConversation, clearEmptyConversations } from './conversation';
 
 const onInputChange = value => {
   return dispatch => {
@@ -46,8 +47,10 @@ export {
   onInputChange,
   startConversation,
   saveToConversation,
+  clearEmptyConversations,
   babyChet,
   saveDetails,
+  saveSettings,
   authWatch,
   wipeBabyChetsMind,
 };

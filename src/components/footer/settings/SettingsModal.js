@@ -4,8 +4,11 @@ import { Input, Button, Modal, ModalBody, Col, Row, Progress, TabContent, TabPan
 import ColorIcon from './ColorIcon';
 import generateName from 'sillyname';
 
+
 // components
 import SettingsTab from './SettingsTab';
+import Milestones from './Milestones';
+import UserSettings from './UserSettings';
 
 export default class SettingsModal extends Component {
 
@@ -55,6 +58,12 @@ export default class SettingsModal extends Component {
 
 	toggleModal = () => {
 		const { dbColor, dbName, babyChetMode } = this.props;
+
+		this.props.saveSettings(this.props.db.id, {enteredPin: false});
+
+		this.setState({
+			activeTab: "1",
+		})
 		if (babyChetMode) {
 			this.setState(prevState => ({
 				showModal: !prevState.showModal,
@@ -124,19 +133,20 @@ export default class SettingsModal extends Component {
         activeTab: tab
       });
     }
+		if (this.state.activeTab === "3") {
+			this.props.saveSettings(this.props.db.id, {enteredPin: false})
+		}
   }
 
 	handleLogout = () => {
 		this.props.logout().then(() => {
-			if (this.props.babyChetMode) {
-				this.props.handleBabyChet();
-			}	
+			this.props.handleBabyChet();
 		});
 	}
 	render() {
 
 		const { showModal, name, showConfirmWipe, color, activeTab, showSave } = this.state;
-		const { dbName, values, conversations, babyChetMode, db} = this.props;
+		const { dbName, values, babyChetMode, db} = this.props;
 		const colors = [
 			"#f44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#03A9F4", "#00BCD4", 
 			"#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", 
@@ -164,9 +174,14 @@ export default class SettingsModal extends Component {
 					isOpen={showModal} 
 					className="text-center modal-shadow" 
 					toggle={this.toggleModal} 
-					style={{maxHeight: 90 + "vh"}}
 				>
-					<ModalBody style={{fontFamily: "Comfortaa, monospace"}}>
+					<ModalBody 
+						style={{
+							fontFamily: "Comfortaa, monospace", 
+							maxHeight: 80 + "vh"
+						}}
+						className="scroll"
+					>
 						<i 
 							className={`fa pull-right ${showSave ? "fa-check-square-o text-success": "fa-times text-danger"}`}
 							style={{
@@ -193,7 +208,21 @@ export default class SettingsModal extends Component {
                 >
                   <i className="fa fa-info-circle fa-2x" />
                 </SettingsTab>
-								}					
+								}	
+								<SettingsTab
+									toggleTab={this.toggle}
+                  tabNumber="3"
+                  activeTab={activeTab}
+								>
+								<img
+									src={db.photo}
+									alt="Profile pic"
+									height={30}
+									style={{
+										borderRadius: 50 + "%",
+									}}
+								/>	
+								</SettingsTab>	
             </Nav>
 						
 						
@@ -203,7 +232,7 @@ export default class SettingsModal extends Component {
 									
 						{ babyChetMode &&
 										<div>
-						<h4 style={{marginTop: 15 + "px"}}>My chatbot's name:</h4>
+						<h4 style={{marginTop: 10 + "px"}}>My chatbot's name:</h4>
 
 								<Input 
 									type="text" 
@@ -224,7 +253,7 @@ export default class SettingsModal extends Component {
 							{colorIcons}
 						</Col>
 
-						{ values.length > 0 &&
+						{ (db.allowWipe === undefined || db.allowWipe) && values.length > 0  &&
 							<p 
 								style={{
 									marginTop: 15 + "px", 
@@ -243,8 +272,12 @@ export default class SettingsModal extends Component {
 					<div style={{marginTop: 10 + "px"}}>
 						{ showConfirmWipe &&
 							<div>
+								<p>
+									{dbName} has learned {db.wordCount} words and {values.length} phrases.
+								</p>
 								<p> Are you sure you want to wipe {dbName}'s mind? This action cannot be undone.</p>
 								<Button 
+								  size="lg"
 									color="danger"
 									onClick={this.handleWipe}
 									style={{cursor: "pointer", marginBottom: 10 + "px"}}
@@ -254,40 +287,37 @@ export default class SettingsModal extends Component {
 							</div>
 						}
 						</div>
-
-						<Row>
-							<Col xs={12} md={6}>
-								<Button
-										block
-										size="lg"
-										onClick={this.handleSleepMode}
-										style={{ cursor: "pointer", marginTop: 10 + "px"}}
-										className="text-center"
-									>
-										Switch to Chet
-								</Button>
-						  </Col>
-							<Col xs={12} md={6}>
+						
+							<Row>
+							 { (db.allowChet === undefined || db.allowChet) && 
+								<Col xs={12} md={{size: 6, offset: this.props.db.allowLogout ? 0 : 3}}>
 									<Button
-									block
-									size="lg"
-									onClick={this.handleLogout}
-									style={{ cursor: "pointer", marginTop: 10 + "px"}}
-									className="text-center"
-								>
-								<img
-									src={db.photo}
-									alt="Profile pic"
-									height={28}
-									style={{
-										borderRadius: 50 + "%",
-										marginRight: 10 + "px"
-									}}
-								/>
-									Logout
-								</Button>
-							</Col>
-						</Row>
+											block
+											size="lg"
+											onClick={this.handleSleepMode}
+											style={{ cursor: "pointer", marginTop: 10 + "px"}}
+											className="text-center"
+										>
+											Switch to Chet
+									</Button>
+								</Col>
+								}
+								{ this.props.db.allowLogout && 
+									<Col xs={12} md={{size: 6, offset: this.props.db.allowChet ? 0 : 3}}>
+										<Button
+											block
+											size="lg"
+											onClick={this.props.logout}
+											style={{ cursor: "pointer", marginTop: 10 + "px"}}
+											className="text-center"
+										>
+											Logout
+										</Button>
+									</Col>
+								}
+							</Row>
+						
+
 						</div>
 						}
 						</TabPane>
@@ -295,14 +325,14 @@ export default class SettingsModal extends Component {
 					<TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="2">
 
-							{ !!values.length && db.phase &&
+							{ !!db.phrasesCount && db.phase &&
 								<div >
 									<br />
 									<div style={{color}}>
 											<i 
 												className={`fa fa-child ${db.phase.size}`}
 											/>
-											<p>{db.phase.phase}</p>
+											<p>{db.name}</p>
 									</div>
 											<Progress 
 												animated 
@@ -310,9 +340,10 @@ export default class SettingsModal extends Component {
 												value={db.growthPercentage} 
 												style={{marginTop: 5 + "px"}}
 											/>
-								</div>
+										  <Milestones phase={db.phase ? db.phase.phase : ""} />
+								</div>	
 							}
-						<br />
+						<hr />	
 						<Row>
 							<Col xs={4} style={{borderRight: "1px solid lightgray"}}>
 								<p>Words</p>
@@ -324,19 +355,22 @@ export default class SettingsModal extends Component {
 							</Col>
 							<Col xs={4}>
 								<p>Chats</p>
-								<h4 className="text-primary">{conversations.length < 2 ? 0 : conversations.length - 1}</h4>
+								<h4 className="text-primary">{db.conversationCount}</h4>
 							</Col>
 							</Row>
-
 							</TabPane>
 					</TabContent>
-						{/*{ values.map(({term}) => 
-							<p>{term}</p>
-							)
-						}*/}
-
-					</ModalBody>
-				</Modal>
+					<TabContent activeTab={this.state.activeTab}>
+            <TabPane tabId="3">
+								<UserSettings
+									logout={this.handleLogout}
+									saveSettings={this.props.saveSettings}
+									db={db}
+								/>								
+						</TabPane>
+					</TabContent>
+				</ModalBody>
+			</Modal>
 		</div>
 		)
 	}

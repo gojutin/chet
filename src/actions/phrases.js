@@ -5,6 +5,7 @@ const db = firebase.database();
 
 export const fetchPhrases = (dbRef) => {
   return dispatch => {
+    return new Promise((resolve, reject) => {
     db.ref(dbRef).orderByChild("value").on('value', snap => {
       let valuesArray = [];
       snap.forEach(value => {
@@ -89,6 +90,8 @@ export const fetchPhrases = (dbRef) => {
           
         }
       })
+    })
+    resolve();
     })  
   }
 }

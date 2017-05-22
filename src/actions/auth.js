@@ -5,7 +5,10 @@ export const logout = () => {
   return dispatch => {
 		return new Promise((resolve, reject) => {
 			firebase.auth().signOut()
-				.then(_ => {resolve()})
+				.then(_ => {
+					dispatch({type: types.CLEAR_DB})
+					resolve()
+				})
 				.catch(error => {
 					console.log("Oops, something went wrong. Please try again.")
 				});
@@ -46,10 +49,7 @@ export const login = (providerName) => {
 			})
       .catch(err => {
         console.log(err.reason? err.reason : err)
-				dispatch({
-					type: types.UPDATE_DB,
-					payload: {loggingIn: false},
-				})
+				
       })
     }
   }
@@ -64,7 +64,7 @@ export const login = (providerName) => {
 							userInfo = {
 								provider: profile.providerId,
 								uid: profile.uid,
-								name: profile.displayName,
+								userName: profile.displayName,
 								email: profile.email,
 								photo: profile.photoURL,
 							}
@@ -77,11 +77,7 @@ export const login = (providerName) => {
 				} else {
 					dispatch({
 						type: types.RESET_DB,
-					})
-					dispatch({
-						type: types.GET_USER_INFO,
-						payload: "",
-					})						
+					})					
 				}
 			});
 		}

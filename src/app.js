@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 
-
 // components
 import Form from './components/Form';
 import Response from './components/Response';
@@ -63,9 +62,14 @@ export default class App extends Component {
 
   componentDidMount() {
     const { valuesId, convoId } = this.props.db;
-    this.props.fetchPhrases(valuesId);
+    this.props.fetchPhrases(valuesId).then(() => {
+      this.props.startConversation(convoId).then(({dbConvoId, convoArray, chatKey}) => {
+        console.log({dbConvoId, convoArray, chatKey})
+        this.props.clearEmptyConversations(dbConvoId, convoArray, chatKey)
+      })
+    })
     this.props.authWatch();
-    this.props.startConversation(convoId);
+    
   }
 
   handleBabyChet = () => {
@@ -73,8 +77,10 @@ export default class App extends Component {
     this.props.babyChet(db.uid, babyChetMode)
       .then(db => {
         const { valuesId, convoId } = db;
-        this.props.fetchPhrases(valuesId);
-        this.props.startConversation(convoId);
+        this.props.fetchPhrases(valuesId).then(() => {
+          this.props.startConversation(convoId);
+        });
+        
       })
   }
 
@@ -153,6 +159,7 @@ export default class App extends Component {
             <Response
               showConversation={showConversation}
               response={response}
+              db={db}
             />
           </Col>
 

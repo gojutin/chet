@@ -8,17 +8,15 @@ import {
     onInputChange, 
     startConversation, 
     saveToConversation,
+    clearEmptyConversations,
     babyChet,
     saveDetails,
+    saveSettings,
     authWatch,
     wipeBabyChetsMind,
   } from '../actions/index';
 
 import App from '../app';
-
-const filterThisConversation = (conversations, id) => {
-  return conversations.filter(convo => convo.id === id )[0];
-};
 
 export default connect(
   // State
@@ -26,8 +24,7 @@ export default connect(
    values: state.values, 
    response: state.response, 
    input: state.input,
-   conversations: state.conversations,
-   thisConversation: filterThisConversation(state.conversations, state.db.conversationId),
+   thisConversation: state.conversation,
    db: state.db,
    babyChetMode: state.babyChetMode,
   }),
@@ -42,8 +39,10 @@ export default connect(
     onInputChange, 
     startConversation, 
     saveToConversation, 
+    clearEmptyConversations,
     babyChet,
     saveDetails,
+    saveSettings,
     authWatch,
     wipeBabyChetsMind
   }

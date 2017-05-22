@@ -4,57 +4,81 @@ import * as types from './types';
 const db = firebase.database();
 
 let convoKey;
-
+let convoArray = [];
 export const startConversation = (dbConvoId) => {
-  // First we fetch all of the conversations and save them to our store
-  let convoArray;
   return dispatch => {
-    db.ref(dbConvoId).on('value', snap => {
-      let conversationsArray = [];
-      snap.forEach(value => {
-        conversationsArray.push({
-          id: value.key,
-          createdAt: value.val().createdAt,
-          exchanges: value.val().exchanges ? Object.values(value.val().exchanges).reverse() : [],
-        });
-      });
-      dispatch({
-        type: types.FETCH_CONVERSATIONS,
-        payload: conversationsArray,
-      });
-      convoArray = conversationsArray.slice();
-      
-    })
+    return new Promise((resolve, reject) => {
 
-    // Now we create a new conversation and save the Id to the store
-    const timestamp = firebase.database.ServerValue.TIMESTAMP;
+    let chatKey;
     
+    // start a new conversation
+    const timestamp = firebase.database.ServerValue.TIMESTAMP;
     db.ref(dbConvoId).push({ createdAt: timestamp })
       .then(ref => {
         convoKey = ref.key;
-        dispatch({
-          type: types.UPDATE_DB,
-          payload: {conversationId: ref.key},
-        })
+        chatKey = ref.key;
 
-        // clear empty conversations
-        const filteredByEmptyValues = convoArray.filter(val => {
-          return val.exchanges.length === 0 && val.id !== ref.key;
+        
+        let conversationCount;
+        
+        let thisConversation;
+        db.ref(dbConvoId).on('value', snap => {
+          let conversationsArray = [];
+          conversationCount = 0;
+          convoArray = [];
+          thisConversation = {}
+          snap.forEach(value => {
+            conversationsArray.push({
+              id: value.key,
+              createdAt: value.val().createdAt,
+              exchanges: value.val().exchanges ? Object.values(value.val().exchanges).reverse() : [],
+            });
         })
-      
-      filteredByEmptyValues.map(({ id }) => {
-        return db.ref(dbConvoId).child(id).remove()
-          .catch(err => console.log(err));
-      })
-      }).catch(err => window.alert(err.reason || err));
-  } 
+          convoArray = conversationsArray.slice();
+          const numChildren = snap.numChildren();
+          if (numChildren < 2) {
+            conversationCount = 0;
+          } else {
+            conversationCount = numChildren - 1;
+          }
+        
+          thisConversation = convoArray.filter(({ id }) => id === chatKey)[0];
+
+          dispatch({
+            type: types.UPDATE_DB,
+            payload: { conversationId: chatKey, conversationCount, },
+          })
+          dispatch({
+            type: types.FETCH_CONVERSATION,
+            payload: thisConversation,
+          });
+          const obj = {
+          dbConvoId, convoArray, chatKey
+        }
+        resolve(obj) 
+        });  
+          
+       })
+    })
+  }
 }
 
+export const clearEmptyConversations = ( convoId, convArray, key) => {
+  return dispatch => {
+    let filteredByEmptyValues = convArray.filter(val => {
+      return val.exchanges.length === 0 && val.id !== key;
+    })
+    filteredByEmptyValues.map(({ id }) => {
+      return db.ref(convoId).child(id).remove()
+        .catch(err => console.log(err));
+    })
+  }
+}
 
 
 export const saveToConversation = (exchange, dbConvoId) => {
   const timestamp = firebase.database.ServerValue.TIMESTAMP;
-  const exchangeWithDate = Object.assign({},exchange, {
+  const exchangeWithDate = Object.assign({}, exchange, {
     createdAt: timestamp,
   })
   return db.ref(`${dbConvoId}/${convoKey}`).child("exchanges").push(exchangeWithDate)

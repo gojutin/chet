@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
 import FooterIcon from './FooterIcon';
-import SettingsModal from './SettingsModal';
-import HelpModal from './HelpModal';
+import SettingsModal from './settings/SettingsModal';
+import HelpModal from './help/HelpModal';
 import LoginButton from './LoginButton';
 
 export default class Footer extends Component {
@@ -48,7 +48,7 @@ export default class Footer extends Component {
 			toggleConversation, showConversation,
 			handleSaveSettings,
 			babyChetMode, handleBabyChet, handleWipeBabyChetsMind,
-			values, conversations,
+			values,
 		} = this.props;
 
 
@@ -78,7 +78,6 @@ export default class Footer extends Component {
 								<LoginButton
 									db={db}
 									login={login}
-									logout={logout}
 									babyChetMode={babyChetMode}
 									handleBabyChet={handleBabyChet}
 									loggingIn={db.loggingIn}
@@ -91,11 +90,11 @@ export default class Footer extends Component {
 									dbName={name}
 									values={values}
 									db={db}
-									conversations={conversations}
 									babyChetMode={babyChetMode}
 									handleBabyChet={handleBabyChet}
 									handleWipeBabyChetsMind={handleWipeBabyChetsMind}
 									logout={logout}
+									saveSettings={this.props.saveSettings}
 								/>
 							}
 						</Col>

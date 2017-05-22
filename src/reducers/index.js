@@ -42,9 +42,9 @@ const input = (state={}, action) => {
   }
 };
 
-const conversations = (state=[], action) => {
+const conversation = (state={}, action) => {
   switch(action.type) {
-    case types.FETCH_CONVERSATIONS:
+    case types.FETCH_CONVERSATION:
       return action.payload;
     default:
       return state;
@@ -71,10 +71,17 @@ const db = (state = initialDbValue, action) => {
     case types.UPDATE_DB:
       return Object.assign({}, state, action.payload);
     case types.RESET_DB:
+      return Object.assign({}, state,
+        {
+        valuesId: "values",
+        convoId: "conversations",
+        }
+      )
+    case types.CLEAR_DB:
       return {
         valuesId: "values",
         convoId: "conversations",
-      };
+      }
     default:
       return state;
   }
@@ -93,7 +100,7 @@ export default combineReducers({
   values,
   response,
   input,
-  conversations,
+  conversation,
   slices,
   db,
   babyChetMode,

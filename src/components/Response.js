@@ -3,23 +3,24 @@ import TypeWriter from 'react-typewriter';
 import {Collapse} from 'react-collapse';
 import Loader from 'react-dots-loader';
 
-export default ({ response, showConversation } ) => {
+export default ({ response, showConversation, db } ) => {
   
 
   return (
     <Collapse isOpened={!showConversation}>
       <div 
         style={{minHeight: "50vh"}} 
-        className={showConversation ? "convoMessageEnter": "convoMessageLeave"}>
+        className={showConversation ? "convoMessageEnter": "convoMessageLeave"}
+      >
         { response.loading &&
             <div style={{ paddingBottom: 12 + "px" }}>
-					    <Loader size={8} color="green" />
+					    <Loader size={8} color={db.color ? db.color: "#31a531"} />
 				    </div>
         }
         { !response.loading && response.term !== "" &&
             <TypeWriter typing={response.typing} minDelay={100} >
                 <h2 
-                  style={{color: "#31a531", fontFamily: "Source Code Pro, monospace"}} 
+                  style={{color: db.color ? db.color: "#31a531" , fontFamily: "Source Code Pro, monospace"}} 
                   className={showConversation ? "convoMessageLeave": ""}
                 >
                   {response.term}
