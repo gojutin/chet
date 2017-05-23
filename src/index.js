@@ -16,7 +16,7 @@ var injectTapEventPlugin = require("react-tap-event-plugin");
 injectTapEventPlugin();
 
 
-const reduxDevTools = false;
+const reduxDevTools = true;
   var getComposeEnhancers = () => {
 
    // Comment out the if statement when running a production build

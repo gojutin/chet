@@ -42,16 +42,15 @@ export default class Footer extends Component {
 
 	render() {
 		const {
-			animatedClass,
-			nightMode, toggleNightMode,
-			db, login, logout,
+			handleDisplayMode,
+			db, login, logout, deleteUserAccount,
 			toggleConversation, showConversation,
 			handleSaveSettings,
 			babyChetMode, handleBabyChet, handleWipeBabyChetsMind,
 			values,
 		} = this.props;
 
-
+		const { displayMode, bgClass } = this.props.displayMode;
 		const { name, color } = this.props.db;
 		const { showHelpModal, activeHelpTab } = this.state;
 
@@ -63,9 +62,9 @@ export default class Footer extends Component {
 					height: 55 + "px",
 					width: 100 + "%",
 					padding: 10 + "px",
-					color: animatedClass ? animatedClass : "white",
+					color: displayMode === "black" ? "black" : "white",
 				}}
-				className={animatedClass}
+				className={bgClass}
 			>
 				<div style={{ paddingTop: 8 + "px" }}>
 					<Row className="text-center">
@@ -94,6 +93,7 @@ export default class Footer extends Component {
 									handleBabyChet={handleBabyChet}
 									handleWipeBabyChetsMind={handleWipeBabyChetsMind}
 									logout={logout}
+									deleteUserAccount={deleteUserAccount}
 									saveSettings={this.props.saveSettings}
 								/>
 							}
@@ -109,8 +109,8 @@ export default class Footer extends Component {
 						<Col xs={3} md={1} id="google">
 							<FooterIcon
 								type="moon-o"
-								condition={nightMode}
-								onClick={toggleNightMode}
+								condition={displayMode === "night"}
+								onClick={() => handleDisplayMode(displayMode)}
 							/>
 						</Col>
 

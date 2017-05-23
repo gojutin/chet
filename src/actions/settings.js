@@ -20,3 +20,4 @@ export const saveSettings = (id, val) => {
 		})
 	}	
 }
+

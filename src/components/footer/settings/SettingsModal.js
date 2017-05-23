@@ -146,7 +146,7 @@ export default class SettingsModal extends Component {
 	render() {
 
 		const { showModal, name, showConfirmWipe, color, activeTab, showSave } = this.state;
-		const { dbName, values, babyChetMode, db} = this.props;
+		const { dbName, values, babyChetMode, db, deleteUserAccount} = this.props;
 		const colors = [
 			"#f44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#03A9F4", "#00BCD4", 
 			"#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", 
@@ -167,7 +167,7 @@ export default class SettingsModal extends Component {
 		return (
 			<div style={{display: "inline"}}>
 				
-				<i className={`fa fa-2x fa-child ${babyChetMode ? "text-warning" : ""}`}
+				<i className={`fa fa-2x fa-cog ${showModal ? "text-warning" : ""}`}
 				onClick={this.toggleModal} style={{ cursor: "pointer", color: "gray" }} />
 
 				<Modal 
@@ -366,6 +366,7 @@ export default class SettingsModal extends Component {
 									logout={this.handleLogout}
 									saveSettings={this.props.saveSettings}
 									db={db}
+									deleteUserAccount={deleteUserAccount}
 								/>								
 						</TabPane>
 					</TabContent>

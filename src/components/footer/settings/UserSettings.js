@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  Col, Row } from 'reactstrap';
+import {  Col, Row, Label, Input, Button } from 'reactstrap';
 import 'react-toggle/style.css';
 import Toggle from 'react-toggle';
 
@@ -11,6 +11,8 @@ export default class UserSettings extends Component {
     allowChet: true,
     allowWipe: true,
     allowLogout: true,
+    emailAddress: "",
+    showResetForm: false,
   }
 
   componentDidMount() {
@@ -19,7 +21,33 @@ export default class UserSettings extends Component {
       allowChet: db.allowChet,
       allowWipe: db.allowWipe,
       allowLogout: db.allowLogout,
+      allowDeleteAccount: db.allowDeleteAccount,
     })
+  }
+
+
+  handleEmailAddress = (e) => {
+    const emailAddress = e.target.value;
+    this.setState({
+      emailAddress,
+    })
+  }
+
+  handlePinReset = () => {
+    const { db, saveSettings } = this.props;
+    const { emailAddress } = this.state;
+    if (emailAddress !== db.email) {
+      this.setState({
+        error: "Sorry but this is not the correct email address. Please try again."
+      })
+    } else {
+      saveSettings(db.id, {pin: ""})
+      this.setState({
+        showResetForm: false,
+        emailAddress: "",
+        error: ""
+      })
+    }
   }
 
 
@@ -34,8 +62,8 @@ export default class UserSettings extends Component {
   }
 
   render () {
-    const { db } = this.props;
-    const { allowChet, allowWipe, allowLogout } = this.state;
+    const { db, deleteUserAccount } = this.props;
+    const { allowChet, allowWipe, allowLogout, error, showResetForm } = this.state;
     const settingsOptions = [
       { name: "Allow user to talk to Chet", id: "allowChet", value: allowChet },
       { name: "Allow user to wipe your chatbot's mind", id: "allowWipe", value: allowWipe },
@@ -55,6 +83,36 @@ export default class UserSettings extends Component {
               <p>Please enter your pin</p>
             }
             <Pin {...this.props} />
+            { db.pin &&
+              <p 
+                className="text-warning" 
+                style={{textDecoration: "underline", cursor: "pointer"}}
+                onClick={() => this.setState(prevState => ({showResetForm: !prevState.showResetForm}))}
+              >
+                reset my pin
+              </p>
+            }
+            { showResetForm && 
+            <div>
+              <Label>Enter your email address associated with this account.</Label>
+              <Input 
+                value={this.state.emailAddress}
+                onChange={this.handleEmailAddress}
+              />
+              { error && 
+                <p className="text-warning">{error}</p>
+              }
+              <br />
+              <Button
+                color="primary"
+                onClick={this.handlePinReset}
+                style={{cursor: "pointer"}}
+              >
+                Reset my pin
+              </Button>
+              
+            </div>
+            }
           </div>
         }
         { db.enteredPin &&
@@ -74,6 +132,17 @@ export default class UserSettings extends Component {
             </Row>
           )}
           </div>
+        }
+        <hr />
+        { db.enteredPin &&
+          <p 
+            className="text-danger" 
+            style={{cursor: "pointer"}}
+            onClick={() => deleteUserAccount(db.id)}
+          >
+            <i className="fa fa-trash" style={{paddingRight: 5 + "px"}} /> 
+            Delete my account
+          </p>
         }
       </div>
     );

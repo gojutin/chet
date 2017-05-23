@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import * as types from './types';
+const db = firebase.database();
 
 export const logout = () => {
   return dispatch => {
@@ -7,6 +8,7 @@ export const logout = () => {
 			firebase.auth().signOut()
 				.then(_ => {
 					dispatch({type: types.CLEAR_DB})
+					dispatch({type: types.BABY_CHET_MODE, payload: false})
 					resolve()
 				})
 				.catch(error => {
@@ -48,11 +50,32 @@ export const login = (providerName) => {
 				})
 			})
       .catch(err => {
-        console.log(err.reason? err.reason : err)
+        console.log(err.message ? err.message : err)
 				
       })
     }
   }
+
+	export const deleteUserAccount = (id) => {
+		return dispatch => {
+			const user = firebase.auth().currentUser;
+				user.delete().then( _ =>  {
+					console.log("deleted")
+					dispatch({
+						type: types.CLEAR_DB,
+					})
+					dispatch({
+						type: types.BABY_CHET_MODE,
+						payload: false,
+					})
+					db.ref("babyChets").child(id).remove();
+				}, err => {
+					console.log(err)
+						alert(err.message)
+				});
+	}
+		}
+
 
 	export const authWatch = () => {
 		return dispatch => {

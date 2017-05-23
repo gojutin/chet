@@ -102,7 +102,7 @@ h5 {
   100% { background-color: #000; }
 }
 
-.animatedBackgroundBlack{    
+.bg-black{    
     background-image:none !important;
     -webkit-animation: fadeIt 0.5s ease-in forwards; 
        -moz-animation: fadeIt 0.5s ease-in forwards; 
@@ -131,7 +131,7 @@ h5 {
   100% { background-color: #fff; }
 }
 
-.animatedBackgroundWhite{    
+.bg-white{    
     background-image:none !important;
     -webkit-animation: fadeWhite 0.5s ease-out forwards; 
        -moz-animation: fadeWhite 0.5s ease-out forwards; 

@@ -1,6 +1,27 @@
 import { combineReducers } from 'redux';
 import * as types from '../actions/types';
 
+const INITIAL_DISPLAY_MODE_STATE = {
+  displayMode: "day",
+  bgClass: "bg-white"
+}
+const displayMode = (state={}, action) => {
+  switch(action.type) {
+    case types.TOGGLE_DAY_MODE:
+      return {
+        displayMode: "day",
+        bgClass: "bg-white"
+      }
+    case types.TOGGLE_NIGHT_MODE:
+      return {
+        displayMode: "night",
+        bgClass: "bg-black"
+      }
+    default:
+      return state;
+  }
+};
+
 const values = (state=false, action) => {
   switch(action.type) {
     case types.FETCH_PHRASES:
@@ -97,6 +118,7 @@ const babyChetMode = (state = false, action) => {
 }
 
 export default combineReducers({
+  displayMode,
   values,
   response,
   input,

@@ -46,7 +46,7 @@ export default class LoginButton extends Component {
 					{ !db.uid && !db.loggingIn &&
 							<div style={{ display: "inline"}}>
 								<FooterIcon
-									type="user-o"
+									type="user-circle-o"
 									condition={dropDownOpen}
 								/>
 							</div>

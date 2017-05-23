@@ -1,9 +1,10 @@
 import * as types from './types';
+import { handleDisplayMode } from './displayMode';
 import { goChet } from './goChet';
 import { saveDetails, babyChet, wipeBabyChetsMind } from './babyChet';
 import { saveSettings } from './settings';
 import { fetchPhrases } from './phrases';
-import { login, logout, authWatch } from './auth';
+import { login, logout, authWatch, deleteUserAccount } from './auth';
 import { startConversation, saveToConversation, clearEmptyConversations } from './conversation';
 
 const onInputChange = value => {
@@ -39,9 +40,11 @@ const sayHi = () => {
 };
 
 export {
+  handleDisplayMode,
   sayHi,
   login,
   logout,
+  deleteUserAccount,
   fetchPhrases,
   goChet,
   onInputChange,
@@ -53,4 +56,5 @@ export {
   saveSettings,
   authWatch,
   wipeBabyChetsMind,
+
 };

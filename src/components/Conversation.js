@@ -13,7 +13,7 @@ export default class Conversation extends Component {
     return (
       <div>
 
-        { thisConversation && delayConversation &&
+        { thisConversation && delayConversation && thisConversation.exchanges &&
           <div>
             
             { thisConversation.exchanges.map((exchange, i) => (

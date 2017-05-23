@@ -1,3 +1,7 @@
+export const TOGGLE_DAY_MODE = 'TOGGLE_DAY_MODE';
+export const TOGGLE_NIGHT_MODE = 'TOGGLE_NIGHT_MODE';
+
+
 export const FETCH_PHRASES = 'FETCH_PHRASES';
 export const LOADING = 'LOADING';
 export const GENERATE_RESPONSE = 'GENERATE_RESPONSE';

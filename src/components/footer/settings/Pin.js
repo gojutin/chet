@@ -1,11 +1,34 @@
 import React, { Component } from 'react';
 import { Col, Row } from 'reactstrap';
 import 'react-toggle/style.css';
+import { headShake, slideInUp, slideInDown } from 'react-animations';
+import { StyleSheet, css } from 'aphrodite';
+
+const styles = StyleSheet.create({
+  headShake: {
+    animationName: headShake,
+    animationDuration: '1s'
+  },
+  slideInUp: {
+    animationName: slideInUp,
+    animationDuration: '1s'
+  },
+  slideInDown: {
+    animationName: slideInDown,
+    animationDuration: '1s'
+  }
+})
 
 export default class Pin extends Component {
 
   state = {
-    pin: "", box1: "", box2: "", box3: "", box4: "", error: "", type: "number"
+    pin: "", box1: "", box2: "", box3: "", box4: "", error: "", type: "number", attempts: 0,
+  }
+
+  clearPin = () => {
+    this.setState({
+      box1: "", box2: "", box3: "", box4: "", pin: ""
+    })
   }
 
   handleUnlock = () => {
@@ -22,11 +45,30 @@ export default class Pin extends Component {
           allowLogout: true  
         }
     )
-    } else if (providedPin !== db.pin) {
-      this.setState({
-        error: "Nope, that's not it"
+  } else if (providedPin !== db.pin) {
+      this.setState(prevState => ({
+        attempts: prevState.attempts + 1,
+      }), () => {
+        let errorMsg;
+        switch(true) {
+          case (this.state.attempts < 5):
+            errorMsg = "Sorry, wrong pin."
+            break;
+          case (this.state.attempts < 10):
+            errorMsg = "Still wrong..."
+            break;
+          case (this.state.attempts < 15):
+            errorMsg = "I'm beginning to think you don't belong here."
+            break;
+          default:
+            break;
+        }
+        this.setState({
+          error: errorMsg
+        })
+        this[`box1`].focus();
       })
-      this[`box1`].focus();
+
     } else if (providedPin === db.pin) {
       this.props.saveSettings(db.id, {enteredPin: true})
     }
@@ -39,7 +81,7 @@ export default class Pin extends Component {
     const inputValue = e.target.value;
     const box = `box${num}`;
 
-    if (!inputValue || inputValue.length > 1 || !+inputValue) {
+    if ( inputValue.length > 1 || !+inputValue) {
       return false;
     }
 
@@ -49,12 +91,7 @@ export default class Pin extends Component {
       if (num === 4) {
         this[`box${num}`].blur();
         this.handleUnlock()
-        this.setState({
-          box1: "",
-          box2: "",
-          box3: "",
-          box4: "",
-        })
+        this.clearPin();
       } else {
         this[`box${num+1}`].focus();
       } 
@@ -74,7 +111,6 @@ export default class Pin extends Component {
   }
 
   getValue = num => {
-    console.log("NUM", num)
     const { box1, box2, box3, box4 } = this.state;
     switch(num) {
       case 1:
@@ -95,7 +131,7 @@ export default class Pin extends Component {
 
     return (
       <Row>
-        <Col xs={{size: 10, offset: 1}}>
+        <Col xs={{size: 10, offset: 1}} className={error && css(styles.headShake)}>
         { boxes.map(({num}) => 
             <input
               key={num}
@@ -117,7 +153,7 @@ export default class Pin extends Component {
         )}
       </Col>
       { error &&
-        <Col xs={12} className="text-center text-warning">
+        <Col xs={12} className="text-center text-danger">
           <p>{error}</p>
         </Col>
       }

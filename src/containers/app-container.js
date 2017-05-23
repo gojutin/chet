@@ -1,9 +1,11 @@
 import { connect } from 'react-redux';
 import { 
+    handleDisplayMode,
     fetchPhrases, 
     sayHi, 
     login,
     logout,
+    deleteUserAccount,
     goChet, 
     onInputChange, 
     startConversation, 
@@ -21,6 +23,7 @@ import App from '../app';
 export default connect(
   // State
  state => ({ 
+   displayMode: state.displayMode,
    values: state.values, 
    response: state.response, 
    input: state.input,
@@ -31,8 +34,10 @@ export default connect(
 
   // Actions
   {
+    handleDisplayMode,
     fetchPhrases, 
     sayHi, 
+    deleteUserAccount,
     login,
     logout,
     goChet, 

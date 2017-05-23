@@ -1,38 +1,20 @@
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Col } from 'reactstrap';
 
 // components
 import Form from './components/Form';
 import Response from './components/Response';
 import Conversation from './components/Conversation';
 import AgreementModal from './components/AgreementModal';
+import Header from './components/Header'
 import Footer from './components/footer/Footer';
+
 
 export default class App extends Component {
 
   state = {
     showConversation: false,
     delayConversation: false,
-    modal: false,
-    checkBox: false,
-    nightMode: false,
-    animatedClass: "",
-  }
-
-  toggleNightMode = () => {
-    this.setState(prevState => ({
-      nightMode: !prevState.nightMode
-    }), () => {
-      if (this.state.nightMode) {
-        this.setState({
-          animatedClass: "animatedBackgroundBlack"
-        })
-      } else {
-        this.setState({
-          animatedClass: "animatedBackgroundWhite"
-        })
-      }
-    })
   }
 
   toggleConversation = () => {
@@ -53,19 +35,15 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    // Switch between night and day mode depending on time of day
-    const rightNow = new Date().getHours();
-    if (rightNow >= 19 || rightNow <= 6) {
-      this.toggleNightMode();
-    }
+    this.props.handleDisplayMode();
   }
 
   componentDidMount() {
-    const { valuesId, convoId } = this.props.db;
+    const { valuesId, convoId, conversationId} = this.props.db;
+    const { bgClass, displayMode } = this.props.displayMode;
     this.props.fetchPhrases(valuesId).then(() => {
       this.props.startConversation(convoId).then(({dbConvoId, convoArray, chatKey}) => {
-        console.log({dbConvoId, convoArray, chatKey})
-        this.props.clearEmptyConversations(dbConvoId, convoArray, chatKey)
+        // this.props.clearEmptyConversations(convoId, convoArray, conversationId)
       })
     })
     this.props.authWatch();
@@ -78,7 +56,9 @@ export default class App extends Component {
       .then(db => {
         const { valuesId, convoId } = db;
         this.props.fetchPhrases(valuesId).then(() => {
-          this.props.startConversation(convoId);
+          this.props.startConversation(convoId).then(({dbConvoId, convoArray, chatKey}) => {
+            // this.props.clearEmptyConversations(dbConvoId, convoArray, chatKey)
+          })
         });
         
       })
@@ -96,13 +76,14 @@ export default class App extends Component {
 
   render() {
     const { thisConversation, response, db, babyChetMode, slices } = this.props;
-    const { showConversation, delayConversation, nightMode, animatedClass, } = this.state;
+    const { showConversation, delayConversation } = this.state;
     const { name } = db;
+    const { bgClass } = this.props.displayMode;
 
-  return (
+    return (
 
       <div
-        className={`text-center ${animatedClass}`}
+        className={`text-center ${bgClass}`}
         style={{
           width: 100 + "%",
           height: 100 + "%",
@@ -110,39 +91,10 @@ export default class App extends Component {
           margin: 0,
         }}
       >
-        <div
-          style={{
-            color: nightMode ? "#2a96c7" : "#2a96c7",
-          }}
-        >
-          <Row style={{ maxWidth: "100vw", margin: 0 }}>
-            <Col xs={12}>
-              { babyChetMode
-                ? <div>
-                  <i
-                    className="fa fa-child fa-5x"
-                    style={{
-                      marginTop: 4.65 + "%",
-                      fontSize: 69 + "px",
-                      color: db.color ? db.color : "gray",
-                    }}
-                  />
-                  {name &&
-                    <h2 style={{ color: "gray", paddingTop: 5 + "px" }}>{name ? name: "my chatbot"}</h2>
-                  }
-                  </div>
-                : 
-                <img
-                  src="chet_logo.png"
-                  alt="Chet Logo"
-                  height={120}
-                  style={{ marginTop: 5 + "%" }}
-                  className="visible"
-                />
-              }
-            </Col>
-          </Row>
+        <div style={{color: bgClass === "day" ? "#2a96c7" : "#2a96c7",}}>
+          <Header db={db} babyChetMode={babyChetMode} />
         </div>
+
         <Container
           style={{
             paddingBottom: 30 + "px",
@@ -163,6 +115,7 @@ export default class App extends Component {
             />
           </Col>
 
+          
           <Conversation
             thisConversation={thisConversation}
             delayConversation={delayConversation}
@@ -170,6 +123,7 @@ export default class App extends Component {
             slices={slices}
             name={name}
           />
+
           <br />
           <br />
 
@@ -179,13 +133,10 @@ export default class App extends Component {
 
         <Footer
           {...this.props}
-          toggleNightMode={this.toggleNightMode}
           handleBabyChet={this.handleBabyChet}
           handleSaveSettings={this.handleSaveSettings}
           toggleConversation={this.toggleConversation}
-          animatedClass={animatedClass}
           showConversation={showConversation}
-          nightMode={nightMode}
           handleWipeBabyChetsMind={this.handleWipeBabyChetsMind}
         />
       </div>

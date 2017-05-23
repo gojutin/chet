@@ -2,13 +2,13 @@ import firebase from 'firebase';
 import * as types from './types';
 
 const db = firebase.database();
+  var convoKey;
 
-let convoKey;
-let convoArray = [];
+
 export const startConversation = (dbConvoId) => {
   return dispatch => {
     return new Promise((resolve, reject) => {
-
+    let convoArray = [];
     let chatKey;
     
     // start a new conversation
@@ -17,6 +17,7 @@ export const startConversation = (dbConvoId) => {
       .then(ref => {
         convoKey = ref.key;
         chatKey = ref.key;
+        let obj;
 
         
         let conversationCount;
@@ -25,7 +26,6 @@ export const startConversation = (dbConvoId) => {
         db.ref(dbConvoId).on('value', snap => {
           let conversationsArray = [];
           conversationCount = 0;
-          convoArray = [];
           thisConversation = {}
           snap.forEach(value => {
             conversationsArray.push({
@@ -52,13 +52,15 @@ export const startConversation = (dbConvoId) => {
             type: types.FETCH_CONVERSATION,
             payload: thisConversation,
           });
-          const obj = {
-          dbConvoId, convoArray, chatKey
+          obj = {
+          dbConvoId, convoArray, convoKey
         }
-        resolve(obj) 
+        resolve(obj)
+         
         });  
           
        })
+       
     })
   }
 }
