@@ -16,12 +16,25 @@ export default class LoginButton extends Component {
   }
 
 	handleLogin = (network) => {
-		this.props.login(network);
-		this.toggleDropDown();
+		const { profile, fetchPhrases, toggleBabyChetMode } = this.props;
+		this.props.login(network)
+		.then(uid => {
+			console.log(uid)
+			this.toggleDropDown();
+			this.props.handleBabyChet(uid).then(() => {
+				if ( profile.allowChet === false) {
+					toggleBabyChetMode(false, profile.babyChetPhrasesId).then(dbref => {
+						fetchPhrases(dbref);
+					})
+					
+					
+				}
+			})
+		})
 	}
 
 	render() {
-		const { db } = this.props;
+		const { profile } = this.props;
 		const { dropDownOpen } = this.state;
 
 		const dropdownStyle = {
@@ -40,10 +53,10 @@ export default class LoginButton extends Component {
 					
 				>
 					<DropdownToggle style={dropdownStyle}  >
-					{ db.loggingIn &&
+					{ profile.loggingIn &&
 						<WobblySpinner diameter={30} />
 					}
-					{ !db.uid && !db.loggingIn &&
+					{ !profile.uid && !profile.loggingIn &&
 							<div style={{ display: "inline"}}>
 								<FooterIcon
 									type="user-circle-o"

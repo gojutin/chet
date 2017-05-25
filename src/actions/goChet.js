@@ -5,19 +5,21 @@ import * as types from './types';
 
 const db = firebase.database();
 
-export const goChet = (term, values, responseId, dbId, dbConvoId) => {
+export const goChet = (term, values, responseId, phrasesId, chatId) => {
 
     // Set loading to true so that we can show the spinner
     return dispatch => {
         console.time("Total Time");
-          dispatch({
+
+        dispatch({
             type: types.HANDLE_INPUT_ERROR,
             payload: "",
-          })
-          dispatch({
+        })
+    
+        dispatch({
             type: types.LOADING,
             payload: true,
-          })
+        })
 
         dispatch({ type: types.STOP_TYPING })
 
@@ -29,11 +31,11 @@ export const goChet = (term, values, responseId, dbId, dbConvoId) => {
         const existingValue = values.filter((value) => value.term === term );
 
         if (existingValue.length === 0) {
-            db.ref(dbId).push({
+            db.ref(phrasesId).push({
                 term,
             }).then(ref => {
                 refKey = ref.key;
-                db.ref(dbId + '/' + ref.key).child("responses").set({
+                db.ref(phrasesId + '/' + ref.key).child("responses").set({
                     [refKey]: {
                         term: term,
                         id: refKey,
@@ -41,16 +43,16 @@ export const goChet = (term, values, responseId, dbId, dbConvoId) => {
                     }
                 })
             }).then(_ => {
-                handlePrevResponse(term, values, responseId, refKey, dbId)
+                handlePrevResponse(term, values, responseId, refKey, phrasesId)
                     .then((valKey) => {
-                        generateResponse(values, term, valKey, dispatch, dbConvoId);
+                        generateResponse(values, term, valKey, dispatch, chatId);
                     })
             })
         } else {
 
-            handlePrevResponse(term, values, responseId, existingValue[0]["id"], dbId)
+            handlePrevResponse(term, values, responseId, existingValue[0]["id"], phrasesId)
                 .then((valKey) => {
-                    generateResponse(values, term, valKey, dispatch, dbConvoId);
+                    generateResponse(values, term, valKey, dispatch, chatId);
                 })
         }
         console.timeEnd("Total Time");

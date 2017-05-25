@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import { 
-    handleDisplayMode,
+    handleNightMode,
     fetchPhrases, 
+    toggleBabyChetMode,
     sayHi, 
     login,
     logout,
@@ -11,33 +12,32 @@ import {
     startConversation, 
     saveToConversation,
     clearEmptyConversations,
-    babyChet,
-    saveDetails,
-    saveSettings,
+    handleBabyChet,
+    updateSettings,
     authWatch,
     wipeBabyChetsMind,
   } from '../actions/index';
 
-import App from '../app';
+import App from '../components/App';
 
 export default connect(
   // State
  state => ({ 
-   displayMode: state.displayMode,
+   nightMode: state.nightMode,
    values: state.values, 
    response: state.response, 
    input: state.input,
    thisConversation: state.conversation,
-   db: state.db,
-   babyChetMode: state.babyChetMode,
+   profile: state.profile,
   }),
 
   // Actions
   {
-    handleDisplayMode,
+    handleNightMode,
     fetchPhrases, 
     sayHi, 
     deleteUserAccount,
+    toggleBabyChetMode,
     login,
     logout,
     goChet, 
@@ -45,9 +45,8 @@ export default connect(
     startConversation, 
     saveToConversation, 
     clearEmptyConversations,
-    babyChet,
-    saveDetails,
-    saveSettings,
+    handleBabyChet,
+    updateSettings,
     authWatch,
     wipeBabyChetsMind
   }

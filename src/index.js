@@ -15,21 +15,18 @@ import thunk from 'redux-thunk';
 var injectTapEventPlugin = require("react-tap-event-plugin");
 injectTapEventPlugin();
 
+const isDevEnv = process.env.NODE_ENV === "development";
+var getComposeEnhancers = () => {
+  if (window.navigator.userAgent.includes('Chrome') && isDevEnv) {
+    return compose(
+      applyMiddleware(thunk)
+      ,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+  }
+  return compose(applyMiddleware(thunk) );
+};
 
-const reduxDevTools = true;
-  var getComposeEnhancers = () => {
-
-   // Comment out the if statement when running a production build
-    if (window.navigator.userAgent.includes('Chrome') && reduxDevTools) {
-      return compose(
-        applyMiddleware(thunk)
-        ,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-      );
-    }
-   return compose(applyMiddleware(thunk) );
-  };
-
-  var store = createStore(reducer, getComposeEnhancers() );
+var store = createStore(reducer, getComposeEnhancers() );
 
 render(
   <Provider store={store}>

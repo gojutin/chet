@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 export default class Pin extends Component {
 
   state = {
-    pin: "", box1: "", box2: "", box3: "", box4: "", error: "", type: "number", attempts: 0,
+    pin: "", box1: "", box2: "", box3: "", box4: "", error: "", attempts: 0,
   }
 
   clearPin = () => {
@@ -32,20 +32,17 @@ export default class Pin extends Component {
   }
 
   handleUnlock = () => {
-    const { db } = this.props;
+    const { profile, updateSettings } = this.props;
     const { box1, box2, box3, box4 } = this.state;
     const providedPin = box1 + box2 + box3 + box4;
-    if (!db.pin) {
-      this.props.saveSettings(
-        db.id, 
+    if (!profile.pin) {
+      updateSettings(
+        profile.id, 
         { pin: providedPin, 
-          enteredPin: false,
-          allowChet: true,
-          allowWipe: true,
-          allowLogout: true  
+          enteredPin: false, 
         }
     )
-  } else if (providedPin !== db.pin) {
+  } else if (providedPin !== profile.pin) {
       this.setState(prevState => ({
         attempts: prevState.attempts + 1,
       }), () => {
@@ -69,8 +66,8 @@ export default class Pin extends Component {
         this[`box1`].focus();
       })
 
-    } else if (providedPin === db.pin) {
-      this.props.saveSettings(db.id, {enteredPin: true})
+    } else if (providedPin === profile.pin) {
+      updateSettings(profile.id, {enteredPin: true})
     }
   }
 
@@ -96,8 +93,6 @@ export default class Pin extends Component {
         this[`box${num+1}`].focus();
       } 
     });
-
- 
   }
 
   generateBoxes = () => {
@@ -127,6 +122,7 @@ export default class Pin extends Component {
   }
   render () {
     const { error } = this.state;
+    const { profile } = this.props;
     const boxes = this.generateBoxes();
 
     return (
@@ -146,19 +142,17 @@ export default class Pin extends Component {
                 borderRadius: 5 + "px",
                 border: "1px solid gray"
               }}
-              type={this.state.type}
+              type={profile.pin ? "password" : "number"}
               onChange={(e) => this.handleFocus(e, num)}
               ref={(input) => { this[`box${num}`] = input; }} 
             />
-        )}
-      </Col>
-      { error &&
-        <Col xs={12} className="text-center text-danger">
-          <p>{error}</p>
+          )}
         </Col>
-      }
-      {/*<i className="fa fa-check fa-3x text-success" />*/}
-        
+        { error &&
+          <Col xs={12} className="text-center text-danger">
+            <p>{error}</p>
+          </Col>
+        } 
       </Row>
     );
   }

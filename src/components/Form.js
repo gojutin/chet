@@ -2,10 +2,11 @@ import React from 'react';
 import { Row, Col } from 'reactstrap';
 
 
-export default ({ goChet, input, values, response, onInputChange, db, }) => {
+export default ({ goChet, input, values, response, onInputChange, startConversation, profile }) => {
 
-  const { valuesId, convoId } = db;
+  // const { valuesId, convoId } = db;
   const { id, loading } = response;
+  const { babyChetPhrasesId, babyChetChatId } = profile;
 
   let textInput = null;
 
@@ -19,8 +20,23 @@ export default ({ goChet, input, values, response, onInputChange, db, }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    let phrasesId;
+    let chatId;
     if (!input.value ) { return; }
-    goChet(input.value, values, id, valuesId, convoId );
+    if (profile.babyChetMode) {
+      phrasesId = babyChetPhrasesId;
+      chatId = babyChetChatId; 
+    } else {
+      phrasesId = "values";
+      chatId = "conversations";
+    }
+    if (!id) {
+      startConversation(chatId).then((chatKey) => {
+        goChet(input.value, values, id, phrasesId, chatId );
+      })
+    } else {
+      goChet(input.value, values, id, phrasesId, chatId );
+    }
   }
 
   const handleChange = (e) => {

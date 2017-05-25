@@ -1,7 +1,23 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
-import { rollIn, wobble, bounceInDown, tada, rotateInDownRight } from 'react-animations';
+import { 
+  rollIn, wobble, bounceInDown, bounceOutUp, tada, rotateInDownRight, 
+  hinge, rubberBand, flip, rotateIn, bounce, jello, swing, zoomInDown, zoomOutUp,
+} from 'react-animations';
 import { StyleSheet, css } from 'aphrodite';
+
+// const animations = [wobble, tada, flip, bounce, zoomOutUp, rotateInDownRight, swing, zoomInDown, bounceOutUp, jello,rotateIn, hinge, rubberBand];
+
+// let styleObjects = {}
+
+// animations.map(anim => {
+//   styleObjects[anim.toString()] = {
+//     animationName: anim,
+//     animationDuration: '1s'
+//   }
+// })
+// console.log(styleObjects)
+// const styles = StyleSheet.create(styleObjects);
 
 const styles = StyleSheet.create({
   rotateInDownRight: {
@@ -20,57 +36,102 @@ const styles = StyleSheet.create({
     animationName: tada,
     animationDuration: '1s'
   },
+  rubberBand: {
+    animationName: rubberBand,
+    animationDuration: '1s'
+  },
+  flip: {
+    animationName: flip,
+    animationDuration: '1s'
+  },
+  zoomInDown: {
+    animationName: zoomInDown,
+    animationDuration: '1s'
+  },
+  zoomOutUp: {
+    animationName: zoomOutUp,
+    animationDuration: '1s'
+  },
+  hinge: {
+    animationName: hinge,
+    animationDuration: '1s'
+  },
+  rotateIn: {
+    animationName: rotateIn,
+    animationDuration: '1s'
+  },
+  bounce: {
+    animationName: bounce,
+    animationDuration: '1s'
+  },
+  jello: {
+    animationName: jello,
+    animationDuration: '1s'
+  },
+  swing: {
+    animationName: swing,
+    animationDuration: '1s'
+  },
+  bounceOutUp: {
+    animationName: bounceOutUp,
+    animationDuration: '1s'
+  },
 })
 
 export default class Header extends Component {
 
   state = {
     animateBabyChet: true,
+    randomAnimation: "",
   }
 
   handleAnimateBabyChet = () => {
+    const animations = ["wobble", "tada", "flip","bounce", "zoomOutUp", "swing", "zoomInDown", "bounceOutUp", "jello","rotateIn", "hinge", "rubberBand"];
+    const randomNumber = Math.floor(Math.random() * animations.length);
+    const randomAnimation = animations[randomNumber];
     this.setState(prevState => ({
       animateBabyChet: !prevState.animateBabyChet,
     }), () => {
       this.setState(prevState => ({
         animateBabyChet: !prevState.animateBabyChet,
+        randomAnimation: randomAnimation,
       }))
     })
   }
   render () {
 
-    const { db, babyChetMode } = this.props;
-    const { animateBabyChet } = this.state;
+    const { profile } = this.props;
+    const { animateBabyChet, randomAnimation } = this.state;
     return (
       <Row style={{ maxWidth: "100vw", margin: 0 }}>
         <Col xs={12}>
-          { babyChetMode &&
-            <div className={css(styles.rotateInDownRight)}>
+          { profile.babyChetMode &&
+            <div className={css(styles.flip)}>
               { animateBabyChet &&
               <i
-                className={`fa fa-child fa-5x ${animateBabyChet && css(styles.wobble)}`}
+                className={`fa fa-child fa-5x ${animateBabyChet && css(styles[randomAnimation])}`}
                 onClick = {this.handleAnimateBabyChet}
                 style={{
                   marginTop: 4.65 + "%",
                   fontSize: 69 + "px",
-                  color: db.color ? db.color : "gray",
+                  color: profile.babyChetColor ? profile.babyChetColor : "gray",
                 }}
               />
               }
-              </div>
+            </div>
           }
 
-          { babyChetMode && db.name &&
-            <h2 style={{ color: "gray", paddingTop: 5 + "px" }}>{db.name ? db.name: "my chatbot"}</h2>
+          { profile.babyChetMode &&
+            <h2 style={{ color: "gray", paddingTop: 5 + "px" }}>{profile.babyChetName}</h2>
           }
 
-          { !babyChetMode &&
+          { !profile.babyChetMode &&
             <img
               src="chet_logo.png"
               alt="Chet Logo"
               height={120}
               style={{ marginTop: 5 + "%" }}
-              className={`visible ${css(styles.tada)}`}
+              className={`visible ${css(styles[randomAnimation ? randomAnimation : "tada"])}`}
             />
           }
         </Col>

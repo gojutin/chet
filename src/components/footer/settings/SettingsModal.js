@@ -4,7 +4,6 @@ import { Input, Button, Modal, ModalBody, Col, Row, Progress, TabContent, TabPan
 import ColorIcon from './ColorIcon';
 import generateName from 'sillyname';
 
-
 // components
 import SettingsTab from './SettingsTab';
 import Milestones from './Milestones';
@@ -13,31 +12,22 @@ import UserSettings from './UserSettings';
 export default class SettingsModal extends Component {
 
 	state = {
-		showModal: false,
-		name: "",
-		color: "",
+		babyChetName: "",
 		showConfirmWipe: false,
 		activeTab: "1",
 		sleepMode: false,
-		showSave: false,
 	}
 
 	componentDidMount() {
-		const { dbName, dbColor } = this.props;
-		this.handleSleepMode()
-		.then(() => {
-			this.setState({
-				name: dbName ? dbName : "",
-				color: dbColor ? dbColor : "",
-			})
+		this.setState({
+			babyChetName: this.props.profile.babyChetName
 		})
 	}
 
 	sillyname = () => {
-		const name = generateName();
+		const babyChetName = generateName();
 		this.setState({
-			name,
-			showSave: true,
+			babyChetName,
 		}, () => {
 			this.handleSubmit();
 		})
@@ -50,130 +40,106 @@ export default class SettingsModal extends Component {
 	}
 
 	handleWipe = () => {
+		const { profile, wipeBabyChetsMind } = this.props;
+		const { babyChetPhrasesId, babyChetChatId, uid } = profile;
 		this.setState(prevState => ({
       	showConfirmWipe: !prevState.showConfirmWipe,
     }));
-		this.props.handleWipeBabyChetsMind();
+		wipeBabyChetsMind(babyChetPhrasesId, babyChetChatId, uid);
 	}
 
-	toggleModal = () => {
-		const { dbColor, dbName, babyChetMode } = this.props;
-
-		this.props.saveSettings(this.props.db.id, {enteredPin: false});
-
+	componentWillUnMount() {
+		if (this.props.profile.id) {
+			this.props.updateSettings(this.props.profile.id, {enteredPin: false});
+		}
 		this.setState({
 			activeTab: "1",
 		})
-		if (babyChetMode) {
-			this.setState(prevState => ({
-				showModal: !prevState.showModal,
-				name: dbName ? dbName : "",
-				color: dbColor ? dbColor : "",
-				showSave: false,
-			}))
-		} else if (!this.state.sleepMode && !babyChetMode) {
-			this.setState(prevState => ({
-				showModal: !prevState.showModal
-			}))	
-			this.handleSleepMode();
-		} else {
-			this.setState(prevState => ({
-				showModal: !prevState.showModal
-			}))	
-		}  
-  }
+	}
 
 	handleChange = (e) => {
 		this.setState({
-			name: e.target.value,
-			showSave: true,
+			babyChetName: e.target.value,
 		}, () => {
 			this.handleSubmit();
 		})
 	}
 
-	handleSleepMode = () => {
+
+	handleBabyChetMode = () => {
+		const { profile } = this.props;
+		const  { babyChetMode, babyChetPhrasesId } = profile;
 		return new Promise ((resolve, reject) => {
-				if (this.props.babyChetMode) {
-					this.setState({
-							showModal: false,
-					});
-				}
-				this.props.handleBabyChet();
-
+			this.props.toggleBabyChetMode( babyChetMode, babyChetPhrasesId ).then((dbRef) => {
+				this.props.fetchPhrases(dbRef);
+				this.props.toggleSettingsModal()
 				resolve();
-		})
-		
-	}
-
-	handleColor = (color) => {
-		this.setState({
-			color,
-			showSave: true,
-		}, () => {
-			this.handleSubmit();
+			})
 		})
 	}
 
 	// 1 second delay after typing before it saves to the database
-	handleSubmit = () => {
+	handleSubmit = (color) => {
+		const { profile, updateSettings } = this.props;
 		let timeoutId;
-		const { name, color } = this.state;
 		clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => { 
-      this.props.handleSubmit(name, color);
-			console.log("saved")
-    }, 1000);
-		
+		const { babyChetName } = this.state;
+		if (color) {
+			updateSettings(profile.id, {babyChetName, babyChetColor: color});
+		} else {
+			timeoutId = setTimeout(() => { 
+				let babyChetColor = color ? color : profile.babyChetColor;
+      	updateSettings(profile.id, {babyChetName, babyChetColor});
+    	}, 1000);
+		}		
 	}
 
-	  toggle = (tab) => {
+	toggle = (tab) => {
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab
       });
     }
 		if (this.state.activeTab === "3") {
-			this.props.saveSettings(this.props.db.id, {enteredPin: false})
+			this.props.updateSettings(this.props.profile.id, {enteredPin: false})
 		}
   }
 
 	handleLogout = () => {
 		this.props.logout().then(() => {
-			this.props.handleBabyChet();
-		});
+			this.props.toggleSettingsModal()
+			this.props.fetchPhrases("values")
+
+		})
+		
 	}
+
 	render() {
 
-		const { showModal, name, showConfirmWipe, color, activeTab, showSave } = this.state;
-		const { dbName, values, babyChetMode, db, deleteUserAccount} = this.props;
+		const { babyChetName, showConfirmWipe, activeTab } = this.state;
+		const { dbName, values, deleteUserAccount, show, toggleSettingsModal, profile} = this.props;
+		const { babyChetMode, babyChetColor } = this.props.profile;
 		const colors = [
 			"#f44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#03A9F4", "#00BCD4", 
-			"#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", 
-			"#795548", "#9E9E9E", "#607D8B",
+			"#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B",
 		];
-
 
 		const colorIcons = colors.map(color => 
 			<ColorIcon 
 				key={color}
 				color={color}
-				selectedColor={this.state.color}
-				dbColor={this.props.dbColor}
-				onClick={this.handleColor}
+				dbColor={babyChetColor}
+				onClick={() => this.handleSubmit(color)}
 			/>
 		)
 
 		return (
 			<div style={{display: "inline"}}>
-				
-				<i className={`fa fa-2x fa-cog ${showModal ? "text-warning" : ""}`}
-				onClick={this.toggleModal} style={{ cursor: "pointer", color: "gray" }} />
-
+				{ profile.id && 
 				<Modal 
-					isOpen={showModal} 
+					isOpen={show} 
 					className="text-center modal-shadow" 
-					toggle={this.toggleModal} 
+					toggle={toggleSettingsModal} 
 				>
 					<ModalBody 
 						style={{
@@ -183,12 +149,12 @@ export default class SettingsModal extends Component {
 						className="scroll"
 					>
 						<i 
-							className={`fa pull-right ${showSave ? "fa-check-square-o text-success": "fa-times text-danger"}`}
+							className={`fa pull-right fa-times text-danger`}
 							style={{
 								cursor: "pointer",
 								fontSize: 1.3 + "em"
 							}}
-							onClick={this.toggleModal}
+							onClick={toggleSettingsModal}
 						/>
 
 						  <Nav tabs style={{ cursor: "pointer"}}>
@@ -200,7 +166,7 @@ export default class SettingsModal extends Component {
                 >
                   <i className="fa fa-cog fa-2x" />
                 </SettingsTab>
-								{ babyChetMode &&
+								{ profile.babyChetMode &&
                 <SettingsTab 
                   toggleTab={this.toggle}
                   tabNumber="2"
@@ -215,7 +181,7 @@ export default class SettingsModal extends Component {
                   activeTab={activeTab}
 								>
 								<img
-									src={db.photo}
+									src={profile.user.photo}
 									alt="Profile pic"
 									height={30}
 									style={{
@@ -229,31 +195,35 @@ export default class SettingsModal extends Component {
 						<TabContent activeTab={this.state.activeTab}>
                 <TabPane tabId="1">
 									<br />
-									
-						{ babyChetMode &&
-										<div>
+					<div>
 						<h4 style={{marginTop: 10 + "px"}}>My chatbot's name:</h4>
+							{ !profile.allowEditProfile && 
+								<h4 style={{color: profile.babyChetColor}}> {babyChetName} </h4>
+							}
 
-								<Input 
-									type="text" 
-									value={name} 
-									onChange={this.handleChange} 
-									style={{ fontSize: 1.5 + "em", color,}} 
-								/>
+							{ profile.allowEditProfile && 
+									<div>
+										<Input 
+											type="text" 
+											value={babyChetName} 
+											onChange={this.handleChange} 
+											style={{ fontSize: 1.5 + "em", color: profile.babyChetColor,}} 
+										/>
 
-								<i 
-									className="fa fa-random text-warning" 
-									style={{cursor: "pointer", margin: 15 + "px"}} 
-									onClick={this.sillyname}
-								/>
+										<i 
+											className="fa fa-random text-warning" 
+											style={{cursor: "pointer", margin: 15 + "px"}} 
+											onClick={this.sillyname}
+										/>
+										<br />
+										<h4>My chatbot's color:</h4>
+										<Col xs={12} md={{size: 10, offset: 1}} >
+											{colorIcons}
+										</Col>
+									</div>
+							}
 
-						<br />
-						<h4>My chatbot's color:</h4>
-						<Col xs={12} md={{size: 10, offset: 1}} >
-							{colorIcons}
-						</Col>
-
-						{ (db.allowWipe === undefined || db.allowWipe) && values.length > 0  &&
+						{ profile.allowWipe && values.length > 0  &&
 							<p 
 								style={{
 									marginTop: 15 + "px", 
@@ -273,7 +243,7 @@ export default class SettingsModal extends Component {
 						{ showConfirmWipe &&
 							<div>
 								<p>
-									{dbName} has learned {db.wordCount} words and {values.length} phrases.
+									{dbName} has learned {profile.wordCount} words and {values.length} phrases.
 								</p>
 								<p> Are you sure you want to wipe {dbName}'s mind? This action cannot be undone.</p>
 								<Button 
@@ -289,25 +259,25 @@ export default class SettingsModal extends Component {
 						</div>
 						
 							<Row>
-							 { (db.allowChet === undefined || db.allowChet) && 
-								<Col xs={12} md={{size: 6, offset: this.props.db.allowLogout ? 0 : 3}}>
+							 {  profile.allowChet && 
+								<Col xs={12} md={{size: 6, offset: profile.allowLogout ? 0 : 3}}>
 									<Button
 											block
 											size="lg"
-											onClick={this.handleSleepMode}
+											onClick={this.handleBabyChetMode}
 											style={{ cursor: "pointer", marginTop: 10 + "px"}}
 											className="text-center"
 										>
-											Switch to Chet
+											Switch
 									</Button>
 								</Col>
 								}
-								{ this.props.db.allowLogout && 
-									<Col xs={12} md={{size: 6, offset: this.props.db.allowChet ? 0 : 3}}>
+								{ profile.allowLogout && 
+									<Col xs={12} md={{size: 6, offset: profile.allowChet ? 0 : 3}}>
 										<Button
 											block
 											size="lg"
-											onClick={this.props.logout}
+											onClick={this.handleLogout}
 											style={{ cursor: "pointer", marginTop: 10 + "px"}}
 											className="text-center"
 										>
@@ -319,35 +289,35 @@ export default class SettingsModal extends Component {
 						
 
 						</div>
-						}
+						
 						</TabPane>
 					</TabContent>
 					<TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="2">
 
-							{ !!db.phrasesCount && db.phase &&
+							{ profile.babyChetMode &&
 								<div >
 									<br />
-									<div style={{color}}>
+									<div style={{color: babyChetColor}}>
 											<i 
-												className={`fa fa-child ${db.phase.size}`}
+												className={`fa fa-child ${profile.phase ? profile.phase.size: "" }`}
 											/>
-											<p>{db.name}</p>
+											<p>{profile.name}</p>
 									</div>
 											<Progress 
 												animated 
 												color="success" 
-												value={db.growthPercentage} 
+												value={profile.growthPercentage} 
 												style={{marginTop: 5 + "px"}}
 											/>
-										  <Milestones phase={db.phase ? db.phase.phase : ""} />
+										  <Milestones phase={profile.phase ? profile.phase.phase : ""} />
 								</div>	
 							}
 						<hr />	
 						<Row>
 							<Col xs={4} style={{borderRight: "1px solid lightgray"}}>
 								<p>Words</p>
-								<h4 className="text-primary">{db.wordCount}</h4>
+								<h4 className="text-primary">{profile.wordCount}</h4>
 							</Col>
 							<Col xs={4} style={{borderRight: "1px solid lightgray"}}>
 								<p>Phrases</p>
@@ -355,7 +325,7 @@ export default class SettingsModal extends Component {
 							</Col>
 							<Col xs={4}>
 								<p>Chats</p>
-								<h4 className="text-primary">{db.conversationCount}</h4>
+								<h4 className="text-primary">{profile.chatCount}</h4>
 							</Col>
 							</Row>
 							</TabPane>
@@ -363,15 +333,17 @@ export default class SettingsModal extends Component {
 					<TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="3">
 								<UserSettings
-									logout={this.handleLogout}
-									saveSettings={this.props.saveSettings}
-									db={db}
+									updateSettings={this.props.updateSettings}
+									profile={profile}
 									deleteUserAccount={deleteUserAccount}
+									toggleBabyChetMode={this.props.toggleBabyChetMode}
+									fetchPhrases={this.props.fetchPhrases}
 								/>								
 						</TabPane>
 					</TabContent>
 				</ModalBody>
 			</Modal>
+			}
 		</div>
 		)
 	}

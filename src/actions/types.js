@@ -1,7 +1,7 @@
 export const TOGGLE_DAY_MODE = 'TOGGLE_DAY_MODE';
 export const TOGGLE_NIGHT_MODE = 'TOGGLE_NIGHT_MODE';
 
-
+export const UPDATE_PROFILE = "UPDATE_PROFILE";
 export const FETCH_PHRASES = 'FETCH_PHRASES';
 export const LOADING = 'LOADING';
 export const GENERATE_RESPONSE = 'GENERATE_RESPONSE';
@@ -10,11 +10,12 @@ export const START_TYPING = 'START_TYPING';
 export const STOP_TYPING = 'STOP_TYPING';
 export const HANDLE_INPUT_CHANGE = 'HANDLE_INPUT_CHANGE';
 export const FETCH_CONVERSATION = 'FETCH_CONVERSATION';
+export const CLEAR_CONVERSATION = 'CLEAR_CONVERSATION';
 export const SAVE_SLICES = 'SAVE_SLICES';
 export const START_DELAY = 'START_DELAY';
 export const STOP_DELAY = 'STOP_DELAY';
 export const UPDATE_DB = 'UPDATE_DB';
 export const RESET_DB = 'RESET_DB';
-export const CLEAR_DB = 'CLEAR_DB';
+export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 export const BABY_CHET_MODE = 'BABY_CHET_MODE';
 export const HANDLE_INPUT_ERROR = 'HANDLE_INPUT_ERROR';

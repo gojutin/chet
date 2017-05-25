@@ -9,6 +9,7 @@ export default class Footer extends Component {
 
 	state = {
 		showHelpModal: false,
+		showSettingsModal: false,
 		activeHelpTab: "1",
 		dropDownOpen: false,
 	}
@@ -31,6 +32,16 @@ export default class Footer extends Component {
 		})
 	}
 
+	toggleSettingsModal = () => {
+		this.setState(prevState => ({
+			showSettingsModal: !prevState.showSettingsModal
+		}));
+		if (this.props.profile.id) {
+			this.props.updateSettings(this.props.profile.id, {enteredPin: false})
+		}
+		
+	}
+
 	toggleHelpTabs = (tab) => {
 		if (this.state.activeTab !== tab) {
 			this.setState({
@@ -42,16 +53,14 @@ export default class Footer extends Component {
 
 	render() {
 		const {
-			handleDisplayMode,
-			db, login, logout, deleteUserAccount,
+			handleNightMode, nightMode,
+			login, logout, deleteUserAccount,
 			toggleConversation, showConversation,
-			handleSaveSettings,
-			babyChetMode, handleBabyChet, handleWipeBabyChetsMind,
-			values,
+			handleBabyChet, toggleBabyChetMode,
+			values, profile, fetchPhrases,
 		} = this.props;
 
-		const { displayMode, bgClass } = this.props.displayMode;
-		const { name, color } = this.props.db;
+		const { babyChetName} = profile;
 		const { showHelpModal, activeHelpTab } = this.state;
 
 		return (
@@ -62,9 +71,9 @@ export default class Footer extends Component {
 					height: 55 + "px",
 					width: 100 + "%",
 					padding: 10 + "px",
-					color: displayMode === "black" ? "black" : "white",
+					color: nightMode ? "black" : "white",
 				}}
-				className={bgClass}
+				className={nightMode ? "bg-black" : "bg-white"}
 			>
 				<div style={{ paddingTop: 8 + "px" }}>
 					<Row className="text-center">
@@ -73,28 +82,36 @@ export default class Footer extends Component {
 							xs={{ size: 3, offset: 0 }}
 							md={{ size: 1, offset: 4 }}
 						>
-							{!db.uid &&
+							{!profile.uid &&
 								<LoginButton
-									db={db}
+									profile={profile}
 									login={login}
-									babyChetMode={babyChetMode}
+									fetchPhrases={fetchPhrases}
 									handleBabyChet={handleBabyChet}
-									loggingIn={db.loggingIn}
+									toggleBabyChetMode={toggleBabyChetMode}
+									loggingIn={profile.loggingIn}
 								/>
 							}
-							{db.uid  && values && this.props.db &&
+							{ profile.uid &&
+							<i className={`fa fa-2x fa-cog ${this.state.showSettingsModal ? "text-warning" : ""}`}
+								onClick={this.toggleSettingsModal} style={{ cursor: "pointer", color: "gray" }} />
+							}
+							{ // db.uid  && values && this.props.db &&
+								this.state.showSettingsModal &&
+
 								<SettingsModal
-									handleSubmit={handleSaveSettings}
-									dbColor={color}
-									dbName={name}
+									profile={profile}
+									dbName={babyChetName}
 									values={values}
-									db={db}
-									babyChetMode={babyChetMode}
+									fetchPhrases={this.props.fetchPhrases}
 									handleBabyChet={handleBabyChet}
-									handleWipeBabyChetsMind={handleWipeBabyChetsMind}
+									toggleBabyChetMode={this.props.toggleBabyChetMode}
+									wipeBabyChetsMind={this.props.wipeBabyChetsMind}
+									show={this.state.showSettingsModal}
+									toggleSettingsModal={this.toggleSettingsModal}
 									logout={logout}
 									deleteUserAccount={deleteUserAccount}
-									saveSettings={this.props.saveSettings}
+									updateSettings={this.props.updateSettings}
 								/>
 							}
 						</Col>
@@ -109,8 +126,8 @@ export default class Footer extends Component {
 						<Col xs={3} md={1} id="google">
 							<FooterIcon
 								type="moon-o"
-								condition={displayMode === "night"}
-								onClick={() => handleDisplayMode(displayMode)}
+								condition={nightMode}
+								onClick={() => handleNightMode(nightMode)}
 							/>
 						</Col>
 

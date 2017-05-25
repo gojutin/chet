@@ -1,22 +1,25 @@
 import { combineReducers } from 'redux';
 import * as types from '../actions/types';
 
-const INITIAL_DISPLAY_MODE_STATE = {
-  displayMode: "day",
-  bgClass: "bg-white"
-}
-const displayMode = (state={}, action) => {
+const nightMode = (state="", action) => {
   switch(action.type) {
     case types.TOGGLE_DAY_MODE:
-      return {
-        displayMode: "day",
-        bgClass: "bg-white"
-      }
+      return false;
     case types.TOGGLE_NIGHT_MODE:
-      return {
-        displayMode: "night",
-        bgClass: "bg-black"
-      }
+      return true;
+    default:
+      return state;
+  }
+};
+
+const profile = (state={}, action) => {
+  switch(action.type) {
+    case types.UPDATE_PROFILE:
+      return Object.assign({}, state, action.payload);
+    case types.CLEAR_PROFILE:
+      return {};
+    case types.BABY_CHET_MODE:
+      return Object.assign({}, state, { babyChetMode: action.payload });
     default:
       return state;
   }
@@ -67,6 +70,8 @@ const conversation = (state={}, action) => {
   switch(action.type) {
     case types.FETCH_CONVERSATION:
       return action.payload;
+    case types.CLEAR_CONVERSATION:
+      return {};
     default:
       return state;
   }
@@ -81,49 +86,12 @@ const slices = (state="", action) => {
   }
 };
 
-const initialDbValue = {
-  userId : "",
-  valuesId : "values",
-  convoId : "conversations",
-}
-
-const db = (state = initialDbValue, action) => {
-  switch(action.type) {
-    case types.UPDATE_DB:
-      return Object.assign({}, state, action.payload);
-    case types.RESET_DB:
-      return Object.assign({}, state,
-        {
-        valuesId: "values",
-        convoId: "conversations",
-        }
-      )
-    case types.CLEAR_DB:
-      return {
-        valuesId: "values",
-        convoId: "conversations",
-      }
-    default:
-      return state;
-  }
-}
-
-const babyChetMode = (state = false, action) => {
-    switch(action.type) {
-      case types.BABY_CHET_MODE:
-        return action.payload;
-      default:
-        return state;
-  }
-}
-
 export default combineReducers({
-  displayMode,
+  nightMode,
   values,
   response,
   input,
   conversation,
   slices,
-  db,
-  babyChetMode,
+  profile,
 });

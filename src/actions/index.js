@@ -1,8 +1,8 @@
 import * as types from './types';
-import { handleDisplayMode } from './displayMode';
+import { handleNightMode } from './displayMode';
 import { goChet } from './goChet';
-import { saveDetails, babyChet, wipeBabyChetsMind } from './babyChet';
-import { saveSettings } from './settings';
+import { updateSettings, handleBabyChet, wipeBabyChetsMind, toggleBabyChetMode } from './babyChet';
+
 import { fetchPhrases } from './phrases';
 import { login, logout, authWatch, deleteUserAccount } from './auth';
 import { startConversation, saveToConversation, clearEmptyConversations } from './conversation';
@@ -40,7 +40,7 @@ const sayHi = () => {
 };
 
 export {
-  handleDisplayMode,
+  handleNightMode,
   sayHi,
   login,
   logout,
@@ -51,9 +51,9 @@ export {
   startConversation,
   saveToConversation,
   clearEmptyConversations,
-  babyChet,
-  saveDetails,
-  saveSettings,
+  toggleBabyChetMode,
+  handleBabyChet,
+  updateSettings,
   authWatch,
   wipeBabyChetsMind,
 

@@ -1,27 +1,28 @@
 import firebase from 'firebase';
 import * as types from './types';
+import { handleBabyChet } from './index';
 const db = firebase.database();
+
+
+
 
 export const logout = () => {
   return dispatch => {
 		return new Promise((resolve, reject) => {
 			firebase.auth().signOut()
-				.then(_ => {
-					dispatch({type: types.CLEAR_DB})
-					dispatch({type: types.BABY_CHET_MODE, payload: false})
-					resolve()
-				})
+				.then(() => {resolve()})
 				.catch(error => {
 					console.log("Oops, something went wrong. Please try again.")
-				});
-		});
+			});
+		})
   }
 }
 
 export const login = (providerName) => {
   return dispatch => {
+		return new Promise((resolve, reject )=> {
 		dispatch({
-			type: types.UPDATE_DB,
+			type: types.UPDATE_PROFILE,
 			payload: {loggingIn: true},
 		})
 
@@ -45,14 +46,16 @@ export const login = (providerName) => {
     firebase.auth().signInWithPopup(provider)
       .then((res) =>{
 				dispatch({
-					type: types.UPDATE_DB,
+					type: types.UPDATE_PROFILE,
 					payload: {loggingIn: false},
 				})
+				resolve(res.user.uid)
 			})
       .catch(err => {
-        console.log(err.message ? err.message : err)
+        alert.log(err.message ? err.message : err)
 				
       })
+			})
     }
   }
 
@@ -62,46 +65,51 @@ export const login = (providerName) => {
 				user.delete().then( _ =>  {
 					console.log("deleted")
 					dispatch({
-						type: types.CLEAR_DB,
+						type: types.CLEAR_PROFILE,
 					})
 					dispatch({
 						type: types.BABY_CHET_MODE,
 						payload: false,
 					})
-					db.ref("babyChets").child(id).remove();
+					db.ref("profiles").child(id).remove();
 				}, err => {
 					console.log(err)
 						alert(err.message)
 				});
-	}
+			}
 		}
 
 
 	export const authWatch = () => {
 		return dispatch => {
-  		firebase.auth().onAuthStateChanged( (user) => {
-				if (user) {
-					if (user != null) {
-						let userInfo = {};
-						user.providerData.forEach(profile => {
-							userInfo = {
-								provider: profile.providerId,
-								uid: profile.uid,
-								userName: profile.displayName,
-								email: profile.email,
-								photo: profile.photoURL,
-							}
-							return dispatch({
-								type: types.UPDATE_DB,
-								payload: userInfo,
-							})
-						});
+			return new Promise((resolve, reject) => {
+				firebase.auth().onAuthStateChanged( (user) => {
+					console.log("user", user)
+					if (user) {
+						if (user != null) {
+							let userInfo = {};
+							user.providerData.forEach(profile => {
+								console.log("pro", profile)
+								userInfo = {
+									provider: profile.providerId,
+									uid: profile.uid,
+									userName: profile.displayName,
+									email: profile.email,
+									photo: profile.photoURL,
+								}
+								dispatch({
+									type: types.UPDATE_PROFILE,
+									payload: {user: userInfo},
+								})
+								handleBabyChet(user.uid);
+								resolve(user.uid);
+							});
+						}
+					} else {
+						dispatch({type: types.CLEAR_PROFILE})	
+						resolve(false);				
 					}
-				} else {
-					dispatch({
-						type: types.RESET_DB,
-					})					
-				}
+				});
 			});
 		}
 	}

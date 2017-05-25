@@ -4,6 +4,7 @@ import * as types from './types';
 const db = firebase.database();
 
 export const fetchPhrases = (dbRef) => {
+  console.log("DBREF", dbRef)
   return dispatch => {
     return new Promise((resolve, reject) => {
     db.ref(dbRef).orderByChild("value").on('value', snap => {
@@ -21,6 +22,8 @@ export const fetchPhrases = (dbRef) => {
       });  
 
       // get stats
+
+      if (dbRef !== "values") {
 
       const removeDuplicates = arr => {
         let i,
@@ -81,7 +84,7 @@ export const fetchPhrases = (dbRef) => {
 			  }
 		  }
       dispatch({
-        type: types.UPDATE_DB,
+        type: types.UPDATE_PROFILE,
         payload: {
           wordCount,
           growthPercentage,
@@ -90,6 +93,7 @@ export const fetchPhrases = (dbRef) => {
           
         }
       })
+      }
     })
     resolve();
     })  
