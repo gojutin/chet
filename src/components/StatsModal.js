@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 import { Modal, ModalBody, Progress } from 'reactstrap';
 
-class StatsModal extends Component {
+export default class StatsModal extends Component {
 	 state = {
     showInfoModal: false,
     showSlices: false,
@@ -24,7 +23,7 @@ class StatsModal extends Component {
 
 	render() {
 		const { showInfoModal, showSlices } = this.state;
-    const { response, slices, name } = this.props;
+    const { response, name } = this.props;
 		return (
 			<div>
 				<i 
@@ -62,7 +61,7 @@ class StatsModal extends Component {
                 </p>
                 <i className="fa fa-arrow-down text-primary" />
 
-                { !response.phrases &&
+                { !response.phrasesCount &&
                   <p>Congratulations, {name ? name: "Chet"} just learned their first thing ever!</p>
                 }
               
@@ -70,14 +69,14 @@ class StatsModal extends Component {
                   <p>
                     {name ? name: "Chet"} scanned "
                       <span className="text-primary">{response.userValue}</span>
-                    " against {response.phrases} known phrases and found an exact match.
+                    " against {response.phrasesCount} known phrases and found an exact match.
                   </p>
                 }
                 
-                { response.matchedTo && !!response.phrases &&
+                { response.matchedTo && !!response.phrasesCount &&
                 <div>
                   <p>
-                  {name ? name: "Chet"} has never seen this phrase before so it was sliced into {slices.length} different variations and each one scanned against {response.phrases} uknown phrases to find the closest match of "
+                  {name ? name: "Chet"} has never seen this phrase before so it was sliced into {response.slices.length} different variations and each one scanned against {response.phrasesCount} uknown phrases to find the closest match of "
                   <span className="text-primary">{response.matched}</span>
                   "
                   { !response.matchedTo &&
@@ -107,7 +106,7 @@ class StatsModal extends Component {
                 
                 <br/>
 
-                { slices.length > 0 && 
+                { response.slices.length > 0 && 
                   <div 
                     style={{color: "gray", cursor: "pointer"}} 
                     className={showSlices ? "text-warning" : ""}
@@ -129,7 +128,7 @@ class StatsModal extends Component {
 
                   <div className="slices">
                     <hr />
-                    { slices && slices.map(slice => { 
+                    { response.slices && response.slices.map(slice => { 
                         if (response.matched === slice) {
                           return (
                             <h5 className="text-success">{slice}<i className="fa fa-check " style={{paddingLeft: 10 + "px"}}/></h5>
@@ -149,12 +148,3 @@ class StatsModal extends Component {
 		)
 	}
 }
-
-export default connect(
- state => ({ 
-   response: state.response, 
-   slices: state.slices,
-
-  }),
-  null
-  )(StatsModal)

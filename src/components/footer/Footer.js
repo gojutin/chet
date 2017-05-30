@@ -14,6 +14,7 @@ export default class Footer extends Component {
 		dropDownOpen: false,
 	}
 
+
 	toggleDropDown = () => {
 		this.setState(prevState => ({
 			dropDownOpen: !prevState.dropDownOpen
@@ -55,9 +56,9 @@ export default class Footer extends Component {
 		const {
 			handleNightMode, nightMode,
 			login, logout, deleteUserAccount,
-			toggleConversation, showConversation,
+			toggleChat, showChat,
 			handleBabyChet, toggleBabyChetMode,
-			values, profile, fetchPhrases,
+			phrases, profile, fetchPhrases,
 		} = this.props;
 
 		const { babyChetName} = profile;
@@ -96,15 +97,15 @@ export default class Footer extends Component {
 							<i className={`fa fa-2x fa-cog ${this.state.showSettingsModal ? "text-warning" : ""}`}
 								onClick={this.toggleSettingsModal} style={{ cursor: "pointer", color: "gray" }} />
 							}
-							{ // db.uid  && values && this.props.db &&
-								this.state.showSettingsModal &&
+							
+							
+							{ this.state.showSettingsModal &&
 
 								<SettingsModal
 									profile={profile}
 									dbName={babyChetName}
-									values={values}
+									phrases={phrases}
 									fetchPhrases={this.props.fetchPhrases}
-									handleBabyChet={handleBabyChet}
 									toggleBabyChetMode={this.props.toggleBabyChetMode}
 									wipeBabyChetsMind={this.props.wipeBabyChetsMind}
 									show={this.state.showSettingsModal}
@@ -118,8 +119,8 @@ export default class Footer extends Component {
 						<Col xs={3} md={1}>
 							<FooterIcon
 								type="tasks"
-								condition={showConversation}
-								onClick={toggleConversation}
+								condition={showChat}
+								onClick={toggleChat}
 							/>
 						</Col>
 
@@ -137,12 +138,16 @@ export default class Footer extends Component {
 								condition={showHelpModal}
 								onClick={this.toggleHelpModal}
 							/>
-							<HelpModal
-								showHelpModal={showHelpModal}
-								toggleHelpModal={this.toggleHelpModal}
-								activeHelpTab={activeHelpTab}
-								toggleHelpTabs={this.toggleHelpTabs}
-							/>
+						
+							{ showHelpModal &&
+								<HelpModal
+									showHelpModal={showHelpModal}
+									toggleHelpModal={this.toggleHelpModal}
+									activeHelpTab={activeHelpTab}
+									toggleHelpTabs={this.toggleHelpTabs}
+								/>
+							}
+
 						</Col>
 					</Row>
 				</div>

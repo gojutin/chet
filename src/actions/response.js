@@ -1,5 +1,5 @@
 import * as types from './types';
-import { saveToConversation } from './index';
+import { saveToChat } from './index';
 
 import firebase from 'firebase';
 
@@ -7,14 +7,13 @@ const db = firebase.database();
 
 const saveSlices = (slices, dispatch) => {
   return dispatch({
-    type: types.SAVE_SLICES,
-    payload: slices,
+    type: types.GENERATE_RESPONSE,
+    payload: {slices},
   })
 }
 
-export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
+export const generateResponse = (phrases, term, refKey, dispatch, dbConvoId) => {
 
-  // var i = -1;
   let matched;
   let matchedTo;
   let strength;
@@ -23,7 +22,7 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
 
   const findBestMatch = () => {
 
-    const exactMatch = values.filter(value => value.term === term );
+    const exactMatch = phrases.filter(value => value.term === term );
 
     if (exactMatch.length > 0 ) {
       matched = term;
@@ -53,7 +52,7 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
       let finalSlices = [];
       slicesArray.sort((a,b) => b.length - a.length);
        slicesArray.map(slice => {
-        return values.map(val => {
+        return phrases.map(val => {
           if (val.term.includes(slice) ){
             finalSlices.push(slice);
             return finArr.push(val);
@@ -63,12 +62,13 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
       })
 
       const sortedSlices = finalSlices.sort((a,b) => b.length - a.length);
+
+      // stats
       matched = sortedSlices[0]
       matchedTo =  finArr[0] ? finArr[0]["term"]: "nothing"
       strength = sortedSlices[0] ? Math.floor(sortedSlices[0].length / term.length * 100): 0;
      
-      return finArr[0];
-        
+      return finArr[0];  
     }
 
     const finalMatch = findBestMatch();
@@ -114,7 +114,7 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
         userValue: term,
         term: finalResp["term"],
         id: finalResp["id"],
-        phrases: values.length,
+        phrasesCount: phrases.length,
         matched,
         matchedTo,
         strength,
@@ -148,7 +148,7 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
 
     
    // Save to the conversation
-    saveToConversation({
+    saveToChat({
       userSays: {
         id: refKey,
         term,
@@ -160,12 +160,12 @@ export const generateResponse = (values, term, refKey, dispatch, dbConvoId) => {
     }, dbConvoId)   
 }
 
-export const handlePrevResponse = (term, values, responseId, refKey, dbId) => {
+export const handlePrevResponse = (term, phrases, responseId, refKey, dbId) => {
   return new Promise((resolve, reject) => {
     if (responseId) {
       // if there is a previous response, then get the value of the responseId
       // and see if any of it's responses contains the inputValue
-      const previousResponseValue = values.filter(({ id }) => id === responseId)[0] ;
+      const previousResponseValue = phrases.filter(({ id }) => id === responseId)[0] ;
       const responses = previousResponseValue ? previousResponseValue["responses"] : false;
       const responseValue = responses ? responses.find(value =>
         value.id === refKey) : false;

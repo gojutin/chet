@@ -1,21 +1,13 @@
 import React from 'react';
-import { NavItem, NavLink } from 'reactstrap';
-import classNames from 'classnames';
+import { NavItem } from 'reactstrap';
 
+export default ( {toggleTab, tabNumber, activeTab, children} ) => 
+	<div className="nav-link">
+		<NavItem
+			className={tabNumber === activeTab && "active"}
+			onClick={() => { toggleTab(tabNumber) }}
+		>
+			{children}
+		</NavItem>
+</div>
 
-export default ( {toggleTab, tabNumber, activeTab, children} ) => {
-
-	const tabClass = classNames({
-		"active": tabNumber === activeTab
-	})
-	return (
-		<NavItem>
-			<NavLink
-				className={tabClass}
-				onClick={() => { toggleTab(tabNumber); }}
-			>
-				{children}
-			</NavLink>
-	</NavItem>
-	);
-}

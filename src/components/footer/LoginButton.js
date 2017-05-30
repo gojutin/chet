@@ -24,7 +24,7 @@ export default class LoginButton extends Component {
 			this.props.handleBabyChet(uid).then(() => {
 				if ( profile.allowChet === false) {
 					toggleBabyChetMode(false, profile.babyChetPhrasesId).then(dbref => {
-						fetchPhrases(dbref);
+						fetchPhrases(dbref, profile.babyChetChatId);
 					})
 					
 					
@@ -52,7 +52,7 @@ export default class LoginButton extends Component {
 					toggle={this.toggleDropDown}
 					
 				>
-					<DropdownToggle style={dropdownStyle}  >
+					<DropdownToggle style={dropdownStyle} aria-label="Login dropdown button"  >
 					{ profile.loggingIn &&
 						<WobblySpinner diameter={30} />
 					}
@@ -69,7 +69,7 @@ export default class LoginButton extends Component {
         <DropdownMenu 
 					style={{
 						border: "1px solid lightgray", 
-						background: "white"
+						background: "white",
 					}}
 					className="text-center"
 				>

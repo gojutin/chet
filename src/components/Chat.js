@@ -6,17 +6,28 @@ import ScrollToTop from 'react-scroll-up';
 // Components
 import Bubble from './Bubble';
 
-export default class Conversation extends Component {
+export default class Chat extends Component {
 
   render() {
-    const { thisConversation, delayConversation, response, name } = this.props;
+    const { thisChat, delayChat, response, name } = this.props;
     return (
       <div>
+        { !thisChat.exchanges && delayChat &&
+          <Col xs={12} md={{ size: 8, offset: 2 }}>
+            <Bubble
+              textColor="white"
+              type="chet"
+              response={response}
+              message="You are now in the conversation view."
+              index={1}
+            />
+          </Col>
+        }
 
-        { thisConversation && delayConversation && thisConversation.exchanges &&
+        { thisChat && delayChat && thisChat.exchanges &&
           <div>
             
-            { thisConversation.exchanges.map((exchange, i) => (
+            { thisChat.exchanges.map((exchange, i) => (
                 <div
                   key={exchange.createdAt}
                   style={{ fontFamily: "Comfortaa, sans-serif" }}

@@ -3,14 +3,14 @@ import TypeWriter from 'react-typewriter';
 import {Collapse} from 'react-collapse';
 import Loader from 'react-dots-loader';
 
-export default ({ response, showConversation, profile } ) => {
+export default ({ response, showChat, profile } ) => {
   
 
   return (
-    <Collapse isOpened={!showConversation}>
+    <Collapse isOpened={!showChat}>
       <div 
         style={{minHeight: "50vh"}} 
-        className={showConversation ? "convoMessageEnter": "convoMessageLeave"}
+        className={showChat ? "convoMessageEnter": "convoMessageLeave"}
       >
         { response.loading &&
             <div style={{ paddingBottom: 12 + "px" }}>
@@ -21,7 +21,7 @@ export default ({ response, showConversation, profile } ) => {
             <TypeWriter typing={response.typing} minDelay={100} >
                 <h2 
                   style={{color: profile.babyChetColor && profile.babyChetMode ? profile.babyChetColor: "#31a531" , fontFamily: "Source Code Pro, monospace"}} 
-                  className={showConversation ? "convoMessageLeave": ""}
+                  className={showChat ? "convoMessageLeave": ""}
                 >
                   {response.term}
                 </h2>

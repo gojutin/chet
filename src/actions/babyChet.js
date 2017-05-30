@@ -1,10 +1,8 @@
 import firebase from 'firebase';
 import * as types from './types';
 import randomID from "random-id";
-import { login } from './index';
-import { fetchPhrases } from './index';
-const db = firebase.database();
 
+const db = firebase.database();
 
 export const updateSettings = (id, val) => {
 	return dispatch => {
@@ -40,7 +38,7 @@ export const toggleBabyChetMode = (babyChetMode, dbRef) => {
 				})
 				resolve(dbRef)
 			}
-			dispatch({type: types.CLEAR_CONVERSATION})
+			dispatch({type: types.ERASE_CHAT})
 			dispatch({type: types.CLEAR_RESPONSE})
 		})
 	}
@@ -67,24 +65,20 @@ export const handleBabyChet = (uid, dispatch) => {
 					}
 				})
 
-				console.log("existing profile", existingProfile)
-
 				if (!existingProfile) {
 					// if the user does not have a baby Chet, create a new one. 
 					const randomId = randomID();
-					const valuesId = "phrases_" + randomId;
+					const phrasesId = "phrases_" + randomId;
 					const chatId = "chats_" + randomId;
 					newProfile = {
 						uid,
-						babyChetPhrasesId: valuesId,
+						babyChetPhrasesId: phrasesId,
 						babyChetChatId: chatId,
 						babyChetName: "my chatbot",
 						babyChetColor: "#ffbb33",
 						allowChet: true,
-						allowWipe: true,
 						allowLogout: true,
 						allowEditProfile: true,
-						allowDelete: true,
 						pin: "",
 						babyChetMode: false,
 						chatCount: 0,
@@ -102,8 +96,6 @@ export const handleBabyChet = (uid, dispatch) => {
 						type: types.UPDATE_PROFILE,
 						payload: Object.assign({}, existingProfile, {id: existingProfileId} )
 					})
-
-					
 
 					resolve(existingProfile);
 				}

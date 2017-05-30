@@ -1,23 +1,10 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
 import { 
-  rollIn, wobble, bounceInDown, bounceOutUp, tada, rotateInDownRight, 
+  wobble, bounceInDown, bounceOutUp, tada, rotateInDownRight, 
   hinge, rubberBand, flip, rotateIn, bounce, jello, swing, zoomInDown, zoomOutUp,
 } from 'react-animations';
 import { StyleSheet, css } from 'aphrodite';
-
-// const animations = [wobble, tada, flip, bounce, zoomOutUp, rotateInDownRight, swing, zoomInDown, bounceOutUp, jello,rotateIn, hinge, rubberBand];
-
-// let styleObjects = {}
-
-// animations.map(anim => {
-//   styleObjects[anim.toString()] = {
-//     animationName: anim,
-//     animationDuration: '1s'
-//   }
-// })
-// console.log(styleObjects)
-// const styles = StyleSheet.create(styleObjects);
 
 const styles = StyleSheet.create({
   rotateInDownRight: {
@@ -100,7 +87,7 @@ export default class Header extends Component {
   }
   render () {
 
-    const { profile } = this.props;
+    const { profile, nightMode } = this.props;
     const { animateBabyChet, randomAnimation } = this.state;
     return (
       <Row style={{ maxWidth: "100vw", margin: 0 }}>
@@ -112,8 +99,8 @@ export default class Header extends Component {
                 className={`fa fa-child fa-5x ${animateBabyChet && css(styles[randomAnimation])}`}
                 onClick = {this.handleAnimateBabyChet}
                 style={{
-                  marginTop: 4.65 + "%",
-                  fontSize: 69 + "px",
+                  marginTop: 4 + "%",
+                  fontSize: 72 + "px",
                   color: profile.babyChetColor ? profile.babyChetColor : "gray",
                 }}
               />
@@ -127,11 +114,11 @@ export default class Header extends Component {
 
           { !profile.babyChetMode &&
             <img
-              src="chet_logo.png"
+              src="chet_logo-min.png"
               alt="Chet Logo"
               height={120}
-              style={{ marginTop: 5 + "%" }}
-              className={`visible ${css(styles[randomAnimation ? randomAnimation : "tada"])}`}
+              style={{ marginTop: 4 + "%" }}
+              className={`visible ${css(styles["tada"])}`}
             />
           }
         </Col>

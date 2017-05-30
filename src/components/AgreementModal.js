@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import moment from 'moment';
+// import moment from 'moment';
 
 import { Input, Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 
@@ -8,21 +8,8 @@ import Terms from './Terms';
 export default class AgreementModal extends Component {
 
 	state = {
-		showModal: false,
 		checkBox: false,
 		showTerms: false,
-	}
-
-	componentDidMount() {
-		if (localStorage.chet !== "true") {
-			this.toggleModal();
-		}
-	}
-
-	toggleModal = () => {
-		this.setState(prevState => ({
-			showModal: !prevState.showModal
-		}))
 	}
 
 	toggleTerms = () => {
@@ -32,11 +19,13 @@ export default class AgreementModal extends Component {
 	}
 
 	handleAgreement = () => {
+		let localStorage = window.localStorage;
 		this.setState(prevState => ({
 			checkBox: !prevState.checkBox
 		}), () => {
 			if (this.state.checkBox) {
-				const rightNow = moment().format('MMMM Do YYYY');
+				// const rightNow = moment().format('MMMM Do YYYY');
+				const rightNow = new Date().toDateString();
 				localStorage.setItem("chet", true);
 				localStorage.setItem("time", rightNow);
 			} else {
@@ -46,14 +35,13 @@ export default class AgreementModal extends Component {
 	}
 
 	render() {
-		const { showModal, showTerms, checkBox } = this.state;
+		const { showTerms, checkBox } = this.state;
+		const { toggleAgreementModal, showAgreementModal } = this.props;
 
 		return (
-			<Modal isOpen={showModal} className="text-center scroll modal-shadow" style={{maxHeight: 90 + "%"}} >
-				<ModalBody style={{fontFamily: "Source Code Pro, monospace"}}>
-					<h2 
-						className="text-warning"
-					>
+			<Modal isOpen={showAgreementModal} className="text-center scroll modal-shadow" style={{maxHeight: 90 + "%"}} >
+				<ModalBody>
+					<h2 style={{fontFamily: "Righteous, sans-serif"}}>
 						Hi, I'm Chet.
 					</h2>
 					<br />
@@ -70,8 +58,9 @@ export default class AgreementModal extends Component {
 						block
 						size="lg"
 						color="primary"
+						aria-label="Close popover button"
 						disabled={!checkBox}
-						onClick={this.toggleModal}
+						onClick={() => toggleAgreementModal()}
 						style={{ 
 							cursor: checkBox ? "pointer" : "not-allowed", 
 							height: 100 + "%", 
@@ -85,6 +74,7 @@ export default class AgreementModal extends Component {
 					<Input
 						type="checkbox"
 						value="hi"
+						aria-label="Checkbox to agree to terms"
 						className="pull-left"
 						onClick={this.handleAgreement}
 						style={{ height: 20 + "px", width: 20 + "px" }}

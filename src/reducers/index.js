@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import * as types from '../actions/types';
 
-const nightMode = (state="", action) => {
+const nightMode = (state=false, action) => {
   switch(action.type) {
     case types.TOGGLE_DAY_MODE:
       return false;
@@ -25,7 +25,7 @@ const profile = (state={}, action) => {
   }
 };
 
-const values = (state=false, action) => {
+const phrases = (state=false, action) => {
   switch(action.type) {
     case types.FETCH_PHRASES:
       return action.payload;
@@ -66,21 +66,12 @@ const input = (state={}, action) => {
   }
 };
 
-const conversation = (state={}, action) => {
+const chat = (state={}, action) => {
   switch(action.type) {
-    case types.FETCH_CONVERSATION:
+    case types.FETCH_CHAT:
       return action.payload;
-    case types.CLEAR_CONVERSATION:
+    case types.ERASE_CHAT:
       return {};
-    default:
-      return state;
-  }
-};
-
-const slices = (state="", action) => {
-  switch(action.type) {
-    case types.SAVE_SLICES:
-      return action.payload;
     default:
       return state;
   }
@@ -88,10 +79,9 @@ const slices = (state="", action) => {
 
 export default combineReducers({
   nightMode,
-  values,
+  phrases,
   response,
   input,
-  conversation,
-  slices,
+  chat,
   profile,
 });

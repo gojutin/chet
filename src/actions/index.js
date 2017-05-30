@@ -5,7 +5,7 @@ import { updateSettings, handleBabyChet, wipeBabyChetsMind, toggleBabyChetMode }
 
 import { fetchPhrases } from './phrases';
 import { login, logout, authWatch, deleteUserAccount } from './auth';
-import { startConversation, saveToConversation, clearEmptyConversations } from './conversation';
+import { startChat, saveToChat } from './chat';
 
 const onInputChange = value => {
   return dispatch => {
@@ -27,30 +27,28 @@ const onInputChange = value => {
   }
 };
 
-const sayHi = () => {
-  return dispatch => {
-    dispatch({
-      type: types.GENERATE_RESPONSE,
-      payload: {
-        term: "Hi :)",
-      },
-    })
-    dispatch({ type: types.START_TYPING })
-  }
-};
+// const sayHi = () => {
+//   return dispatch => {
+//     dispatch({
+//       type: types.GENERATE_RESPONSE,
+//       payload: {
+//         term: "Hi :)",
+//       },
+//     })
+//     dispatch({ type: types.START_TYPING })
+//   }
+// };
 
 export {
   handleNightMode,
-  sayHi,
   login,
   logout,
   deleteUserAccount,
   fetchPhrases,
   goChet,
   onInputChange,
-  startConversation,
-  saveToConversation,
-  clearEmptyConversations,
+  startChat,
+  saveToChat,
   toggleBabyChetMode,
   handleBabyChet,
   updateSettings,

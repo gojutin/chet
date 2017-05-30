@@ -40,7 +40,7 @@ export default ({ message, children, type, name, response  }) => {
 						<p style={{ color: "white", margin: 5,padding: 8 }}> {message} </p>
 					</Col>
 						<Col xs={2}>
-							<StatsModal name={name} />
+							<StatsModal name={name} response={response} />
 						</Col>
 				</Row>
 			}

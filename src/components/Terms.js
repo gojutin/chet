@@ -1,6 +1,8 @@
 import React from 'react';
 
+let localStorage = window.localStorage;
 const agreementDate = localStorage.getItem("time");
+
 
 export default _ =>
 	<div style={{ padding: 15 + "px", textAlign: "left" }}>

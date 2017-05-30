@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavItem, NavLink } from 'reactstrap';
+import { NavItem } from 'reactstrap';
 import classNames from 'classnames';
 
 
@@ -9,14 +9,14 @@ export default ( {toggleTab, tabNumber, activeTab, children} ) => {
 		"active text-warning": tabNumber === activeTab
 	})
 	return (
-		<NavItem>
-			<NavLink
+		<div className="nav-link">
+			<NavItem
 				className={tabClass}
 				onClick={() => { toggleTab(tabNumber); }}
 				style={{color: "lightgray"}}
 			>
 				{children}
-			</NavLink>
-	</NavItem>
+			</NavItem>
+	</div>
 	);
 }

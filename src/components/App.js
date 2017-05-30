@@ -2,58 +2,67 @@ import React, { Component } from 'react';
 import { Container, Col } from 'reactstrap';
 
 // components
+import AgreementModal from './AgreementModal';
+import Header from './Header';
 import Form from './Form';
 import Response from './Response';
-import Conversation from './Conversation';
-import AgreementModal from './AgreementModal';
-import Header from './Header'
+import Chat from './Chat';
 import Footer from './footer/Footer';
 
 export default class App extends Component {
 
   state = {
-    showConversation: false,
-    delayConversation: false,
+    showChat: false,
+    showAgreementModal: false,
+    delayChat: false,
   }
 
   componentDidMount() {
     this.props.handleNightMode();
+
+    if (localStorage.chet !== "true") {
+			this.toggleAgreementModal();
+		}
+
     this.props.authWatch()
-    .then(userId => {
-      console.log("UID", userId)
-      this.props.handleBabyChet(userId).then((profile) => {
-        console.log("pro",profile)
-        if (profile && profile.allowChet === false && profile.babyChetMode === false) {
-          this.props.fetchPhrases(profile.babyChetPhrasesId);
-          this.props.toggleBabyChetMode(profile.babyChetMode, profile.babyChetPhrasesId );
-        } else {
-          console.log("time to fetch values")
-          this.props.fetchPhrases("values");
-        }
+      .then(userId => {
+        this.props.handleBabyChet(userId).then((profile) => {
+          if (profile && profile.allowChet === false && profile.babyChetMode === false) {
+            this.props.fetchPhrases(profile.babyChetPhrasesId, profile.babyChetChatId);
+            this.props.toggleBabyChetMode(profile.babyChetMode, profile.babyChetPhrasesId );
+          } else {
+            this.props.fetchPhrases("values");
+          }
+        })
       })
-    })
   }
 
-  toggleConversation = () => {
+  toggleChat = () => {
     this.setState(prevState => ({
-      showConversation: !prevState.showConversation,
+      showChat: !prevState.showChat,
     }))
-    if (this.state.delayConversation === false) {
+    if (this.state.delayChat === false) {
       this.setState(prevState => ({
-        delayConversation: !prevState.delayConversation,
+        delayChat: !prevState.delayChat,
       }))
     } else {
       setTimeout(() => {
         this.setState(prevState => ({
-          delayConversation: !prevState.delayConversation,
+          delayChat: !prevState.delayChat,
         }))
       }, 500)
     }
   }
 
+	toggleAgreementModal = () => {
+		this.setState(prevState => ({
+			showAgreementModal: !prevState.showAgreementModal
+		}))
+	}
+
   render() {
-    const { thisConversation, response, profile, slices, nightMode } = this.props;
-    const { showConversation, delayConversation } = this.state;
+    const { thisChat, response, profile, nightMode } = this.props;
+    const { showChat, delayChat, showAgreementModal } = this.state;
 
     return (
 
@@ -80,29 +89,32 @@ export default class App extends Component {
 
           <Col xs={12} md={{ size: 8, offset: 2 }}>
             <Response
-              showConversation={showConversation}
+              showChat={showChat}
               response={response}
               profile={profile}
             />
           </Col>
 
-          
-          <Conversation
-            thisConversation={thisConversation}
-            delayConversation={delayConversation}
-            response={response}
-            slices={slices}
-            name={profile.babyChetMode ? profile.babyChetName : "Chet"}
+            <Chat
+              thisChat={thisChat}
+              delayChat={delayChat}
+              response={response}
+              name={profile.babyChetMode ? profile.babyChetName : "Chet"}
+            />
+            
+          { showAgreementModal && 
+          <AgreementModal
+            toggleAgreementModal={this.toggleAgreementModal}
+            showAgreementModal={showAgreementModal}
           />
-
-          <AgreementModal />
+          }
 
         </Container>
 
         <Footer
           {...this.props}
-          toggleConversation={this.toggleConversation}
-          showConversation={showConversation}
+          toggleChat={this.toggleChat}
+          showChat={showChat}
         />
       </div>
     );

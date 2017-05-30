@@ -2,9 +2,8 @@ import React from 'react';
 import { Row, Col } from 'reactstrap';
 
 
-export default ({ goChet, input, values, response, onInputChange, startConversation, profile }) => {
+export default ({ goChet, input, phrases, response, onInputChange, startChat, profile }) => {
 
-  // const { valuesId, convoId } = db;
   const { id, loading } = response;
   const { babyChetPhrasesId, babyChetChatId } = profile;
 
@@ -31,11 +30,11 @@ export default ({ goChet, input, values, response, onInputChange, startConversat
       chatId = "conversations";
     }
     if (!id) {
-      startConversation(chatId).then((chatKey) => {
-        goChet(input.value, values, id, phrasesId, chatId );
+      startChat(chatId).then((chatKey) => {
+        goChet(input.value, phrases, id, phrasesId, chatId );
       })
     } else {
-      goChet(input.value, values, id, phrasesId, chatId );
+      goChet(input.value, phrases, id, phrasesId, chatId );
     }
   }
 
@@ -44,13 +43,14 @@ export default ({ goChet, input, values, response, onInputChange, startConversat
   };
 
   const inputStyle = {
-    fontSize: 1.3 + "em",
+    fontSize: 1.2 + "em",
+    color: "black",
     lineHeight: 1.8 + "em",
     border: "1px solid black",
     borderRadius: 5 + "px",
     width: 100 + "%",
     maxWidth: 100 + "%",
-    marginTop: 20 + "px",
+    marginTop: 5 + "px",
     marginBottom: 20 + "px",
     paddingLeft: 20 + "px",
     paddingRight: 20 + "px",
@@ -61,6 +61,7 @@ export default ({ goChet, input, values, response, onInputChange, startConversat
     <Row>
       <Col xs={12} md={{size:8, offset:2}}>
         <form onSubmit={handleSubmit}>
+          <label style={{ width: 100 + "%", color: "transparent" }}> Talk to Chet
           <input
             type="text"
             value={input.value}
@@ -70,6 +71,9 @@ export default ({ goChet, input, values, response, onInputChange, startConversat
             disabled={loading}
             ref={(input) => { textInput = input; }}
           />
+          </label>
+          
+          
           { input.error &&
             <p className="text-warning">
               {input.error}

@@ -3,28 +3,10 @@ import * as types from './types';
 
 const db = firebase.database();
 
-export const fetchPhrases = (dbRef) => {
-  console.log("DBREF", dbRef)
-  return dispatch => {
-    return new Promise((resolve, reject) => {
-    db.ref(dbRef).orderByChild("value").on('value', snap => {
-      let valuesArray = [];
-      snap.forEach(value => {
-        valuesArray.push({
-          id: value.key,
-          term: value.val().term,
-          responses: value.val().responses ? Object.values(value.val().responses) : [],
-        });
-      });
-      dispatch({
-        type: types.FETCH_PHRASES,
-        payload: valuesArray,
-      });  
+const getStats = (dbRef, phrasesArray) => {
 
-      // get stats
-
-      if (dbRef !== "values") {
-
+   if (dbRef !== "values") {
+     
       const removeDuplicates = arr => {
         let i,
           len=arr.length,
@@ -41,63 +23,106 @@ export const fetchPhrases = (dbRef) => {
       };
 
       let wordsArr = [];
-		  let wordCount;
-			valuesArray.map(value => wordsArr.push(value.term));
+		  let wordsCount;
+			phrasesArray.map(value => wordsArr.push(value.term));
 		  const splitWords = wordsArr.join(" ").split(" ");
 		  const dupsRemoved = removeDuplicates(splitWords);
 
       if (dupsRemoved.length < 2 && dupsRemoved[0] === "") {
-        wordCount = 0;
+        wordsCount = 0;
       } else {
-        wordCount = dupsRemoved.length;
+        wordsCount = dupsRemoved.length;
       }
 
-      const growthPercentage = ((wordCount / 20000)*100).toFixed(1)
+      const growthPercentage = ((wordsCount / 20000)*100).toFixed(1)
 
       const phase = () => {
-        if ( wordCount < 500 ) {
+        if ( wordsCount < 100 ) {
           return {
-            phase: "baby",
+            level: 1,
             progress: 5,
             size: "",
           }
-        } else if (wordCount < 2000) {
+        } else if (wordsCount < 2000) {
           return {
-            phase: "toddler",
+            level: 2,
             size: "fa-2x",
           }
-        } else if (wordCount < 3000) {
+        } else if (wordsCount < 3000) {
           return {
-            phase: "kid",
+            level: 3,
             size: "fa-3x",
           }
-        } else if (wordCount < 20000) {
+        } else if (wordsCount < 20000) {
           return {
-            phase: "teenager",
+            level: 4,
             size: "fa-4x",
           }
-        } else {
+        } else if (wordsCount < 150000) {
           return {
-            phase: "all grown up",
+            level: 5,
             size: "fa-5x",
           }
-			  }
+			  } else {
+          return {
+            level: 6,
+            size: "fa-5x",
+          }
+        }
 		  }
+
+      const stats = {
+        wordsCount,
+        growthPercentage,
+        phrasesCount: phrasesArray.length,
+        phase: phase(),
+        }
+        return stats;
+
+      } else return {};
+}
+
+export const fetchPhrases = (dbRef, chatId) => {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+    db.ref(dbRef).orderByChild("value").on('value', snap => {
+      let phrasesArray = [];
+      snap.forEach(value => {
+        phrasesArray.push({
+          id: value.key,
+          term: value.val().term,
+          responses: value.val().responses ? Object.values(value.val().responses) : [],
+        });
+      });
+      dispatch({
+        type: types.FETCH_PHRASES,
+        payload: phrasesArray,
+      });  
+
+       // get stats if in babyChetMode
+       const stats = getStats(dbRef, phrasesArray);
+       
       dispatch({
         type: types.UPDATE_PROFILE,
-        payload: {
-          wordCount,
-          growthPercentage,
-          phrasesCount: valuesArray.length,
-          phase: phase(),
-          
-        }
+        payload: stats,
       })
-      }
     })
+
+    // get the chat count only once when the phrases are initially fetched
+    if (chatId) {
+      db.ref(chatId).once('value', snap => {
+        const len = snap.val() ? Object.keys(snap.val()).length : 0;
+        dispatch({
+          type: types.UPDATE_PROFILE,
+          payload:{ chatCount: len }
+        })
+      })
+    }
     resolve();
     })  
   }
 }
+
+
 
 

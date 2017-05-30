@@ -5,7 +5,7 @@ import * as types from './types';
 
 const db = firebase.database();
 
-export const goChet = (term, values, responseId, phrasesId, chatId) => {
+export const goChet = (term, phrases, responseId, phrasesId, chatId) => {
 
     // Set loading to true so that we can show the spinner
     return dispatch => {
@@ -28,7 +28,7 @@ export const goChet = (term, values, responseId, phrasesId, chatId) => {
         let refKey;
 
         // Check if this value has already been submitted.
-        const existingValue = values.filter((value) => value.term === term );
+        const existingValue = phrases.filter((phrase) => phrase.term === term );
 
         if (existingValue.length === 0) {
             db.ref(phrasesId).push({
@@ -43,16 +43,16 @@ export const goChet = (term, values, responseId, phrasesId, chatId) => {
                     }
                 })
             }).then(_ => {
-                handlePrevResponse(term, values, responseId, refKey, phrasesId)
+                handlePrevResponse(term, phrases, responseId, refKey, phrasesId)
                     .then((valKey) => {
-                        generateResponse(values, term, valKey, dispatch, chatId);
+                        generateResponse(phrases, term, valKey, dispatch, chatId);
                     })
             })
         } else {
 
-            handlePrevResponse(term, values, responseId, existingValue[0]["id"], phrasesId)
+            handlePrevResponse(term, phrases, responseId, existingValue[0]["id"], phrasesId)
                 .then((valKey) => {
-                    generateResponse(values, term, valKey, dispatch, chatId);
+                    generateResponse(phrases, term, valKey, dispatch, chatId);
                 })
         }
         console.timeEnd("Total Time");
