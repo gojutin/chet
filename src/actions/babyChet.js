@@ -7,6 +7,10 @@ const db = firebase.database();
 export const updateSettings = (id, val) => {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
+			dispatch({
+				type: types.UPDATE_PROFILE,
+				payload: val,
+			})
 			db.ref("profiles").child(id).update(val)
 			.then(() => {
 				dispatch({
@@ -22,25 +26,26 @@ export const updateSettings = (id, val) => {
 	}	
 }
 
-export const toggleBabyChetMode = (babyChetMode, dbRef) => {
+export const toggleBabyChetMode = (babyChetMode, babyChetPhrases) => {
 	return dispatch => {
-		return new Promise((resolve, reject) => {
+	//	return new Promise((resolve, reject) => {
 			if ( babyChetMode ) {
 				dispatch({
 					type: types.BABY_CHET_MODE,
 					payload: false,
 				})
-				resolve("values")
+			//	resolve("phrases")
 			} else {
+
 				dispatch({
 					type: types.BABY_CHET_MODE,
 					payload: true,
 				})
-				resolve(dbRef)
+			//	resolve(babyChetPhrases)
 			}
-			dispatch({type: types.ERASE_CHAT})
+			dispatch({type: types.CLEAR_CHAT})
 			dispatch({type: types.CLEAR_RESPONSE})
-		})
+//		})
 	}
 }
 
@@ -51,29 +56,25 @@ export const handleBabyChet = (uid, dispatch) => {
 				return resolve(false);
 			}
 
-			let newProfile;
-
 			// Check to see if the user already has a baby chet
 			db.ref("profiles").once("value", snap => {
-				let existingProfile;
-				let existingProfileId;
+				let profile;
+				let profileId;
 
 				snap.forEach((snap) => {
 					if (snap.val().uid === uid) {
-						existingProfile = snap.val();
-						existingProfileId = snap.key;
+						profile = snap.val();
+						profileId = snap.key;
 					}
 				})
 
-				if (!existingProfile) {
+				if (!profile) {
 					// if the user does not have a baby Chet, create a new one. 
 					const randomId = randomID();
 					const phrasesId = "phrases_" + randomId;
-					const chatId = "chats_" + randomId;
-					newProfile = {
+					profile = {
 						uid,
 						babyChetPhrasesId: phrasesId,
-						babyChetChatId: chatId,
 						babyChetName: "my chatbot",
 						babyChetColor: "#ffbb33",
 						allowChet: true,
@@ -81,40 +82,33 @@ export const handleBabyChet = (uid, dispatch) => {
 						allowEditProfile: true,
 						pin: "",
 						babyChetMode: false,
-						chatCount: 0,
 					}
-					db.ref("profiles").push(newProfile)
-						.then((ref) => {
-							dispatch({
-								type: types.UPDATE_PROFILE,
-								payload: Object.assign({}, newProfile, {id: ref.key, babyChetMode: false} )
-							})
-						})
-					resolve(newProfile);
-				} else if (existingProfile) {
+
 					dispatch({
 						type: types.UPDATE_PROFILE,
-						payload: Object.assign({}, existingProfile, {id: existingProfileId} )
+						payload: Object.assign({}, profile, {id: uid} )
 					})
 
-					resolve(existingProfile);
+					db.ref("profiles/" + profile.uid).set(profile)
+
+				} else if (profile) {
+					dispatch({
+						type: types.UPDATE_PROFILE,
+						payload: Object.assign({}, profile, {id: profileId} )
+					})
 				}
+				resolve(profile);
 			})
 	  })
 	}
 }
 
-export const wipeBabyChetsMind = (babyChetPhrasesId, babyChetChatId, uid) => {
+export const wipeBabyChetsMind = (babyChetPhrasesId, uid) => {
 	return dispatch => {
+		dispatch({type: types.CLEAR_RESPONSE})	
+		dispatch({type: types.CLEAR_CHAT})
 		db.ref(babyChetPhrasesId).remove()
-			.then(() => {
-				db.ref(babyChetChatId).remove()
-					.then(() => {
-							dispatch({
-								type: types.CLEAR_RESPONSE
-							})
-						})		
-			}).catch((err) => alert(err.message ? err.message : err))
+			.catch((err) => alert(err.message ? err.message : err))
 		}
 	}
 

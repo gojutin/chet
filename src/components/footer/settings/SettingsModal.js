@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
  
-import { Input, Button, Modal, ModalBody, Col, Row, Progress, TabContent, TabPane, Nav } from 'reactstrap';
+import { Input, Button, Modal, ModalBody, Col, Row, TabContent, TabPane, Nav } from 'reactstrap';
 import ColorIcon from './ColorIcon';
 import generateName from 'sillyname';
 
@@ -54,11 +54,9 @@ export default class SettingsModal extends Component {
 		const { profile } = this.props;
 		const  { babyChetMode, babyChetPhrasesId } = profile;
 		return new Promise ((resolve, reject) => {
-			this.props.toggleBabyChetMode( babyChetMode, babyChetPhrasesId ).then((dbRef) => {
-				this.props.fetchPhrases(dbRef, profile.babyChetChatId);
-				this.props.toggleSettingsModal()
-				resolve();
-			})
+			this.props.toggleBabyChetMode( babyChetMode, babyChetPhrasesId )
+			this.props.toggleSettingsModal();
+			resolve();
 		})
 	}
 
@@ -71,10 +69,8 @@ export default class SettingsModal extends Component {
 		if (color) {
 			updateSettings(profile.id, {babyChetName, babyChetColor: color});
 		} else {
-			timeoutId = setTimeout(() => { 
-				let babyChetColor = color ? color : profile.babyChetColor;
-      	updateSettings(profile.id, {babyChetName, babyChetColor});
-    	}, 1000);
+			let babyChetColor = color ? color : profile.babyChetColor;
+			updateSettings(profile.id, {babyChetName, babyChetColor});
 		}		
 	}
 
@@ -90,28 +86,43 @@ export default class SettingsModal extends Component {
   }
 
 	handleLogout = () => {
-		this.props.logout().then(() => {
-			this.props.toggleSettingsModal();
-			this.props.fetchPhrases("values");
-		})
-		
+		this.props.logout();
+		this.props.toggleSettingsModal();
 	}
 
 	render() {
-
 		const { babyChetName, activeTab } = this.state;
-		const { dbName, phrases, deleteUserAccount, show, toggleSettingsModal, profile} = this.props;
-		const { babyChetColor } = this.props.profile;
+		const { babyChetPhrases, online, deleteUserAccount, show, toggleSettingsModal, profile } = this.props;
 		const colors = [
-			"#f44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#03A9F4", "#00BCD4", 
-			"#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B",
+			"#FF5722","#9C27B0", "#3F51B5", "#4CAF50", "#FFC107"	 
 		];
+		const colors2 = [
+			"#E91E63","#03A9F4","#009688", "#CDDC39", "#FFEB3B",  "#FF9800"
+		]
 
-		const colorIcons = colors.map(color => 
+		const colors3 = [
+		"#00BCD4", "#795548", "#9E9E9E", "#607D8B", "#8BC34A",
+		]
+
+		const colorChoice = () => {
+			switch(profile.phase.level) {
+				case 1:
+					return colors;
+				case 2:
+					return [...colors,...colors2];
+				case 3:
+					return [...colors,...colors2, ...colors3];
+				default:
+					return [...colors,...colors2, ...colors3];
+			}
+		}
+
+
+		const colorIcons = colorChoice().map(color => 
 			<ColorIcon 
 				key={color}
 				color={color}
-				dbColor={babyChetColor}
+				dbColor={profile.babyChetColor}
 				handleUpdateSettings={() => this.handleUpdateSettings(color)}
 			/>
 		)
@@ -156,18 +167,21 @@ export default class SettingsModal extends Component {
                   activeTab={activeTab}
 								>
 								<div>
-								<img
-									src={profile.user.photo}
-									alt="Profile pic"
-									height={34}
-									style={{
-										borderRadius: 50 + "%",
-										margin: 0,
-									}}
-								/>	
+								{ online 
+									? <img
+										src={profile.photo}
+										alt="Profile pic"
+										height={34}
+										style={{
+											borderRadius: 50 + "%",
+											margin: 0,
+										}}
+									/>
+									: <i className="fa fa-user-circle-o fa-2x" />
+								}
 								</div>
 								</SettingsTab>	
-								{ profile.babyChetMode &&
+								{ profile.phase &&
 									<SettingsTab 
 										toggleTab={this.toggle}
 										tabNumber="3"
@@ -175,46 +189,41 @@ export default class SettingsModal extends Component {
 									>
 										<i className="fa fa-info-circle fa-2x" />
 									</SettingsTab>
-								}
-								{ (profile.allowLogout || profile.enteredPin) &&
-                  <Button 
-										color="primary"
-
-										style={{cursor: "pointer", border: "none", height: 80 + "%", margin: 3 + "px", marginTop: 8 + "px"}} 
-										onClick={this.handleLogout}
-										aria-label="Logout button"
-									>
-										Logout
-									</Button>
-								}
-               
+								} 
             </Nav>
 						
 						
 						<TabContent activeTab={this.state.activeTab}>
               <TabPane tabId="1">
 					<div>
-						<p style={{marginTop: 15 + "px"}}>My chatbot's name</p>
+						<p style={{marginTop: 15 + "px"}}>My chatbot's name
+							{ profile.allowEditProfile &&
+									<i 											
+										className="fa fa-random text-warning" 
+										style={{cursor: "pointer", paddingLeft: 10 + "px"}} 
+										onClick={this.sillyname}
+									/> 
+							}
+
+						</p>
 							{ !profile.allowEditProfile && 
-								<h4 style={{color: profile.babyChetColor}}> {babyChetName} </h4>
+									<h4 style={{color: profile.babyChetColor}}> {babyChetName} </h4>
 							}
 
 							{ profile.allowEditProfile && 
 									<div>
 										<Row>
+
 											<label style={{display: "none"}}>Your chatbots name</label>
+
 											<Input 
 												type="text" 
 												value={babyChetName} 
 												onChange={this.handleChange} 
-												style={{ width: 90 + "%", fontSize: 1.5 + "em", color: profile.babyChetColor, marginLeft: 8 + "px"}} 
+												style={{ fontSize: 1.5 + "em", color: profile.babyChetColor, margin: 10 + "px"}} 
 											/>
 
-											<i 
-												className="fa fa-random text-warning pull-right" 
-												style={{cursor: "pointer", paddingLeft: 5 + "px", paddingTop: 15 + "px"}} 
-												onClick={this.sillyname}
-											/>
+											
 											
 										</Row>
 										<br />
@@ -229,31 +238,23 @@ export default class SettingsModal extends Component {
 							<Row>
 								
 							 {  profile.allowChet && 
-								<Col xs={12} onClick={this.handleBabyChetMode} style={{cursor: "pointer"}} >
-								{/*<p 
-									className="text-center" 
-									style={{marginBottom: 0}}
+								<Col xs={12} >
+								<div style={{cursor: "pointer"}}>
+								<Button
+									block
+									size="lg"
+									className="switch"
+									style={{
+										cursor: "pointer", 
+										fontSize: 1.3 + "em", 
+										color: "white",
+										fontFamily: "Comfortaa, sans-serif"
+									}}
+									onClick={this.handleBabyChetMode}
+								
 								>
-									Switch to {profile.babyChetMode ? "Chet" : profile.babyChetName}
-								</p>*/}
-								<div 
-									style={{cursor: "pointer"}}
-								>
-								<p style={{marginBottom: 0}}>Switch</p>
-								{ profile.babyChetMode 
-										? <img 
-												src="chet_logo-min.png" 
-												alt="Chet logo"
-												height={75}  
-											/>
-										: 
-
-											<i 
-												className="fa fa-child fa-4x" 
-												style={{color: profile.babyChetColor }} 
-											/>
-
-								}
+									Switch to { !profile.babyChetMode ? profile.babyChetName : "Chet"}
+								</Button>
 									</div>									
 								</Col>
 								}
@@ -264,44 +265,12 @@ export default class SettingsModal extends Component {
 					</TabContent>
 					<TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="3">
+							{ profile.phase &&
+								<Milestones
+									profile={profile}
+								/>
+							}
 
-
-								<div >
-									{/*<div style={{color: babyChetColor}}>
-											<i 
-												className={`fa fa-child ${profile.phase ? profile.phase.size: "" }`}
-												style={{zIndex: 5000}}
-											/>
-
-											<p>{profile.name}</p>
-									</div>*/}
-										
-										  <Milestones 
-												level={profile.phase ? profile.phase.level : ""} 
-											/>
-												<Progress 
-												animated 
-												color="success" 
-												value={profile.growthPercentage} 
-												style={{marginTop: 5 + "px"}}
-											/>
-								</div>	
-
-						<hr />	
-						<Row>
-							<Col xs={4} style={{borderRight: "1px solid lightgray"}}>
-								<p>Words</p>
-								<h4 className="text-primary">{profile.wordsCount}</h4>
-							</Col>
-							<Col xs={4} style={{borderRight: "1px solid lightgray"}}>
-								<p>Phrases</p>
-								<h4 className="text-primary">{phrases.length}</h4>
-							</Col>
-							<Col xs={4}>
-								<p>Chats</p>
-								<h4 className="text-primary">{profile.chatCount}</h4>
-							</Col>
-							</Row>
 							</TabPane>
 					</TabContent>
 					<TabContent activeTab={this.state.activeTab}>
@@ -309,13 +278,11 @@ export default class SettingsModal extends Component {
 								<UserSettings
 									updateSettings={this.props.updateSettings}
 									profile={profile}
-									phrases={phrases}
+									phrases={babyChetPhrases}
 									handleLogout={this.handleLogout}
 									deleteUserAccount={deleteUserAccount}
 									wipeBabyChetsMind={this.props.wipeBabyChetsMind}
 									toggleBabyChetMode={this.props.toggleBabyChetMode}
-									fetchPhrases={this.props.fetchPhrases}
-									dbName={dbName}
 									activeTab={this.state.activeTab}
 								/>								
 						</TabPane>

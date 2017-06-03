@@ -25,6 +25,31 @@ h5 {
 	line-height: 1.5em !important;
 }
 
+.switch {
+	color: #FFFFFF;
+	background-color: #56A3DE;
+	*background-color: #56A3DE;
+	background-image: -moz-linear-gradient(top, #186BAB, #56A3DE);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#186BAB), to(#56A3DE));
+	background-image: -webkit-linear-gradient(top, #186BAB, #56A3DE);
+	background-image: -o-linear-gradient(top, #186BAB, #56A3DE);
+	background-image: linear-gradient(to bottom, #186BAB, #56A3DE);
+	background-repeat: repeat-x;
+	border-color: #56A3DE;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#186BAB', endColorstr='#56A3DE', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+.switch:hover,
+.switch:focus,
+.switch:active,
+.switch.active,
+.switch.disabled,
+.switch[disabled] {
+	color: #FFFFFF;
+	background-color: #56A3DE;
+	*background-color: #003bb3;
+}
 
 .speech-bubble-user {
   font-size: 1.1em;
@@ -156,8 +181,8 @@ h5 {
     transition: transform 4s ease-out;
 }
 
-.btn-secondary:focus {
-  border: none;
+.btn-secondary:focus, .btn-secondary:active {
+  border: none !important;
   text-decoration: none;
   box-shadow: none;
 }

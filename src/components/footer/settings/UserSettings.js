@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  Col, Row } from 'reactstrap';
+import {  Col, Row, Button } from 'reactstrap';
 import 'react-toggle/style.css';
 import Toggle from 'react-toggle';
 
@@ -38,11 +38,10 @@ export default class UserSettings extends Component {
   }
 
   handleSettingsToggle = (e, option) => {
-    const { updateSettings, profile, toggleBabyChetMode, fetchPhrases } = this.props;
+    const { updateSettings, profile, toggleBabyChetMode } = this.props;
     const stateName = option.id;
     if (stateName === "allowChet" && profile.allowChet && !profile.babyChetMode) {
       toggleBabyChetMode(profile.babyChetMode)
-      fetchPhrases(profile.babyChetPhrasesId, profile.babyChetChatId)
     }
     this.setState(prevState => ({
       [`${stateName}`]: !prevState[`${stateName}`]
@@ -56,19 +55,18 @@ export default class UserSettings extends Component {
   handleDelete = () => {
     const { profile } = this.props;
     this.props.deleteUserAccount(profile.id)
-      // updateSettings(profile.id, {pin: ""})
   }
 
 	handleWipe = () => {
 		const { profile, wipeBabyChetsMind } = this.props;
-		const { babyChetPhrasesId, babyChetChatId, uid } = profile;
-		wipeBabyChetsMind(babyChetPhrasesId, babyChetChatId, uid);
+		const { babyChetPhrasesId, uid } = profile;
+		wipeBabyChetsMind(babyChetPhrasesId, uid);
 
     
 	}
 
   render () {
-    const { profile, updateSettings, phrases } = this.props;
+    const { profile, updateSettings, phrases, handleLogout } = this.props;
     const { allowChet, allowLogout, allowEditProfile } = this.state;
     const settingsOptions = [
       { name: "Allow user to talk to Chet", id: "allowChet", value: allowChet },
@@ -79,6 +77,7 @@ export default class UserSettings extends Component {
     return (
       <div>
         <br />
+
          { !profile.enteredPin && this.props.activeTab === "2" &&
           <div className={css(styles.fadeIn)}>
             { !profile.pin &&
@@ -94,7 +93,6 @@ export default class UserSettings extends Component {
         { profile.enteredPin &&
           <div className={css(styles.fadeIn)}>
           <p 
-            className="text-warning"
             style={{textDecoration: "underline", cursor: "pointer"}}
             onClick={() => updateSettings(this.props.profile.id, {enteredPin: false})}
           >
@@ -117,13 +115,13 @@ export default class UserSettings extends Component {
             condition={(profile.enteredPin)}
             onClick={this.handleDelete}
             title="Delete my account"
-            userEmail={profile.user.email}
+            userEmail={profile.email}
           />
           <Setting 
             condition={(profile.enteredPin && phrases.length > 0)}
             onClick={this.handleWipe}
             title="Wipe my chatbot's mind"
-            userEmail={profile.user.email}
+            userEmail={profile.email}
             babyChetColor={profile.babyChetColor}
           />    
           </div>
@@ -132,8 +130,23 @@ export default class UserSettings extends Component {
           condition={profile.pin}
           onClick={this.handlePinReset}
           title="Reset my pin"
-          userEmail={profile.user.email}
+          userEmail={profile.email}
         />
+        { (profile.allowLogout || profile.enteredPin) &&
+          <Button 
+            color="primary"
+            style={{
+              cursor: "pointer", 
+              border: "none", 
+              height: 80 + "%",
+              width: 50 + "%",
+            }} 
+            onClick={() => handleLogout()}
+            aria-label="Logout button"
+          >
+            Logout
+          </Button>
+        }
       </div>
         
     );

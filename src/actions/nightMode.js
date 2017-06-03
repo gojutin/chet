@@ -7,11 +7,9 @@ export const handleNightMode = (nightMode) => {
       // toggle to night mode if it is between 7PM & 7AM
       if (rightNow >= 19 || rightNow <= 6) {
         dispatch({type: types.TOGGLE_NIGHT_MODE,})
-      } else {dispatch({type: types.TOGGLE_DAY_MODE,})}
-    } else if (nightMode) {
-      dispatch({type: types.TOGGLE_DAY_MODE,})
-    } else if (!nightMode) {
+      }
+    } else {
       dispatch({type: types.TOGGLE_NIGHT_MODE,})
-    }
+    } 
   } 
 }

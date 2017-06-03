@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Label, Button } from 'reactstrap';
+import { Label, Button, Form } from 'reactstrap';
 import { 
   wobble, tada, rubberBand, rotateIn, bounce, jello, swing, fadeIn
 } from 'react-animations';
@@ -60,11 +60,14 @@ export default class Setting extends Component {
     })
   }
 
-  handleSubmit = () => {
+  handleSubmit = (e) => {
+    e.preventDefault();
     if (this.props.userEmail.toLowerCase() !== this.state.emailAddress.toLowerCase()) {
       this.setState({
-        error: "Wrong email address. Please try again."
+        error: "Wrong email address. Please try again.",
+        emailAddress: "",
       })
+      this.emailInput.focus();
     } else {
       this.props.onClick();
       this.setState({
@@ -92,6 +95,7 @@ export default class Setting extends Component {
     this.setState(prevState => ({
       showConfirmForm: !prevState.showConfirmForm,
       emailAddress: "",
+      error: "",
     }), () => {
       if (this.state.showConfirmForm) {
         this.emailInput.focus();
@@ -126,7 +130,7 @@ export default class Setting extends Component {
        <div>
           { condition &&
               <p 
-                className={`${showConfirmForm ? "" : "text-warning"}`}
+                className={`${showConfirmForm ? "" : "text-primary"}`}
                 style={{textDecoration: "underline", cursor: "pointer"}}
                 onClick={this.handleChange}
               >
@@ -149,7 +153,10 @@ export default class Setting extends Component {
             </div>
           }
           { showConfirmForm && 
-            <div className={showConfirmForm &&  css(styles.fadeIn)}>
+            <Form 
+              className={showConfirmForm &&  css(styles.fadeIn)}
+              onSubmit={this.handleSubmit}
+            >
               <Label>Please enter the email address associated with your account.</Label>
               <input 
                 value={this.state.emailAddress}
@@ -159,25 +166,27 @@ export default class Setting extends Component {
                   outline: "none", 
                   border: "1px solid lightgray",
                   borderRadius: 5 + "px",
-                  marginBottom: 15 + "px",
                 }}
                 onChange={this.handleEmailAddress}
                 ref={(input) => { this.emailInput = input; }} 
               />
-              { error && 
-                <p className="text-warning">{error}</p>
-              }
+              <div style={{height: 15 + "px"}}>
+                <p className="text-danger" style={{margin: 0}}>
+                  {error}
+                </p>
+              </div>
+
               <br />
               <Button
                 color="danger"
-                onClick={this.handleSubmit}
-                style={{cursor: "pointer"}}
+                type="submit"
+                style={{cursor: "pointer", marginTop: 8 + "px"}}
                 aria-label="Confirm submit"
               >
                 {title}
               </Button>
               <hr />
-            </div>
+            </Form>
           }
        </div>
     );

@@ -19,22 +19,17 @@ export default class LoginButton extends Component {
 		const { profile, fetchPhrases, toggleBabyChetMode } = this.props;
 		this.props.login(network)
 		.then(uid => {
-			console.log(uid)
 			this.toggleDropDown();
 			this.props.handleBabyChet(uid).then(() => {
 				if ( profile.allowChet === false) {
-					toggleBabyChetMode(false, profile.babyChetPhrasesId).then(dbref => {
-						fetchPhrases(dbref, profile.babyChetChatId);
-					})
-					
-					
+					toggleBabyChetMode(false, profile.babyChetPhrasesId)
 				}
 			})
 		})
 	}
 
 	render() {
-		const { profile } = this.props;
+		const { profile, online } = this.props;
 		const { dropDownOpen } = this.state;
 
 		const dropdownStyle = {
@@ -73,15 +68,22 @@ export default class LoginButton extends Component {
 					}}
 					className="text-center"
 				>
+				{ !online && 
+				<div style={{padding: 5 + "px"}}>
+					<p>Sorry, but you cannot log in while you are offline.</p>
+				</div>
+					
+				}
+				{ online && 
+		
 					<div>
 						<DropdownItem header>Sign in with:</DropdownItem>
 						<SocialCircle network="google" click={this.handleLogin} />
 						<SocialCircle network="facebook" click={this.handleLogin} />
 						<SocialCircle network="twitter" click={this.handleLogin} />
 						<SocialCircle network="github" click={this.handleLogin}/>
-
 					</div>
-					
+				}
         </DropdownMenu>
       </Dropdown>
 			

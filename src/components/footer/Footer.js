@@ -56,12 +56,11 @@ export default class Footer extends Component {
 		const {
 			handleNightMode, nightMode,
 			login, logout, deleteUserAccount,
-			toggleChat, showChat,
+			toggleChat, showChat, online,
 			handleBabyChet, toggleBabyChetMode,
-			phrases, profile, fetchPhrases,
+			babyChetPhrases, profile, fetchData,
 		} = this.props;
 
-		const { babyChetName} = profile;
 		const { showHelpModal, activeHelpTab } = this.state;
 
 		return (
@@ -85,9 +84,10 @@ export default class Footer extends Component {
 						>
 							{!profile.uid &&
 								<LoginButton
+									online={online}
 									profile={profile}
 									login={login}
-									fetchPhrases={fetchPhrases}
+									fetchData={fetchData}
 									handleBabyChet={handleBabyChet}
 									toggleBabyChetMode={toggleBabyChetMode}
 									loggingIn={profile.loggingIn}
@@ -103,9 +103,8 @@ export default class Footer extends Component {
 
 								<SettingsModal
 									profile={profile}
-									dbName={babyChetName}
-									phrases={phrases}
-									fetchPhrases={this.props.fetchPhrases}
+									online={online}
+									babyChetPhrases={babyChetPhrases}
 									toggleBabyChetMode={this.props.toggleBabyChetMode}
 									wipeBabyChetsMind={this.props.wipeBabyChetsMind}
 									show={this.state.showSettingsModal}

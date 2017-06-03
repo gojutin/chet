@@ -2,10 +2,12 @@ import React from 'react';
 import { Row, Col } from 'reactstrap';
 
 
-export default ({ goChet, input, phrases, response, onInputChange, startChat, profile }) => {
+export default ({ dispatch, goChet, handleLastResponse, generateResponse, input, babyChetPhrases, chetPhrases, response, onInputChange, startChat, profile, currentPhrasesId, phrases }) => {
 
-  const { id, loading } = response;
-  const { babyChetPhrasesId, babyChetChatId } = profile;
+  const { loading } = response;
+  const responseId = response.id;
+  const { babyChetMode } = profile;
+  
 
   let textInput = null;
 
@@ -18,24 +20,17 @@ export default ({ goChet, input, phrases, response, onInputChange, startChat, pr
   }
 
   const handleSubmit = e => {
+    
     e.preventDefault();
-    let phrasesId;
-    let chatId;
     if (!input.value ) { return; }
-    if (profile.babyChetMode) {
-      phrasesId = babyChetPhrasesId;
-      chatId = babyChetChatId; 
-    } else {
-      phrasesId = "values";
-      chatId = "conversations";
-    }
-    if (!id) {
-      startChat(chatId).then((chatKey) => {
-        goChet(input.value, phrases, id, phrasesId, chatId );
+    let phrases = babyChetMode ? babyChetPhrases : chetPhrases
+    goChet( input.value, phrases, babyChetMode )
+      .then(newPhrasesObject => {
+        if (responseId) {
+          handleLastResponse(newPhrasesObject, input.value, responseId, currentPhrasesId);
+        }
+        generateResponse(newPhrasesObject, input.value, currentPhrasesId);
       })
-    } else {
-      goChet(input.value, phrases, id, phrasesId, chatId );
-    }
   }
 
   const handleChange = (e) => {

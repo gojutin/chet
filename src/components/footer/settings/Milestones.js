@@ -1,59 +1,85 @@
 import React from 'react';
-import { Col, Row } from 'reactstrap';
+import { Col, Row, Progress, Badge } from 'reactstrap';
 
-const Milestone = ({level, milestone}) => {
+const Trophy = ({phase, profile}) => {
+
 	const getColor = () => {
-		if (milestone.level === level) {return "green"} else
-		if (milestone.level < level) {return "#ffbb33"} else
-		{return "lightgray"}
-	}
-	const getColumnSize = () => {
-		switch(milestone.level) {
-			case 1:
-				return {size: 12}
-			case 2:
-				return {size: 4, offset: 2}
-			case 3:
-				return {size: 4}
-			case 4:
-				return {size: 4}
-			case 5:
-				return {size: 4}
-			case 6:
-				return {size: 4}
-			default:
-				break;
+		if (phase.level === profile.phase.level) {
+			return "#00C851";
+		} else if (phase.level === profile.phase.level) {
+			return "#ffbb33";
+		} else {
+			return "lightgray"
 		}
 	}
-	const color = getColor();
-	const colSize = getColumnSize();
 	return (
-		<Col 
-			xs={colSize} 
-			style={{color}}
-		>
-			<div>
-				<i className="fa fa-trophy fa-2x" />
-			</div>
-			<p>{milestone.phase}</p>
-		</Col>
+		<i 
+			className={`fa fa-trophy`} 
+			style={{
+				color: getColor(),
+				margin: 10 + "px",
+				fontSize: phase.level + "em"
+			}} 
+		/>
 	)
 }
 
-const milestones = [
-	{level: 1, phase: "baby bot"},
-	{level: 2, phase: "tot bot"},
-	{level: 3, phase: "kid bot"},
-	{level: 4, phase: "teen bot"},
-	{level: 5, phase: "big bot"},
-	{level: 6, phase: "grand bot"},
-];
 
-export default ({level}) => 
-	<div>
-		<Row style={{color: "lightgray", marginTop: 20 + "px"}}>
-			{ milestones.map(milestone => (
-				<Milestone key={milestone.level} level={level} milestone={milestone} />
-			))}
-	</Row>
-</div>
+
+
+export default ({ profile }) => {
+	const phases = [
+		{level: 1, name: "baby bot", words: 0},
+		{level: 2, name: "tot bot", words: 200},
+		{level: 3, name: "kid bot", words: 2000},
+		{level: 4, name: "teen bot", words: 3000},
+		{level: 5, name: "full grown bot", words: 20000},
+	];
+
+	const nextLevel = phases.filter(phase => 
+		phase.level === profile.phase.level + 1)[0]
+	
+	
+
+	return (
+		<div style={{marginTop: 15 + "px"}}>
+			<Progress
+				animated
+				color="success"
+				value={profile.growthPercentage > 3 ? profile.growthPercentage : 3}
+				style={{ marginTop: 5 + "px" }}
+			/>
+
+			{ phases.map(phase => 
+				<Trophy key={phase.level} phase={phase} profile={profile} />
+				)
+			}
+
+			<h3 className="text-success">{profile.phase.name}</h3>
+
+
+					<p style={{margin: 0, color: "gray"}}>next phase: <span className="text-primary">{nextLevel.name}</span></p>
+					<p style={{margin: 0, color: "gray"}}>words to go: <span className="text-primary">{nextLevel.words - profile.wordsCount}</span> </p>
+					<Badge color="success">new colors!</Badge>
+			<hr />
+			<Row>
+				<Col xs={6} style={{ borderRight: "1px solid lightgray" }}>
+					<p>Words</p>
+					<h4 className="text-primary">{profile.wordsCount}</h4>
+				</Col>
+				<Col xs={6} style={{ borderRight: "1px solid lightgray" }}>
+					<p>Phrases</p>
+					<h4 className="text-primary">{profile.phrasesCount}</h4>
+				</Col>
+			</Row>
+
+		</div>
+	)
+}
+
+
+
+
+
+
+

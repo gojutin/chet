@@ -7,36 +7,28 @@ import ScrollToTop from 'react-scroll-up';
 import Bubble from './Bubble';
 
 export default class Chat extends Component {
-
+  
   render() {
-    const { thisChat, delayChat, response, name } = this.props;
-    return (
-      <div>
-        { !thisChat.exchanges && delayChat &&
-          <Col xs={12} md={{ size: 8, offset: 2 }}>
-            <Bubble
-              textColor="white"
-              type="chet"
-              response={response}
-              message="You are now in the conversation view."
-              index={1}
-            />
-          </Col>
-        }
 
-        { thisChat && delayChat && thisChat.exchanges &&
+    const { delayChat, response, name, currentChat } = this.props;
+    return (  
+      <div >
+        { !currentChat.length && delayChat &&
+          <p style={{color: "gray", fontFamily: "Comfortaa, sans-serif"}}>Your conversation will appear here as you chat.</p>
+        }
+        { currentChat && delayChat && 
           <div>
             
-            { thisChat.exchanges.map((exchange, i) => (
+            { currentChat.map((exchange, i) => (
                 <div
                   key={exchange.createdAt}
                   style={{ fontFamily: "Comfortaa, sans-serif" }}
                 >
                   <Row>
                     <Col xs={12} md={{ size: 8, offset: 2 }}>
-                      {exchange.chetSays.id === response.id && i === 0 &&
+                      {exchange.chetSays === response.term && i === 0 &&
                         <Bubble
-                            message={exchange.chetSays.term}
+                            message={exchange.chetSays}
                             type="response"
                             response={response}
                             name={name}
@@ -50,7 +42,7 @@ export default class Chat extends Component {
                             textColor="white"
                             type="chet"
                             response={response}
-                            message={exchange.chetSays.term}
+                            message={exchange.chetSays}
                             index={i}
                           />
                         
@@ -59,7 +51,7 @@ export default class Chat extends Component {
                     <Col xs={12} md={{ size: 8, offset: 2 }}>
                       
                         <Bubble
-                          message={exchange.userSays.term}
+                          message={exchange.userSays}
                           type="user"
                         />
                      

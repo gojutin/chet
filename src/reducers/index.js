@@ -3,10 +3,19 @@ import * as types from '../actions/types';
 
 const nightMode = (state=false, action) => {
   switch(action.type) {
-    case types.TOGGLE_DAY_MODE:
-      return false;
     case types.TOGGLE_NIGHT_MODE:
+      return !state;
+    default:
+      return state;
+  }
+};
+
+const online = (state=true, action) => {
+  switch(action.type) {
+    case types.ONLINE:
       return true;
+    case types.OFFLINE:
+      return false;
     default:
       return state;
   }
@@ -25,10 +34,24 @@ const profile = (state={}, action) => {
   }
 };
 
-const phrases = (state=false, action) => {
+
+const chetPhrases = (state=[], action) => {
   switch(action.type) {
-    case types.FETCH_PHRASES:
+    case types.FETCH_CHET_PHRASES:
       return action.payload;
+    case types.UPDATE_CHET_PHRASES:
+      return state.concat(action.payload)
+    default:
+      return state;
+  }
+};
+
+const babyChetPhrases = (state=[], action) => {
+  switch(action.type) {
+    case types.FETCH_BABYCHET_PHRASES:
+      return action.payload;
+    case types.UPDATE_BABYCHET_PHRASES:
+      return state.concat(action.payload)
     default:
       return state;
   }
@@ -36,7 +59,7 @@ const phrases = (state=false, action) => {
 
 const response = (state={}, action) => {
   switch(action.type) {
-    case types.GENERATE_RESPONSE:
+    case (types.GENERATE_RESPONSE || types.UPDATE_RESPONSE):
       return Object.assign({}, state, action.payload);
     case types.START_TYPING:
       return Object.assign({}, state, {typing: 1});
@@ -61,17 +84,19 @@ const input = (state={}, action) => {
       return Object.assign({}, state, {value: action.payload});
     case types.HANDLE_INPUT_ERROR:
       return Object.assign({}, state, {error: action.payload});
+    case types.CLEAR_INPUT_ERROR:
+      return Object.assign({}, state, {error: ""});
     default:
       return state;
   }
 };
 
-const chat = (state={}, action) => {
+const currentChat = (state=[], action) => {
   switch(action.type) {
-    case types.FETCH_CHAT:
-      return action.payload;
-    case types.ERASE_CHAT:
-      return {};
+    case types.SAVE_CHAT:
+      return [...state, action.payload];
+    case types.CLEAR_CHAT:
+      return [];
     default:
       return state;
   }
@@ -79,9 +104,11 @@ const chat = (state={}, action) => {
 
 export default combineReducers({
   nightMode,
-  phrases,
+  online,
+  chetPhrases,
+  babyChetPhrases,
   response,
   input,
-  chat,
   profile,
+  currentChat,
 });

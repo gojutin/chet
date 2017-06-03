@@ -87,7 +87,7 @@ export default class Header extends Component {
   }
   render () {
 
-    const { profile, nightMode } = this.props;
+    const { profile } = this.props;
     const { animateBabyChet, randomAnimation } = this.state;
     return (
       <Row style={{ maxWidth: "100vw", margin: 0 }}>

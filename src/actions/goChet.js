@@ -1,61 +1,54 @@
-import firebase from 'firebase';
-import { handlePrevResponse } from './response';
-import { generateResponse } from './response';
 import * as types from './types';
+import randomID from "random-id";
 
-const db = firebase.database();
+export const goChet = (inputValue, phrases, babyChetMode) => {
+  // Set loading to true so that we can show the spinner
+  return dispatch => {
+    return new Promise(resolve => {
 
-export const goChet = (term, phrases, responseId, phrasesId, chatId) => {
+      console.time("Total Time");
 
-    // Set loading to true so that we can show the spinner
-    return dispatch => {
-        console.time("Total Time");
+      let phrasesSlice = phrases.slice();
 
-        dispatch({
-            type: types.HANDLE_INPUT_ERROR,
-            payload: "",
+      dispatch({ type: types.CLEAR_INPUT_ERROR })
+      dispatch({ type: types.STOP_TYPING })
+      dispatch({ type: types.LOADING, payload: true, })
+
+      // Check if this value has already been submitted.
+      const existingPhrase = phrases.length ? phrases.filter((phrase) => phrase.term === inputValue)[0] : null;
+
+      let phraseKey;
+
+      if (!existingPhrase) {
+        // create our own id so that we can optomistically update the UI.
+        phraseKey = randomID();
+        phrasesSlice.push({
+          id: phraseKey,
+          term: inputValue,
+          responses: [{
+            id: phraseKey,
+            count: 1,
+          }],
         })
-    
-        dispatch({
-            type: types.LOADING,
-            payload: true,
-        })
 
-        dispatch({ type: types.STOP_TYPING })
+      } else {
+        phraseKey = existingPhrase["id"]
+      }
 
-        // Save the key of the new value at the top of the function 
-        //so that it can be referenced outside of the function
-        let refKey;
+      let newPhraseObject = {
+        phrases: existingPhrase ? phrases : phrasesSlice,
+        phraseKey,
+        existingPhrase,
+      }
 
-        // Check if this value has already been submitted.
-        const existingValue = phrases.filter((phrase) => phrase.term === term );
-
-        if (existingValue.length === 0) {
-            db.ref(phrasesId).push({
-                term,
-            }).then(ref => {
-                refKey = ref.key;
-                db.ref(phrasesId + '/' + ref.key).child("responses").set({
-                    [refKey]: {
-                        term: term,
-                        id: refKey,
-                        count: 1,
-                    }
-                })
-            }).then(_ => {
-                handlePrevResponse(term, phrases, responseId, refKey, phrasesId)
-                    .then((valKey) => {
-                        generateResponse(phrases, term, valKey, dispatch, chatId);
-                    })
-            })
-        } else {
-
-            handlePrevResponse(term, phrases, responseId, existingValue[0]["id"], phrasesId)
-                .then((valKey) => {
-                    generateResponse(phrases, term, valKey, dispatch, chatId);
-                })
-        }
-        console.timeEnd("Total Time");
-    }
-    
+      dispatch({
+        type: babyChetMode
+            ? types.UPDATE_BABYCHET_PHRASES
+            : types.UPDATE_CHET_PHRASES,
+        payload: existingPhrase ? phrases : phrasesSlice,
+      })
+      resolve(newPhraseObject)
+      console.timeEnd("Total Time");
+    })
+  }
 }

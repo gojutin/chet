@@ -27,14 +27,16 @@ export default class App extends Component {
     this.props.authWatch()
       .then(userId => {
         this.props.handleBabyChet(userId).then((profile) => {
-          if (profile && profile.allowChet === false && profile.babyChetMode === false) {
-            this.props.fetchPhrases(profile.babyChetPhrasesId, profile.babyChetChatId);
-            this.props.toggleBabyChetMode(profile.babyChetMode, profile.babyChetPhrasesId );
+          if (profile) {
+            this.props.fetchData(profile.babyChetPhrasesId)
+            .then(phrases => {
+              this.props.getInitialStats(phrases);
+            })  
           } else {
-            this.props.fetchPhrases("values");
-          }
-        })
+            this.props.fetchData()
+          }  
       })
+    })
   }
 
   toggleChat = () => {
@@ -61,7 +63,7 @@ export default class App extends Component {
 	}
 
   render() {
-    const { thisChat, response, profile, nightMode } = this.props;
+    const { response, profile, nightMode, online, currentChat } = this.props;
     const { showChat, delayChat, showAgreementModal } = this.state;
 
     return (
@@ -70,33 +72,38 @@ export default class App extends Component {
         className={`text-center ${nightMode ? "bg-black" : "bg-white"}`}
         style={{ width: 100 + "%",height: 100 + "%", minHeight: "100vh", margin: 0,}}
       >
-        <div style={{color: "#2a96c7"}}>
-          <Header profile={profile} />
-        </div>
+
+        <img 
+          src="offline-icon.png" 
+          alt="offline icon" 
+          style={{display: online ? "none" : "block", position: "fixed", top: 15, right: 15}}
+          height={30} 
+        />
+
+        <Header profile={profile} />
 
         <Container
           style={{
-            paddingBottom: 30 + "px",
-            marginBottom: 20 + "px",
+            paddingBottom: 40 + "px",
             height: 100 + "%",
             minHeight: 100 + "%"
           }}
         >
-
           <Form 
             {...this.props} 
           />
 
-          <Col xs={12} md={{ size: 8, offset: 2 }}>
-            <Response
-              showChat={showChat}
-              response={response}
-              profile={profile}
-            />
-          </Col>
+            <Col xs={12} md={{ size: 8, offset: 2 }}>
+              <Response
+                currentChat={currentChat}
+                showChat={showChat}
+                response={response}
+                profile={profile}
+              />
+            </Col>
 
             <Chat
-              thisChat={thisChat}
+              currentChat={currentChat}
               delayChat={delayChat}
               response={response}
               name={profile.babyChetMode ? profile.babyChetName : "Chet"}
@@ -110,6 +117,7 @@ export default class App extends Component {
           }
 
         </Container>
+
 
         <Footer
           {...this.props}

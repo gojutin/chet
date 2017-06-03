@@ -1,20 +1,5 @@
 import { connect } from 'react-redux';
-import { 
-    handleNightMode,
-    fetchPhrases, 
-    toggleBabyChetMode,
-    login,
-    logout,
-    deleteUserAccount,
-    goChet, 
-    onInputChange, 
-    startChat, 
-    saveToChat,
-    handleBabyChet,
-    updateSettings,
-    authWatch,
-    wipeBabyChetsMind,
-  } from '../actions/index';
+import * as actionCreators from '../actions/index';
 
 import App from '../components/App';
 
@@ -22,28 +7,16 @@ export default connect(
   // State
  state => ({ 
    nightMode: state.nightMode,
-   phrases: state.phrases, 
+   online: state.online,
+   chetPhrases: state.chetPhrases, 
+   babyChetPhrases: state.babyChetPhrases,
    response: state.response, 
    input: state.input,
-   thisChat: state.chat,
    profile: state.profile,
+   currentPhrases: state.profile.babyChetMode ? state.babyChetPhrases : state.chetPhrases,
+   currentPhrasesId: state.profile.babyChetMode ? state.profile.babyChetPhrasesId : "phrases",
+   currentChat: state.currentChat.sort((a,b) => b.createdAt - a.createdAt ),
   }),
+  actionCreators
 
-  // Actions
-  {
-    handleNightMode,
-    fetchPhrases, 
-    deleteUserAccount,
-    toggleBabyChetMode,
-    login,
-    logout,
-    goChet, 
-    onInputChange, 
-    startChat, 
-    saveToChat, 
-    handleBabyChet,
-    updateSettings,
-    authWatch,
-    wipeBabyChetsMind
-  }
   )(App)

@@ -5,14 +5,10 @@ const db = firebase.database();
 
 export const logout = () => {
   return dispatch => {
-		return new Promise((resolve, reject) => {
-			firebase.auth().signOut()
-				.then(() => {resolve()})
-				.catch(error => {
-					resolve();
-					console.log("Oops, something went wrong. Please try again.")
-			});
-		})
+		firebase.auth().signOut()
+			.catch(error => {
+				console.log("Oops, something went wrong. Please try again.")
+		});
   }
 }
 
@@ -50,6 +46,10 @@ export const login = (providerName) => {
 					resolve(res.user.uid)
 				})
 				.catch(err => {
+					dispatch({
+						type: types.UPDATE_PROFILE,
+						payload: {loggingIn: false},
+					})
 					alert(err.message ? err.message : err)
 					resolve(null);
 					
@@ -71,7 +71,6 @@ export const login = (providerName) => {
 					})
 					db.ref("profiles").child(id).remove();
 				}, err => {
-					console.log(err)
 						alert(err.message)
 				});
 			}
@@ -87,15 +86,12 @@ export const login = (providerName) => {
 							let userInfo = {};
 							user.providerData.forEach(profile => {
 								userInfo = {
-									provider: profile.providerId,
-									uid: profile.uid,
-									userName: profile.displayName,
 									email: profile.email,
 									photo: profile.photoURL,
 								}
 								dispatch({
 									type: types.UPDATE_PROFILE,
-									payload: {user: userInfo},
+									payload: userInfo,
 								})
 								handleBabyChet(user.uid);
 								resolve(user.uid);

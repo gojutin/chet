@@ -65,7 +65,7 @@ export default class StatsModal extends Component {
                   <p>Congratulations, {name ? name: "Chet"} just learned their first thing ever!</p>
                 }
               
-                { !response.matchedTo &&
+                { !response.matchedPhrase &&
                   <p>
                     {name ? name: "Chet"} scanned "
                       <span className="text-primary">{response.userValue}</span>
@@ -73,17 +73,17 @@ export default class StatsModal extends Component {
                   </p>
                 }
                 
-                { response.matchedTo && !!response.phrasesCount &&
+                { response.matchedPhrase && !!response.phrasesCount &&
                 <div>
                   <p>
                   {name ? name: "Chet"} has never seen this phrase before so it was sliced into {response.slices.length} different variations and each one scanned against {response.phrasesCount} uknown phrases to find the closest match of "
-                  <span className="text-primary">{response.matched}</span>
+                  <span className="text-primary">{response.matchedSlice}</span>
                   "
-                  { !response.matchedTo &&
+                  { !response.matchedPhrase &&
                   <span>.</span> }
-                  { response.matchedTo &&
+                  { response.matchedPhrase &&
                   <span>
-                    <span> </span>in "<span className="text-primary">{response.matchedTo}</span>".
+                    <span> </span>in "<span className="text-primary">{response.matchedPhrase}</span>".
                   </span>
                 }
                 </p>
@@ -92,15 +92,15 @@ export default class StatsModal extends Component {
                 
                   <i className="fa fa-arrow-down text-primary" />
                   <p>
-                    {name ? name: "Chet"} responded with "<span className="text-primary">{response.term}</span>" out of {response.responseChoiceCount} possible response
-                    {response.responseChoiceCount !== 1 && <span>s</span>}.
+                    {name ? name: "Chet"} responded with "<span className="text-primary">{response.term}</span>" out of {response.matchResponseChoiceCount} possible response
+                    {response.matchResponseChoiceCount !== 1 && <span>s</span>}.
                   </p>
 
                 </div>
                 
                 <hr />
-                  <div> Match Strength: <span>{response.strength}%</span>
-                 <Progress animated color={response.strength === 100 ? "success" : "primary"} value={response.strength} />
+                  <div> Match Strength: <span>{response.matchStrength}%</span>
+                 <Progress animated color={response.matchStrength === 100 ? "success" : "primary"} value={response.matchStrength} />
                   
                   </div>
                 
@@ -129,7 +129,7 @@ export default class StatsModal extends Component {
                   <div className="slices">
                     <hr />
                     { response.slices && response.slices.map(slice => { 
-                        if (response.matched === slice) {
+                        if (response.matchedSlice === slice) {
                           return (
                             <h5 className="text-success">{slice}<i className="fa fa-check " style={{paddingLeft: 10 + "px"}}/></h5>
                           )

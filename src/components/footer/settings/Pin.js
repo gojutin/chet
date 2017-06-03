@@ -38,7 +38,9 @@ export default class Pin extends Component {
     this.setState({
       box1: "", box2: "", box3: "", box4: "", error: "", pin: "", attempts: 0,
     }, () => {
-      this[`box1`].focus();
+      if (this[`box1`]) {
+        this[`box1`].focus();
+      }
     })
   }
 
@@ -168,7 +170,7 @@ export default class Pin extends Component {
                 width: 50 + "px",
                 height: 50 + "px",
                 borderRadius: 5 + "px",
-                border: "1px solid lightgray",
+                border: "1px solid gray",
                 backgroundColor: profile.pin ? "white" : "#fff09b"
               }}
               type="tel"

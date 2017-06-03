@@ -1,15 +1,18 @@
 import * as types from './types';
-import { handleNightMode } from './displayMode';
+import { handleNightMode } from './nightMode';
 import { goChet } from './goChet';
+import { fetchData } from './firebase';
 import { updateSettings, handleBabyChet, wipeBabyChetsMind, toggleBabyChetMode } from './babyChet';
+import { getStats, getInitialStats } from './stats';
+import { handleLastResponse } from './handleLastResponse';
+import { generateResponse } from './generateResponse';
 
-import { fetchPhrases } from './phrases';
 import { login, logout, authWatch, deleteUserAccount } from './auth';
-import { startChat, saveToChat } from './chat';
+import { saveChat } from './chat';
 
 const onInputChange = value => {
   return dispatch => {
-    if (value.length > 90) {
+    if (value.length > 75) {
       dispatch({
         type: types.HANDLE_INPUT_ERROR,
         payload: "Oops, you ran out of space :( ",
@@ -40,19 +43,22 @@ const onInputChange = value => {
 // };
 
 export {
+  fetchData,
   handleNightMode,
   login,
   logout,
   deleteUserAccount,
-  fetchPhrases,
-  goChet,
   onInputChange,
-  startChat,
-  saveToChat,
   toggleBabyChetMode,
   handleBabyChet,
   updateSettings,
   authWatch,
   wipeBabyChetsMind,
+  getInitialStats,
+  saveChat,
+  goChet,
+  handleLastResponse,
+  generateResponse,
+  getStats,
 
 };
