@@ -47,6 +47,7 @@ export const fetchData = (babyChetPhrasesId) => {
                 responses: Object.keys(value.val().responses).map(function(k) { return value.val().responses[k] }),
               });
             });
+
             dispatch({
               type: types.FETCH_BABYCHET_PHRASES,
               payload: phrasesArray,

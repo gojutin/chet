@@ -56,7 +56,7 @@ export default class Footer extends Component {
 		const {
 			handleNightMode, nightMode,
 			login, logout, deleteUserAccount,
-			toggleChat, showChat, online,
+			toggleChat, showChat, online, getInitialStats,
 			handleBabyChet, toggleBabyChetMode,
 			babyChetPhrases, profile, fetchData,
 		} = this.props;
@@ -91,6 +91,8 @@ export default class Footer extends Component {
 									handleBabyChet={handleBabyChet}
 									toggleBabyChetMode={toggleBabyChetMode}
 									loggingIn={profile.loggingIn}
+									babyChetPhrases={babyChetPhrases}
+									getInitialStats={getInitialStats}
 								/>
 							}
 							{ profile.uid &&

@@ -223,8 +223,6 @@ export default class SettingsModal extends Component {
 												style={{ fontSize: 1.5 + "em", color: profile.babyChetColor, margin: 10 + "px"}} 
 											/>
 
-											
-											
 										</Row>
 										<br />
 										<p>My chatbot's color</p>
@@ -253,7 +251,7 @@ export default class SettingsModal extends Component {
 									onClick={this.handleBabyChetMode}
 								
 								>
-									Switch to { !profile.babyChetMode ? profile.babyChetName : "Chet"}
+									Switch to { !profile.babyChetMode ? "my chatbot" : "Chet"}
 								</Button>
 									</div>									
 								</Col>

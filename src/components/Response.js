@@ -17,7 +17,7 @@ export default ({ response, showChat, profile, currentChat } ) => {
 				    </div>
         }
         { !response.loading && response.term !== "" &&
-            <TypeWriter typing={response.typing} minDelay={0} >
+            <TypeWriter typing={response.typing} minDelay={200} >
                 <h2 
                   style={{color: profile.babyChetColor && profile.babyChetMode ? profile.babyChetColor: "#31a531" , fontFamily: "Source Code Pro, monospace"}} 
                   className={showChat ? "convoMessageLeave": ""}

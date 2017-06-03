@@ -16,14 +16,15 @@ export default class LoginButton extends Component {
   }
 
 	handleLogin = (network) => {
-		const { profile, fetchPhrases, toggleBabyChetMode } = this.props;
+		const { profile, fetchPhrases, toggleBabyChetMode, getInitialStats, babyChetPhrases } = this.props;
 		this.props.login(network)
 		.then(uid => {
 			this.toggleDropDown();
 			this.props.handleBabyChet(uid).then(() => {
 				if ( profile.allowChet === false) {
-					toggleBabyChetMode(false, profile.babyChetPhrasesId)
+					toggleBabyChetMode(false, profile.babyChetPhrasesId);
 				}
+				getInitialStats(babyChetPhrases)
 			})
 		})
 	}

@@ -28,7 +28,7 @@ export const updateSettings = (id, val) => {
 
 export const toggleBabyChetMode = (babyChetMode, babyChetPhrases) => {
 	return dispatch => {
-	//	return new Promise((resolve, reject) => {
+
 			if ( babyChetMode ) {
 				dispatch({
 					type: types.BABY_CHET_MODE,
@@ -36,16 +36,14 @@ export const toggleBabyChetMode = (babyChetMode, babyChetPhrases) => {
 				})
 			//	resolve("phrases")
 			} else {
-
+			
 				dispatch({
 					type: types.BABY_CHET_MODE,
 					payload: true,
-				})
-			//	resolve(babyChetPhrases)
+				})				
 			}
 			dispatch({type: types.CLEAR_CHAT})
 			dispatch({type: types.CLEAR_RESPONSE})
-//		})
 	}
 }
 

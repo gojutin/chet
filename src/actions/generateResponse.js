@@ -31,20 +31,27 @@ export const generateResponse = (newPhrasesObject, inputValue, currentPhrasesId)
     } else {
       const stringToArray = inputValue.split("");
       const len = stringToArray.length;
-      let i = 0;
+      // let i = 0;
       
       let slicesArray = [];
       let finalMatchArray = [];
       let slice;
-      while (i < len) {
-        var o = 0;
-        while( o < len) {
-          slice = stringToArray.slice(i, len - o).join("");
+      // while (i < len) {
+      //   var o = 0;
+      //   while( o < len) {
+      //     slice = stringToArray.slice(i, len - o).join("");
+      //     slicesArray.push(slice);
+      //     o += 1;
+      //   }
+      //   i += 1;
+      // }
+      for (let i = 0; i < len; i++) {
+        for (let j = 0; j < len; j++) {
+          slice = stringToArray.slice(i, len - j).join("");
           slicesArray.push(slice);
-          o += 1;
         }
-        i += 1;
       }
+
       const sortedSlices = slicesArray.sort((a,b) => b.length - a.length);
       sortedSlices.filter(slice => slice !== "");
       saveSlices(sortedSlices, dispatch);

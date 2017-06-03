@@ -69,13 +69,16 @@ export const getStats = (babyChetPhrases) => {
       return stats;
 }
 
-export const getInitialStats = babyChetPhrases => {
+export const getInitialStats = (babyChetPhrases, dispatch) => {
   return dispatch => {
-    let stats = getStats(babyChetPhrases);
+    return new Promise(resolve => {
+      let stats = getStats(babyChetPhrases);
 
-    dispatch({
-      type: types.UPDATE_PROFILE,
-      payload: stats
+      dispatch({
+        type: types.UPDATE_PROFILE,
+        payload: stats
+      })
+      resolve(babyChetPhrases);
     })
   }
 }
