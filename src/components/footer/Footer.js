@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
+
+// components
 import FooterIcon from './FooterIcon';
 import SettingsModal from './settings/SettingsModal';
 import HelpModal from './help/HelpModal';
-import LoginButton from './LoginButton';
+import LoginModal from './LoginModal';
 
 export default class Footer extends Component {
 
 	state = {
 		showHelpModal: false,
 		showSettingsModal: false,
+		showLoginModal: false,
 		activeHelpTab: "1",
 		dropDownOpen: false,
 	}
-
 
 	toggleDropDown = () => {
 		this.setState(prevState => ({
@@ -37,10 +39,30 @@ export default class Footer extends Component {
 		this.setState(prevState => ({
 			showSettingsModal: !prevState.showSettingsModal
 		}));
-		if (this.props.profile.id) {
-			this.props.updateSettings(this.props.profile.id, {enteredPin: false})
+		if (this.props.profile.uid) {
+			this.props.updateSettings(this.props.profile.uid, {enteredPin: false})
 		}
 		
+	}
+
+	toggleLoginModal = () => {
+		this.setState(prevState => ({
+			showLoginModal: !prevState.showLoginModal
+		}));
+	}
+
+	handleLogin = (network) => {
+		const { profile, toggleBabyChetMode, getInitialStats, babyChetPhrases } = this.props;
+		this.props.login(network)
+			.then(uid => {
+				this.toggleLoginModal();
+				this.props.handleBabyChet(uid).then(() => {
+					if ( profile.allowChet === false) {
+						toggleBabyChetMode(false, profile.babyChetPhrasesId);
+					}
+					getInitialStats(babyChetPhrases)
+				})
+			})
 	}
 
 	toggleHelpTabs = (tab) => {
@@ -51,17 +73,13 @@ export default class Footer extends Component {
 		}
 	}
 
-
 	render() {
 		const {
-			handleNightMode, nightMode,
-			login, logout, deleteUserAccount,
-			toggleChat, showChat, online, getInitialStats,
-			handleBabyChet, toggleBabyChetMode,
-			babyChetPhrases, profile, fetchData,
+			handleNightMode, nightMode, logout, deleteUserAccount,
+			toggleChat, showChat, offline, babyChetPhrases, profile,
 		} = this.props;
 
-		const { showHelpModal, activeHelpTab } = this.state;
+		const { showHelpModal, activeHelpTab, showLoginModal } = this.state;
 
 		return (
 			<div
@@ -82,30 +100,36 @@ export default class Footer extends Component {
 							xs={{ size: 3, offset: 0 }}
 							md={{ size: 1, offset: 4 }}
 						>
-							{!profile.uid &&
-								<LoginButton
-									online={online}
-									profile={profile}
-									login={login}
-									fetchData={fetchData}
-									handleBabyChet={handleBabyChet}
-									toggleBabyChetMode={toggleBabyChetMode}
+
+							{ !profile.uid &&
+								<FooterIcon
+									type="user-circle-o"
+									condition={this.state.showLoginModal}
+									onClick={this.toggleLoginModal}
 									loggingIn={profile.loggingIn}
-									babyChetPhrases={babyChetPhrases}
-									getInitialStats={getInitialStats}
 								/>
 							}
 							{ profile.uid &&
-							<i className={`fa fa-2x fa-cog ${this.state.showSettingsModal ? "text-warning" : ""}`}
-								onClick={this.toggleSettingsModal} style={{ cursor: "pointer", color: "gray" }} />
+								<FooterIcon
+									type="cog"
+									condition={this.state.showSettingsModal}
+									onClick={this.toggleSettingsModal}
+								/>
+							}
+
+							{ showLoginModal &&
+								<LoginModal
+									offline={offline}
+									toggleLoginModal={this.toggleLoginModal}
+									showLoginModal={showLoginModal}
+									handleLogin={this.handleLogin}
+								/>
 							}
 							
-							
 							{ this.state.showSettingsModal &&
-
 								<SettingsModal
 									profile={profile}
-									online={online}
+									offline={offline}
 									babyChetPhrases={babyChetPhrases}
 									toggleBabyChetMode={this.props.toggleBabyChetMode}
 									wipeBabyChetsMind={this.props.wipeBabyChetsMind}
@@ -148,7 +172,6 @@ export default class Footer extends Component {
 									toggleHelpTabs={this.toggleHelpTabs}
 								/>
 							}
-
 						</Col>
 					</Row>
 				</div>

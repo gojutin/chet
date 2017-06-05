@@ -2,23 +2,55 @@ import React from 'react';
 import { Row, Col } from 'reactstrap';
 import Loader from 'react-dots-loader';
 import StatsModal from './StatsModal';
+import { StyleSheet, css } from 'aphrodite';
 
 export default ({ message, children, type, name, response  }) => {
 
-		const bubbleClass = () => {
-			switch (type) {
-				case "chet":
-					return "speech-bubble-chet pull-right";
-				case "response":
-					return "speech-bubble-chet pull-right";
-				case "user":
-					return "speech-bubble-user";
-				default:
-					return "";
+	const styles = StyleSheet.create({
+		bubble: {
+			color: type === "user" ? "black" : "white",
+			textAlign: 'left',
+			fontSize: '1.1em',
+			position: 'relative',
+			borderRadius: '1em',
+			margin: '10px',
+			padding: '0px',
+			paddingLeft: '10px',
+			paddingRight: '10px',
+			paddingBottom: '.5px',
+			width: '85%',
+			background: (type === "chet" || type === "response") 
+				? 'rgb(49, 165, 49)' 
+				: '#e8e8e8' ,
+			':after': {
+				content: '""',
+				position: 'absolute',					
+				top: 50 + '%',
+				width: 0,
+				height: 0,
+				border: '11px solid transparent',
+				borderTop: 0,
+				marginTop: -5.5 + 'px',
+				// chet
+				left: (type === "chet" || type === "response") && 0,
+				borderRightColor: (type === "chet" || type === "response") && 'rgb(49, 165, 49)',
+				borderLeft: (type === "chet" || type === "response") && 0,
+				marginLeft: (type === "chet" || type === "response") && -11 + 'px',
+				// user
+				right: type === "user" && 0,
+				borderLeftColor: type === "user" && '#e8e8e8',
+				borderRight: type === "user" && 0,
+				marginRight: type === "user" && -11 + 'px',
 			}
+		},
+		text: {
+			margin: 5,
+			padding: 8,
 		}
+	});
+
 	return (
-		<div className={bubbleClass()}>
+		<div className={`${type === "user" ? 'pull-right': ""} ${css(styles.bubble)}`}>
 
 			{response && !response.delay && type === "response" &&
 				<div style={{padding: 14 + "px"}}>
@@ -29,7 +61,7 @@ export default ({ message, children, type, name, response  }) => {
 			{type !== "response" &&
 				<Row>
 					<Col xs={12}>
-						<p style={{ color: type === "chet" ? "white" : "black", margin: 5,padding: 8 }}> {message} </p>
+						<p className={css(styles.text)}> {message} </p>
 					</Col>
 				</Row>
 			}
@@ -37,7 +69,7 @@ export default ({ message, children, type, name, response  }) => {
 			{response && response.delay && type === "response" &&
 				<Row>
 					<Col xs={10}>
-						<p style={{ color: "white", margin: 5,padding: 8 }}> {message} </p>
+						<p className={css(styles.text)}> {message} </p>
 					</Col>
 						<Col xs={2}>
 							<StatsModal name={name} response={response} />
@@ -46,7 +78,6 @@ export default ({ message, children, type, name, response  }) => {
 			}
 		</div>
 	)
-
 }
 
 

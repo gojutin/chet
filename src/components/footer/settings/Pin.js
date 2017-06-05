@@ -56,7 +56,7 @@ export default class Pin extends Component {
         pinMessage: true,
       })
       updateSettings(
-        profile.id, 
+        profile.uid, 
         { pin, 
           enteredPin: false, 
         }
@@ -90,7 +90,7 @@ export default class Pin extends Component {
       })
 
     } else if (pin === profile.pin) {
-      updateSettings(profile.id, {enteredPin: true})
+      updateSettings(profile.uid, {enteredPin: true})
     }
   }
 
@@ -157,6 +157,12 @@ export default class Pin extends Component {
     return (
       <Row>
         <Col xs={{size: 10, offset: 1}} className={error && css(styles.headShake)}>
+          { !profile.pin &&
+            <p>Create your pin</p>
+          }
+          { profile.pin &&
+            <p>Please enter your pin</p>
+          }
         { boxes.map(({num}) => 
             <input
               key={num}
@@ -171,7 +177,7 @@ export default class Pin extends Component {
                 height: 50 + "px",
                 borderRadius: 5 + "px",
                 border: "1px solid gray",
-                backgroundColor: profile.pin ? "white" : "#fff09b"
+                backgroundColor: profile.pin ? "white" : "#f4ff81"
               }}
               type="tel"
               onFocus={() => this.setState({activeBox: num})}

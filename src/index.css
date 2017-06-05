@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Comfortaa|Righteous|Source+Code+Pro');
-
 html, 
 body {
   font-family: "Comfortaa", sans-serif;
@@ -21,92 +19,6 @@ input:hover, input:focus {
 	-webkit-overflow-scrolling: touch;
 }
                         
-h5 {
-	line-height: 1.5em !important;
-}
-
-.switch {
-	color: #FFFFFF;
-	background-color: #56A3DE;
-	*background-color: #56A3DE;
-	background-image: -moz-linear-gradient(top, #186BAB, #56A3DE);
-	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#186BAB), to(#56A3DE));
-	background-image: -webkit-linear-gradient(top, #186BAB, #56A3DE);
-	background-image: -o-linear-gradient(top, #186BAB, #56A3DE);
-	background-image: linear-gradient(to bottom, #186BAB, #56A3DE);
-	background-repeat: repeat-x;
-	border-color: #56A3DE;
-	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#186BAB', endColorstr='#56A3DE', GradientType=0);
-	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-}
-.switch:hover,
-.switch:focus,
-.switch:active,
-.switch.active,
-.switch.disabled,
-.switch[disabled] {
-	color: #FFFFFF;
-	background-color: #56A3DE;
-	*background-color: #003bb3;
-}
-
-.speech-bubble-user {
-  font-size: 1.1em;
-	position: relative;
-	background: #e8e8e8;
-	border-radius: 1em;
-  text-align: left;
-  padding: 0px;
-  padding-left: 10px;
-	padding-right: 10px;
-	padding-bottom: .5px;
-  width: 85%;
-}
-
-.speech-bubble-user:after {
-	content: '';
-	position: absolute;
-	left: 0;
-	top: 50%;
-	width: 0;
-	height: 0;
-	border: 11px solid transparent;
-	border-right-color: #e8e8e8;
-	border-left: 0;
-	border-top: 0;
-	margin-top: -5.5px;
-	margin-left: -11px;
-}
-
-.speech-bubble-chet {
-  text-align: left;
-  font-size: 1.1em;
-	position: relative;
-	background: rgb(49, 165, 49);
-	border-radius: 1em;
-  margin: 10px;
-  padding: 0px;
-  padding-left: 10px;
-	padding-right: 10px;
-	padding-bottom: .5px;
-  width: 85%;
-}
-
-.speech-bubble-chet:after {
-	content: '';
-	position: absolute;
-	right: 0;
-	top: 50%;
-	width: 0;
-	height: 0;
-	border: 11px solid transparent;
-	border-left-color: rgb(49, 165, 49);
-	border-right: 0;
-	border-top: 0;
-	margin-top: -5.5px;
-	margin-right: -11px;
-}
 
 @-webkit-keyframes fadeIt {
   0%   { background-color: #FFFFFF; }
@@ -167,8 +79,8 @@ h5 {
 }
 
 .convoMessageEnter {
-    transform: scale(.6) translateX(-25%);
-    transition: transform 0.3s ease-out;
+    transform: scale(.5) translateX(-75%);
+    transition: transform 0.5s ease-out;
 }
 
 .convoMessageLeave {
@@ -208,4 +120,14 @@ input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.typist-class {
+  font-size: 2.1em;
+  font-family: Source Code Pro, monospace;
+  margin: 0;
+}
+
+.typist-class span {
+  color: #ffbb33;
 }

@@ -4,10 +4,6 @@ import { render } from 'react-dom';
 import './db';
 import App from './containers/app-container';
 
-// css
-import './index.css';
-import 'bootstrap/dist/css/bootstrap.css';
-
 // Redux
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
@@ -15,8 +11,8 @@ import reducer from './reducers/index';
 import thunk from 'redux-thunk';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import localForage from 'localforage'
-import Perf from 'react-addons-perf'
-window.Perf = Perf
+// import Perf from 'react-addons-perf'
+// window.Perf = Perf
 
 // Is this still necessary?
 var injectTapEventPlugin = require("react-tap-event-plugin");
@@ -29,7 +25,6 @@ var getComposeEnhancers = () => {
     return compose(
       applyMiddleware(thunk),
       window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-      autoRehydrate()
     );
   } else {
     return compose(applyMiddleware(thunk),autoRehydrate());
@@ -39,7 +34,7 @@ var getComposeEnhancers = () => {
 
 var store = createStore(reducer, getComposeEnhancers() );
 
-persistStore(store, {storage: localForage});
+persistStore(store, {storage: localForage, whitelist: ["chetPhrases", "babyChetPhrases"]});
 
 render(
   <Provider store={store}>
@@ -47,6 +42,16 @@ render(
   </Provider>,
   document.getElementById('root')
 )
+
+// if (module.hot) {
+//   module.hot.accept('./containers/app-container', () => {
+//     const NextApp = require('./containers/app-container').default
+//     render(
+//       <NextApp />,
+//       document.getElementById('root')
+//     )
+//   })
+// }
 
 
 

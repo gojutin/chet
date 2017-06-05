@@ -57,12 +57,10 @@ export const handleBabyChet = (uid, dispatch) => {
 			// Check to see if the user already has a baby chet
 			db.ref("profiles").once("value", snap => {
 				let profile;
-				let profileId;
 
 				snap.forEach((snap) => {
 					if (snap.val().uid === uid) {
 						profile = snap.val();
-						profileId = snap.key;
 					}
 				})
 
@@ -84,7 +82,7 @@ export const handleBabyChet = (uid, dispatch) => {
 
 					dispatch({
 						type: types.UPDATE_PROFILE,
-						payload: Object.assign({}, profile, {id: uid} )
+						payload: profile,
 					})
 
 					db.ref("profiles/" + profile.uid).set(profile)
@@ -92,7 +90,7 @@ export const handleBabyChet = (uid, dispatch) => {
 				} else if (profile) {
 					dispatch({
 						type: types.UPDATE_PROFILE,
-						payload: Object.assign({}, profile, {id: profileId} )
+						payload: profile,
 					})
 				}
 				resolve(profile);

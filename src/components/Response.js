@@ -1,38 +1,56 @@
-import React from 'react';
-import TypeWriter from 'react-typewriter';
+import React, { Component } from 'react';
+import 'react-typist/dist/Typist.css';
+import Typist from 'react-typist';
 import {Collapse} from 'react-collapse';
-import Loader from 'react-dots-loader';
+import { StyleSheet, css } from 'aphrodite';
 
-export default ({ response, showChat, profile, currentChat } ) => {
+export default class Response extends Component {
   
- 
+  state = {
+    showTyping: true,
+  };
 
-  return (
-    <Collapse isOpened={!showChat} style={{overflow: "hidden"}} >
-    <div style={{minHeight: "50vh"}}>
-      <div className={showChat ? "convoMessageEnter": "convoMessageLeave"}>
-        { response.loading &&
-            <div style={{ paddingBottom: 12 + "px" }}>
-					    <Loader size={8} color={profile.babyChetColor && profile.babyChetMode ? profile.babyChetColor : "#31a531"} />
-				    </div>
-        }
-        { !response.loading && response.term !== "" &&
-            <TypeWriter typing={response.typing} minDelay={200} >
-                <h2 
-                  style={{color: profile.babyChetColor && profile.babyChetMode ? profile.babyChetColor: "#31a531" , fontFamily: "Source Code Pro, monospace"}} 
-                  className={showChat ? "convoMessageLeave": ""}
-                >
-                  {response.term}
-                </h2>
-              </TypeWriter>
-        } 
+  toggleTyping = () => {
+    this.setState(prevState => ({
+      showTyping: !prevState.showTyping,
+    }));
+  }
 
-       
-      </div>
-    </div>
-   </Collapse>
-  );
+  render () {
+    const { response, showChat, showResponse, profile } = this.props;
+    const styles = StyleSheet.create({
+      chetColor: {
+      color: "green",
+    },
+    babyChetColor: {
+      color: profile.babyChetColor
+    }
+})
+    return (
+      <Collapse isOpened={!showChat} style={{overflow: "hidden"}} >
+        <div style={{minHeight: "50vh"}}>
+          <div className={showChat ? "convoMessageEnter": "convoMessageLeave"}>
+            {  response.term && showResponse &&
+              <Typist 
+                avgTypingSpeed={100}
+                stdTypingDelay={100}
+                startDelay={1050}
+                className={`
+                typist-class 
+                ${showChat ? "convoMessageLeave": ""} 
+                ${profile.babyChetMode ? css(styles.babyChetColor): css(styles.chetColor) }
+                ` } 
+              >
+                {response.term}
+              </Typist>
+            } 
+          </div>
+        </div>
+      </Collapse>
+    );
+  }
 }
+
 
 
 

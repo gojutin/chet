@@ -15,6 +15,7 @@ export default class SettingsModal extends Component {
 		babyChetName: "",
 		activeTab: "1",
 		sleepMode: false,
+		progress: 0,
 	}
 
 	componentDidMount() {
@@ -33,8 +34,8 @@ export default class SettingsModal extends Component {
 	}
 
 	componentWillUnMount() {
-		if (this.props.profile.id) {
-			this.props.updateSettings(this.props.profile.id, {enteredPin: false});
+		if (this.props.profile.uid) {
+			this.props.updateSettings(this.props.profile.uid, {enteredPin: false});
 		}
 		this.setState({
 			activeTab: "1",
@@ -67,10 +68,10 @@ export default class SettingsModal extends Component {
 		clearTimeout(timeoutId);
 		const { babyChetName } = this.state;
 		if (color) {
-			updateSettings(profile.id, {babyChetName, babyChetColor: color});
+			updateSettings(profile.uid, {babyChetName, babyChetColor: color});
 		} else {
 			let babyChetColor = color ? color : profile.babyChetColor;
-			updateSettings(profile.id, {babyChetName, babyChetColor});
+			updateSettings(profile.uid, {babyChetName, babyChetColor});
 		}		
 	}
 
@@ -81,7 +82,20 @@ export default class SettingsModal extends Component {
       });
     }
 		if (this.state.activeTab === "2") {
-			this.props.updateSettings(this.props.profile.id, {enteredPin: false})
+			this.props.updateSettings(this.props.profile.uid, {enteredPin: false})
+		} 
+		if (tab === "3") {
+			this.setState({
+				progress: 0
+			}, () => {
+				for (let i = 0; i < ((this.props.profile.growthPercentage > 3) ? this.props.profile.growthPercentage : 12); i += .1 ) {
+					setTimeout(() => {
+						this.setState(prevState => ({
+							progress: i,
+						}))
+					}, 200)
+				}
+			})
 		}
   }
 
@@ -92,7 +106,7 @@ export default class SettingsModal extends Component {
 
 	render() {
 		const { babyChetName, activeTab } = this.state;
-		const { babyChetPhrases, online, deleteUserAccount, show, toggleSettingsModal, profile } = this.props;
+		const { babyChetPhrases, offline, deleteUserAccount, show, toggleSettingsModal, profile } = this.props;
 		const colors = [
 			"#FF5722","#9C27B0", "#3F51B5", "#4CAF50", "#FFC107"	 
 		];
@@ -129,7 +143,7 @@ export default class SettingsModal extends Component {
 
 		return (
 			<div style={{display: "inline"}}>
-				{ profile.id && 
+				{ profile.uid && 
 				<Modal 
 					isOpen={show} 
 					className="text-center modal-shadow" 
@@ -167,7 +181,7 @@ export default class SettingsModal extends Component {
                   activeTab={activeTab}
 								>
 								<div>
-								{ online 
+								{ offline 
 									? <img
 										src={profile.photo}
 										alt="Profile pic"
@@ -220,7 +234,11 @@ export default class SettingsModal extends Component {
 												type="text" 
 												value={babyChetName} 
 												onChange={this.handleChange} 
-												style={{ fontSize: 1.5 + "em", color: profile.babyChetColor, margin: 10 + "px"}} 
+												style={{ 
+													fontSize: 1.5 + "em", 
+													color: profile.babyChetColor, 
+													margin: "0px 20px",
+												}} 
 											/>
 
 										</Row>
@@ -236,17 +254,18 @@ export default class SettingsModal extends Component {
 							<Row>
 								
 							 {  profile.allowChet && 
-								<Col xs={12} >
+								<Col xs={{size: 8, offset: 2}} >
 								<div style={{cursor: "pointer"}}>
 								<Button
 									block
 									size="lg"
-									className="switch"
 									style={{
 										cursor: "pointer", 
-										fontSize: 1.3 + "em", 
-										color: "white",
-										fontFamily: "Comfortaa, sans-serif"
+										fontSize: 1.2 + "em", 
+										fontFamily: "Comfortaa, sans-serif",
+										borderRadius: 30 + "px",
+										border: "1px solid gray",
+										color: "gray"
 									}}
 									onClick={this.handleBabyChetMode}
 								
@@ -266,6 +285,7 @@ export default class SettingsModal extends Component {
 							{ profile.phase &&
 								<Milestones
 									profile={profile}
+									progress={this.state.progress}
 								/>
 							}
 

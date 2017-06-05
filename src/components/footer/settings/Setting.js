@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Label, Button, Form } from 'reactstrap';
+import { Label, Button, Form, Collapse } from 'reactstrap';
 import { 
   wobble, tada, rubberBand, rotateIn, bounce, jello, swing, fadeIn
 } from 'react-animations';
@@ -152,7 +152,8 @@ export default class Setting extends Component {
             <i className={`fa fa-child fa-4x text-center ${zapping && css(styles[randomAnimation])}`} style={{color: babyChetColor}} />
             </div>
           }
-          { showConfirmForm && 
+     
+          <Collapse isOpen={showConfirmForm }>
             <Form 
               className={showConfirmForm &&  css(styles.fadeIn)}
               onSubmit={this.handleSubmit}
@@ -187,7 +188,7 @@ export default class Setting extends Component {
               </Button>
               <hr />
             </Form>
-          }
+          </Collapse>
        </div>
     );
   }

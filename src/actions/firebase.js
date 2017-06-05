@@ -15,14 +15,14 @@ export const fetchData = (babyChetPhrasesId) => {
     connectedRef.on("value", function(snap) {
       if (snap.val() === true) {
         dispatch({
-          type: types.ONLINE
+          type: types.TOGGLE_OFFLINE_MODE,
+          payload: false,
         })
 
         db.ref("phrases").on('value', snap => {
           let phrasesArray = [];
           
           snap.forEach(value => {
-            let responses = value.val()
             phrasesArray.push({
               id: value.key,
               term: value.val().term,
@@ -57,7 +57,8 @@ export const fetchData = (babyChetPhrasesId) => {
         }
       } else {
         dispatch({
-          type: types.OFFLINE,
+          type: types.TOGGLE_OFFLINE_MODE,
+          payload: true,
         })
         resolve();
       }

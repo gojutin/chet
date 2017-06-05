@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Container, Col } from 'reactstrap';
+import '../index.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import { StyleSheet, css } from 'aphrodite';
 
 // components
 import AgreementModal from './AgreementModal';
 import Header from './Header';
 import Form from './Form';
-import Response from './Response';
 import Chat from './Chat';
 import Footer from './footer/Footer';
 
@@ -63,61 +64,72 @@ export default class App extends Component {
 	}
 
   render() {
-    const { response, profile, nightMode, online, currentChat } = this.props;
+    const { response, profile, nightMode, offline, currentChat } = this.props;
     const { showChat, delayChat, showAgreementModal } = this.state;
+
+    const styles = StyleSheet.create({
+      wrapper: {
+        width: 100 + "%",
+        height: 100 + "%", 
+        minHeight: "100vh", 
+        margin: 0,
+        textAlign: "center",
+      },
+      offline: {
+        display: !offline ? "none" : "block", 
+        position: "fixed", 
+        top: 15, 
+        right: 15
+      },
+      container: {
+        marginBottom: showChat ? 75 + "px" : 0 + "px",
+        height: 100 + "%",
+        minHeight: 100 + "%",
+        marginLeft: 5 + "%",
+        marginRight: 5 + "%",
+        textAlign: "center",
+      },
+    });
 
     return (
 
-      <div
-        className={`text-center ${nightMode ? "bg-black" : "bg-white"}`}
-        style={{ width: 100 + "%",height: 100 + "%", minHeight: "100vh", margin: 0,}}
+      <div 
+        className={`
+          ${nightMode ? "bg-black" : "bg-white"}
+          ${css(styles.wrapper)}
+        `}
       >
 
         <img 
           src="offline-icon.png" 
           alt="offline icon" 
-          style={{display: online ? "none" : "block", position: "fixed", top: 15, right: 15}}
-          height={30} 
+          className={css(styles.offline)}
         />
 
         <Header profile={profile} />
 
-        <Container
-          style={{
-            paddingBottom: 40 + "px",
-            height: 100 + "%",
-            minHeight: 100 + "%"
-          }}
-        >
+        <div className={css(styles.container)}>
+
           <Form 
             {...this.props} 
+            showChat={showChat}
           />
 
-            <Col xs={12} md={{ size: 8, offset: 2 }}>
-              <Response
-                currentChat={currentChat}
-                showChat={showChat}
-                response={response}
-                profile={profile}
-              />
-            </Col>
-
-            <Chat
-              currentChat={currentChat}
-              delayChat={delayChat}
-              response={response}
-              name={profile.babyChetMode ? profile.babyChetName : "Chet"}
-            />
+          <Chat
+            currentChat={currentChat}
+            delayChat={delayChat}
+            response={response}
+            name={profile.babyChetMode ? profile.babyChetName : "Chet"}
+          />
             
           { showAgreementModal && 
-          <AgreementModal
-            toggleAgreementModal={this.toggleAgreementModal}
-            showAgreementModal={showAgreementModal}
-          />
+            <AgreementModal
+              toggleAgreementModal={this.toggleAgreementModal}
+              showAgreementModal={showAgreementModal}
+            />
           }
-
-        </Container>
-
+          
+        </div>
 
         <Footer
           {...this.props}

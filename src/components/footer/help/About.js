@@ -30,7 +30,7 @@ const aboutItems = [
   },
 ];
 
-const AboutItem = ({icon,title, subtitle, info}) => (
+const AboutItem = ({icon, title, subtitle, info}) => (
   <div>
     <i className={`fa fa-2x text-warning ${icon}`} />
       <h5 className="text-primary">{title}</h5>
@@ -44,5 +44,13 @@ const AboutItem = ({icon,title, subtitle, info}) => (
 
 export default () => 
   <div>
-    {aboutItems.map(item => <AboutItem {...item} />)}
+    {aboutItems.map(item => <AboutItem key={item.title} {...item} />)}
+      <img 
+          src="offline-icon.png" 
+          alt="offline icon" 
+          height={30} 
+        />
+        <h5 className="text-primary">Offline mode</h5>
+      <p>You can still talk to Chet or your chatbot while offline. This icon will appear in the upper righthand corner when you are offline.</p>
+    <hr />
   </div>

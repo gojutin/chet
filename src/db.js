@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import faker from 'faker';
+// import faker from 'faker';
     
 const config = {
   // enter your Firebase config options here
@@ -22,13 +22,13 @@ const config = {
 
 firebase.initializeApp(config);
 
-const fakeData = () => {
-  let arr = [];
-  for (let i = 0; i < 1000; i++) {
-    arr.push({
-      id: Math.floor(Math.random() * 99999999999999999999),
-      term: faker.lorem.sentence()
-    })
-  }
-  return arr;
-}
+// const fakeData = () => {
+//   let arr = [];
+//   for (let i = 0; i < 1000; i++) {
+//     arr.push({
+//       id: Math.floor(Math.random() * 99999999999999999999),
+//       term: faker.lorem.sentence()
+//     })
+//   }
+//   return arr;
+// }

@@ -30,7 +30,7 @@ export const getStats = (babyChetPhrases) => {
       }
 
       const growthPercentage = ((wordsCount / 20000)*100).toFixed(1);
-
+     
       const phase = () => {
         if ( wordsCount < 200 ) {
           return {
@@ -42,12 +42,12 @@ export const getStats = (babyChetPhrases) => {
             level: 2,
             name: "tot bot",
           }
-        } else if (wordsCount >= 2000 && wordsCount < 3000) {
+        } else if (wordsCount >= 2000 && wordsCount < 5000) {
           return {
             level: 3,
             name: "kid bot"
           }
-        } else if (wordsCount >= 3000 && wordsCount < 20000) {
+        } else if (wordsCount >= 5000 && wordsCount < 20000) {
           return {
             level: 4,
             name: "teen bot"
@@ -55,7 +55,7 @@ export const getStats = (babyChetPhrases) => {
         } else if (wordsCount >= 20000) {
           return {
             level: 5,
-            name: "full grown bot"
+            name: "big bot"
           }
 			  }
 		  }

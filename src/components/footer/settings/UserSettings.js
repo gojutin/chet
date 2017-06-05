@@ -34,7 +34,7 @@ export default class UserSettings extends Component {
 
   handlePinReset = () => {
     const { profile, updateSettings } = this.props;
-    updateSettings(profile.id, {pin: "", enteredPin: false});
+    updateSettings(profile.uid, {pin: "", enteredPin: false});
   }
 
   handleSettingsToggle = (e, option) => {
@@ -46,15 +46,15 @@ export default class UserSettings extends Component {
     this.setState(prevState => ({
       [`${stateName}`]: !prevState[`${stateName}`]
     }), _ => {
-      if (profile.id) {
-        updateSettings(profile.id,{[`${stateName}`]: this.state[`${stateName}`]});
+      if (profile.uid) {
+        updateSettings(profile.uid,{[`${stateName}`]: this.state[`${stateName}`]});
       }
     })
   }
 
   handleDelete = () => {
     const { profile } = this.props;
-    this.props.deleteUserAccount(profile.id)
+    this.props.deleteUserAccount(profile.uid)
   }
 
 	handleWipe = () => {
@@ -80,12 +80,6 @@ export default class UserSettings extends Component {
 
          { !profile.enteredPin && this.props.activeTab === "2" &&
           <div className={css(styles.fadeIn)}>
-            { !profile.pin &&
-              <p>Create a pin to get started</p>
-            }
-            { profile.pin &&
-              <p>Please enter your pin</p>
-            }
             <Pin profile={profile} updateSettings={updateSettings} /> 
           </div> 
 
@@ -94,9 +88,10 @@ export default class UserSettings extends Component {
           <div className={css(styles.fadeIn)}>
           <p 
             style={{textDecoration: "underline", cursor: "pointer"}}
-            onClick={() => updateSettings(this.props.profile.id, {enteredPin: false})}
+            className="text-primary"
+            onClick={() => updateSettings(this.props.profile.uid, {enteredPin: false})}
           >
-            close
+            close settings
           </p>
           { settingsOptions.map(option => 
             <Row key={option.id}>

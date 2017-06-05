@@ -7,7 +7,7 @@ export default connect(
   // State
  state => ({ 
    nightMode: state.nightMode,
-   online: state.online,
+   offline: state.offline,
    chetPhrases: state.chetPhrases, 
    babyChetPhrases: state.babyChetPhrases,
    response: state.response, 

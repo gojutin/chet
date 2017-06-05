@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import { Input, Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 
-import Terms from './Terms';
+import Privacy from './footer/help/Privacy';
 
 export default class AgreementModal extends Component {
 
@@ -41,7 +41,7 @@ export default class AgreementModal extends Component {
 		return (
 			<Modal isOpen={showAgreementModal} className="text-center scroll modal-shadow" style={{maxHeight: 90 + "%"}} >
 				<ModalBody>
-					<h2 style={{fontFamily: "Righteous, sans-serif"}}>
+					<h2 style={{fontFamily: "Comfortaa, sans-serif"}}>
 						Hi, I'm Chet.
 					</h2>
 					<br />
@@ -97,7 +97,7 @@ export default class AgreementModal extends Component {
 				{showTerms &&
 					<div>
 						<hr />
-						<Terms />
+						<Privacy />
 					</div>
 				}
 			</Modal>

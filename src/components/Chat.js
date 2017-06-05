@@ -19,33 +19,26 @@ export default class Chat extends Component {
         { currentChat && delayChat && 
           <div>
             
-            { currentChat.map((exchange, i) => (
+            { currentChat.map((exchange, theIndex) => (
                 <div
                   key={exchange.createdAt}
                   style={{ fontFamily: "Comfortaa, sans-serif" }}
                 >
                   <Row>
                     <Col xs={12} md={{ size: 8, offset: 2 }}>
-                      {exchange.chetSays === response.term && i === 0 &&
+                      {exchange.chetSays === response.term && theIndex === 0 ?
                         <Bubble
                             message={exchange.chetSays}
                             type="response"
                             response={response}
                             name={name}
-                            i={i}
                           />
-                      }
-
-                      {i !== 0 &&
-                        
-                          <Bubble
+                      :  <Bubble
                             textColor="white"
                             type="chet"
                             response={response}
                             message={exchange.chetSays}
-                            index={i}
                           />
-                        
                       }
                     </Col>
                     <Col xs={12} md={{ size: 8, offset: 2 }}>
@@ -68,7 +61,6 @@ export default class Chat extends Component {
             <i className="fa fa-arrow-circle-up fa-2x" />
           </div>
         </ScrollToTop>
-        
         
       </div>
     );

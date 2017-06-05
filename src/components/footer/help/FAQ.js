@@ -24,4 +24,16 @@ export default () =>
         <hr />
       </div>
     )}
+    <h5 className="text-primary">
+      What programming language is Chet written in?
+    </h5>
+    <p>
+      Chet is written in JavaScript using
+        <a href="https://facebook.github.io/react/" rel="noopener noreferrer" target="_blank" > React </a>
+        and 
+        <a href="http://redux.js.org/" rel="noopener noreferrer"  target="_blank"> Redux</a>
+        . The data is stored in 
+      <a href="https://firebase.google.com/" rel="noopener noreferrer" target="_blank" > Firebase</a>.
+    </p>
+    <hr />
   </div>

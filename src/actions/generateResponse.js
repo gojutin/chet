@@ -31,7 +31,6 @@ export const generateResponse = (newPhrasesObject, inputValue, currentPhrasesId)
     } else {
       const stringToArray = inputValue.split("");
       const len = stringToArray.length;
-      // let i = 0;
       
       let slicesArray = [];
       let finalMatchArray = [];
@@ -64,8 +63,8 @@ export const generateResponse = (newPhrasesObject, inputValue, currentPhrasesId)
       }
       let sortedPhrases = phrasesNoNewValue.sort((a,b) => b.term.length - a.term.length);
 
-      sortedSlices.map(slice => {
-        return sortedPhrases.some(val => {
+      sortedSlices.some(slice => {
+        return sortedPhrases.filter(phrase => phrase.term.length > slice.length ).some(val => {
           if (val.term.includes(slice) ){
             finalSlices.push(slice);
             return finalMatchArray.push(val);
@@ -73,8 +72,6 @@ export const generateResponse = (newPhrasesObject, inputValue, currentPhrasesId)
           return false;  
         })
       })
-
-      console.log(finalSlices);
 
       //  sortedSlices.map(slice => {
       //   return sortedPhrases.map(val => {
@@ -89,7 +86,7 @@ export const generateResponse = (newPhrasesObject, inputValue, currentPhrasesId)
       // stats
       matchedSlice = finalSlices[0]
       matchedPhrase =  finalMatchArray[0] ? finalMatchArray[0]["term"]: "nothing"
-      matchStrength = finalSlices[0] ? Math.floor(finalSlices[0].length / inputValue.length * 100): 0;
+      matchStrength = finalSlices[0] ? Math.floor(finalSlices[0].length / finalMatchArray[0].term.length * 100): 0;
      
       return finalMatchArray[0];
     }
@@ -175,8 +172,6 @@ export const generateResponse = (newPhrasesObject, inputValue, currentPhrasesId)
       })
     }, 500)
 
-    dispatch({ type: types.START_TYPING });
-
     window.setTimeout(() => {
       dispatch({
         type: types.LOADING,
@@ -184,10 +179,6 @@ export const generateResponse = (newPhrasesObject, inputValue, currentPhrasesId)
       });
     }, 500)
 
-    dispatch({
-      type: types.HANDLE_INPUT_CHANGE,
-      payload: "",
-    });
 
     saveChat(dispatch, {
       userSays: inputValue,

@@ -9,9 +9,6 @@ export const goChet = (inputValue, phrases, babyChetMode) => {
       console.time("Total Time");
 
       let phrasesSlice = phrases.slice();
-
-      dispatch({ type: types.CLEAR_INPUT_ERROR })
-      dispatch({ type: types.STOP_TYPING })
       dispatch({ type: types.LOADING, payload: true, })
 
       // Check if this value has already been submitted.
