@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import moment from 'moment';
 
-import { Input, Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
+import { Input, Button, Modal, ModalBody, ModalFooter, Collapse } from 'reactstrap';
 
 import Privacy from './footer/help/Privacy';
 
@@ -94,12 +94,10 @@ export default class AgreementModal extends Component {
 							privacy policy</span>.
 					</p>
 				</div>
-				{showTerms &&
-					<div>
-						<hr />
-						<Privacy />
-					</div>
-				}
+				<Collapse isOpen={showTerms}>
+					<hr />
+					<Privacy />
+				</Collapse>
 			</Modal>
 		)
 	}

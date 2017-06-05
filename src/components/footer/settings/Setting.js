@@ -160,6 +160,7 @@ export default class Setting extends Component {
             >
               <Label>Please enter the email address associated with your account.</Label>
               <input 
+                type="text"
                 value={this.state.emailAddress}
                 className="btn text-left"
                 style={{
@@ -181,7 +182,7 @@ export default class Setting extends Component {
               <Button
                 color="danger"
                 type="submit"
-                style={{cursor: "pointer", marginTop: 8 + "px"}}
+                style={{cursor: "pointer"}}
                 aria-label="Confirm submit"
               >
                 {title}

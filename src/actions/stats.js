@@ -29,7 +29,14 @@ export const getStats = (babyChetPhrases) => {
         wordsCount = dupsRemoved.length;
       }
 
-      const growthPercentage = ((wordsCount / 20000)*100).toFixed(1);
+      let growthPercentage;
+      if (((wordsCount / 20000)*100).toFixed(1) < 3) {
+        growthPercentage = 3;
+      } else if (((wordsCount / 20000)*100).toFixed(1) >= 100) {
+        growthPercentage = 100;
+      } else {
+        growthPercentage = ((wordsCount / 20000)*100).toFixed(1);
+      }
      
       const phase = () => {
         if ( wordsCount < 200 ) {

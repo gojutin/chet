@@ -16,6 +16,7 @@ export default class SettingsModal extends Component {
 		activeTab: "1",
 		sleepMode: false,
 		progress: 0,
+		progressDone: false,
 	}
 
 	componentDidMount() {
@@ -86,14 +87,24 @@ export default class SettingsModal extends Component {
 		} 
 		if (tab === "3") {
 			this.setState({
-				progress: 0
+				progress: 0,
+				progressDone: false,
 			}, () => {
-				for (let i = 0; i < ((this.props.profile.growthPercentage > 3) ? this.props.profile.growthPercentage : 12); i += .1 ) {
+
+				for (let i = 0; i < this.props.profile.growthPercentage; i++ ) {
 					setTimeout(() => {
 						this.setState(prevState => ({
 							progress: i,
-						}))
-					}, 200)
+						}), () => {
+							if ((this.state.progress + 2) > this.props.profile.growthPercentage ) {
+								setTimeout(() => {
+									this.setState({
+										progressDone: true,
+									})
+								}, 200)
+							}
+						})
+					}, 100)
 				}
 			})
 		}
@@ -254,7 +265,7 @@ export default class SettingsModal extends Component {
 							<Row>
 								
 							 {  profile.allowChet && 
-								<Col xs={{size: 8, offset: 2}} >
+								<Col xs={{size: 10, offset: 1}} >
 								<div style={{cursor: "pointer"}}>
 								<Button
 									block
@@ -281,17 +292,6 @@ export default class SettingsModal extends Component {
 						</TabPane>
 					</TabContent>
 					<TabContent activeTab={this.state.activeTab}>
-            <TabPane tabId="3">
-							{ profile.phase &&
-								<Milestones
-									profile={profile}
-									progress={this.state.progress}
-								/>
-							}
-
-							</TabPane>
-					</TabContent>
-					<TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="2">
 								<UserSettings
 									updateSettings={this.props.updateSettings}
@@ -304,6 +304,18 @@ export default class SettingsModal extends Component {
 									activeTab={this.state.activeTab}
 								/>								
 						</TabPane>
+					</TabContent>
+					<TabContent activeTab={this.state.activeTab}>
+            <TabPane tabId="3">
+							{ profile.phase &&
+								<Milestones
+									profile={profile}
+									progress={this.state.progress}
+									done={this.state.progressDone}
+								/>
+							}
+
+							</TabPane>
 					</TabContent>
 				</ModalBody>
 			</Modal>
