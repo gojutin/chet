@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import * as firebase from "firebase";
 // import faker from 'faker';
     
 const config = {

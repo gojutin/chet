@@ -81,19 +81,31 @@ export default class Header extends Component {
     }), () => {
       this.setState(prevState => ({
         animateBabyChet: !prevState.animateBabyChet,
-        randomAnimation: randomAnimation,
+        randomAnimation,
       }))
     })
   }
   render () {
-
-    const { profile } = this.props;
+    
+    const { babyChetMode, babyChetColor, babyChetName } = this.props.profile;
     const { animateBabyChet, randomAnimation } = this.state;
+    const headerStyle = {
+      chet: {
+        display: babyChetMode ? "none" : "inline-block",
+        marginTop: 4 + "%" 
+      },
+      babyChet: {
+        display: babyChetMode ? "block": "none",
+      }
+    }
+
     return (
+
       <Row style={{ maxWidth: "100vw", margin: 0 }}>
         <Col xs={12}>
-          { profile.babyChetMode &&
-            <div className={css(styles.flip)}>
+        
+          <div style={headerStyle.babyChet}>
+            <div className={css(styles.flip)} >
               { animateBabyChet &&
               <i
                 className={`fa fa-child fa-5x ${animateBabyChet && css(styles[randomAnimation])}`}
@@ -101,26 +113,22 @@ export default class Header extends Component {
                 style={{
                   marginTop: 4 + "%",
                   fontSize: 72 + "px",
-                  color: profile.babyChetColor ? profile.babyChetColor : "gray",
+                  color: babyChetColor ? babyChetColor : "gray",
                 }}
               />
               }
             </div>
-          }
+            <h2 style={{ color: "gray", paddingTop: 5 + "px" }}>{babyChetName}</h2>
+          </div>
 
-          { profile.babyChetMode &&
-            <h2 style={{ color: "gray", paddingTop: 5 + "px" }}>{profile.babyChetName}</h2>
-          }
-
-          { !profile.babyChetMode &&
             <img
               src="chet_logo-min.png"
               alt="Chet Logo"
               height={120}
-              style={{ marginTop: 4 + "%" }}
-              className={`visible ${css(styles["tada"])}`}
+              className={css(styles.tada)}
+              style={headerStyle.chet}
             />
-          }
+
         </Col>
       </Row>
     )

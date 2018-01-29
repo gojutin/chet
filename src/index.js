@@ -10,9 +10,8 @@ import { Provider } from 'react-redux';
 import reducer from './reducers/index';
 import thunk from 'redux-thunk';
 import { persistStore, autoRehydrate } from 'redux-persist';
-import localForage from 'localforage'
-// import Perf from 'react-addons-perf'
-// window.Perf = Perf
+import localForage from 'localforage';
+import Perf from 'react-addons-perf';
 
 // Is this still necessary?
 var injectTapEventPlugin = require("react-tap-event-plugin");
@@ -22,6 +21,8 @@ const isDevEnv = process.env.NODE_ENV === "development";
 var getComposeEnhancers = () => {
   if (window.navigator.userAgent.includes('Chrome') && isDevEnv) {
 
+    window.Perf = Perf
+    
     return compose(
       applyMiddleware(thunk),
       window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
@@ -29,12 +30,11 @@ var getComposeEnhancers = () => {
   } else {
     return compose(applyMiddleware(thunk),autoRehydrate());
   }
-  
 };
 
 var store = createStore(reducer, getComposeEnhancers() );
 
-persistStore(store, {storage: localForage, whitelist: ["chetPhrases", "babyChetPhrases"]});
+// persistStore(store, {storage: localForage, whitelist: ["chetPhrases", "babyChetPhrases", "profile"]});
 
 render(
   <Provider store={store}>
@@ -42,16 +42,6 @@ render(
   </Provider>,
   document.getElementById('root')
 )
-
-// if (module.hot) {
-//   module.hot.accept('./containers/app-container', () => {
-//     const NextApp = require('./containers/app-container').default
-//     render(
-//       <NextApp />,
-//       document.getElementById('root')
-//     )
-//   })
-// }
 
 
 

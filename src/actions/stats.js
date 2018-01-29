@@ -89,3 +89,18 @@ export const getInitialStats = (babyChetPhrases, dispatch) => {
     })
   }
 }
+
+
+// This isn't working :(
+export const resetStats = (dispatch) => {
+  return dispatch => {
+    return new Promise(resolve => {
+      let stats = getStats([]);
+      dispatch({
+        type: types.UPDATE_PROFILE,
+        payload: stats
+      })
+      resolve(stats);
+    })
+  }
+}

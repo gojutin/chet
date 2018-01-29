@@ -9,6 +9,7 @@ export const saveChat = (dispatch, exchange) => {
     payload: Object.assign({}, {createdAt}, exchange)
   })
 }
+
   
     // db.ref(chatsId).on('value', snap => {
     //   let chatsArray = [];

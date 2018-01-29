@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import * as firebase from "firebase";
 import * as types from './types';
 import { handleBabyChet } from './index';
 const db = firebase.database();

@@ -118,6 +118,28 @@ export default class SettingsModal extends Component {
 	render() {
 		const { babyChetName, activeTab } = this.state;
 		const { babyChetPhrases, offline, deleteUserAccount, show, toggleSettingsModal, profile } = this.props;
+// 		const colors = [
+//     '#5D5A5A',
+//     '#706D97',
+//     '#BD8FDB',
+//     '#C1E787',
+//     '#DADE63',
+//     '#E7A163',
+// ];
+// const colors2 = [
+//     '#F2B701',
+//     '#DC0030',
+//     '#7C378A',
+//     '#3465AA',
+//     '#09A275',
+// ];
+// const colors3 = [
+//     '#0C2949',
+//     '#42235C',
+//     '#B7B748',
+//     '#962F72',
+//     '#63705E',
+// ];
 		const colors = [
 			"#FF5722","#9C27B0", "#3F51B5", "#4CAF50", "#FFC107"	 
 		];

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
-import Response from './Response';
 
 export default class Form extends Component {
 
   state = {
     inputValue: "",
-    showResponse: true,
   };
 
   handleChange = (e) => {
@@ -29,40 +27,25 @@ export default class Form extends Component {
     }, 100)
   }
 
-  // I am here
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { inputValue } = this.state;
-    if (!inputValue) { return; }
+    this.props.handleSubmit(inputValue);
     this.setState({
-      showResponse: false,
+      inputValue: "",
     })
-    const { goChet, handleLastResponse, generateResponse, profile, currentPhrasesId, responseId, currentPhrases } = this.props;
-    goChet( inputValue, currentPhrases, profile.babyChetMode )
-      .then(newPhrasesObject => {
-        if (responseId) {
-          handleLastResponse(newPhrasesObject, inputValue, responseId, currentPhrasesId);
-        }
-        generateResponse(newPhrasesObject, inputValue, currentPhrasesId);
-        this.setState({
-          inputValue: "",
-          showResponse: true,
-        });
-      })
   }
-
 
   render() {
 
     let textInput = null;
-    const { showChat, response, profile } = this.props;
-    const { loading } = response;
-    const { inputValue, errorMessage, showResponse } = this.state;
+    const { loading } = this.props.response;
+    const { inputValue, errorMessage } = this.state;
 
     const inputStyle = {
       fontSize: 1.2 + "em",
       color: "black",
-      lineHeight: 1.8 + "em",
+      lineHeight: 1.9 + "em",
       border: "1px solid black",
       borderRadius: 5 + "px",
       width: 100 + "%",
@@ -102,15 +85,6 @@ export default class Form extends Component {
             }
           </form>
         </Col>
-          <Col xs={12} md={{ size: 8, offset: 2 }}>
-            <Response
-              showChat={showChat}
-              response={response}
-              showResponse={showResponse}
-              profile={profile}
-            />
-
-          </Col>
       </Row>
     );
   }

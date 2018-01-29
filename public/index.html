@@ -1,79 +1,120 @@
 <!doctype html>
 <html lang="en">
-  <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chet</title>
-    <meta name="description" content="Meet Chet, a chatbot that learns from you." />
-    <meta property="og:title" content="Meet Chet, a chatbot that learns from you." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="http://meetchet.com/"/>
-    <meta property="og:image" content="%PUBLIC_URL%/chet_og-min.png" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="Chet" />
-    <meta name="twitter:title" content="Meet Chet, a chatbot that learns from you." />
-    <meta name="twitter:image" content="%PUBLIC_URL%/chet_og-min.png" />
+<head>
 
-    <!--<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">-->
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1">
+  <title>Chet</title>
+  <meta name="description"
+    content="Meet Chet, a chatbot that learns from you." />
+  <meta property="og:title"
+    content="Chet" />
+  <meta property="og:type"
+    content="website" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="apple-mobile-web-app-title" content="Chet">
-    <meta name="application-name" content="Chet">
-    <meta name="theme-color" content="#ffffff">
+  <meta name="twitter:card"
+    content="summary" />
+  <meta name="twitter:site"
+    content="@gojutin" />
+  <meta name="twitter:creator"
+    content="@gojutin" />
+  <meta property="og:url"
+    content="https://meetchet.com/" />
+  <meta property="og:title"
+    content="Chet" />
+  <meta property="og:description"
+    content="Meet Chet, a chatbot that learns from you." />
+  <meta property="og:image"
+    content="%PUBLIC_URL%/chet_og-min.png" />
 
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Comfortaa|Source+Code+Pro" rel="stylesheet">
-    
-    <style>
-      .loader {
-        border: 2px solid #f3f3f3;
-        border-top: 2px solid gray;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 2s linear infinite;
+
+  <!--<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">-->
+
+  <link rel="apple-touch-icon"
+    sizes="180x180"
+    href="/apple-touch-icon.png">
+  <link rel="icon"
+    type="image/png"
+    sizes="32x32"
+    href="/favicon-32x32.png">
+  <link rel="icon"
+    type="image/png"
+    sizes="16x16"
+    href="/favicon-16x16.png">
+  <link rel="manifest"
+    href="/manifest.json">
+  <link rel="mask-icon"
+    href="/safari-pinned-tab.svg"
+    color="#5bbad5">
+  <meta name="apple-mobile-web-app-title"
+    content="Chet">
+  <meta name="application-name"
+    content="Chet">
+  <meta name="theme-color"
+    content="#ffffff">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    rel="stylesheet"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+    crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Comfortaa|Source+Code+Pro"
+    rel="stylesheet">
+
+  <style>
+    .loader {
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid gray;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
       }
-
-      @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+      100% {
+        transform: rotate(360deg);
       }
-      .center {
-        text-align: center;
-        font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-        font-weight: 300;
-        color: lightslategray;
-        margin: 0 auto;
-        margin-top: 40px;
-      }
+    }
 
-    </style>
+    .center {
+      text-align: center;
+      font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      font-weight: 300;
+      color: lightslategray;
+      margin: 0 auto;
+      margin-top: 40px;
+    }
+  </style>
 
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js');
-      }
-    </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
 
-  </head>
-  <body>
-    <div id="root">
-      <br>
-      <h3 class="center">Please wait while Chet gets ready</h3>
-      <div class="loader center"></div>
-    </div>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-98607305-1', 'auto');
-      ga('send', 'pageview');
-    </script>
-  </body>
+</head>
+
+<body>
+  <div id="root">
+    <br>
+    <h3 class="center">Please wait while Chet gets ready</h3>
+    <div class="loader center"></div>
+  </div>
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-98607305-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+</body>
+
 </html>

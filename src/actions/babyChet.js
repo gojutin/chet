@@ -1,6 +1,7 @@
-import firebase from 'firebase';
+import * as firebase from "firebase";
 import * as types from './types';
 import randomID from "random-id";
+import { resetStats } from './index';
 
 const db = firebase.database();
 
@@ -104,6 +105,8 @@ export const wipeBabyChetsMind = (babyChetPhrasesId, uid) => {
 		dispatch({type: types.CLEAR_RESPONSE})	
 		dispatch({type: types.CLEAR_CHAT})
 		db.ref(babyChetPhrasesId).remove()
+			// This isn't working :( see stats.js
+			.then(() => resetStats(dispatch))
 			.catch((err) => alert(err.message ? err.message : err))
 		}
 	}

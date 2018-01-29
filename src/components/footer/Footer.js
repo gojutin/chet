@@ -75,8 +75,10 @@ export default class Footer extends Component {
 
 	render() {
 		const {
-			handleNightMode, nightMode, logout, deleteUserAccount,
-			toggleChat, showChat, offline, babyChetPhrases, profile,
+			// action creators
+			handleNightMode, logout, deleteUserAccount, toggleChat,
+			// state
+			nightMode, showChat, offline, babyChetPhrases, profile,
 		} = this.props;
 
 		const { showHelpModal, activeHelpTab, showLoginModal } = this.state;

@@ -7,6 +7,7 @@ import { StyleSheet, css } from 'aphrodite';
 import AgreementModal from './AgreementModal';
 import Header from './Header';
 import Form from './Form';
+import Response from './Response';
 import Chat from './Chat';
 import Footer from './footer/Footer';
 
@@ -16,10 +17,13 @@ export default class App extends Component {
     showChat: false,
     showAgreementModal: false,
     delayChat: false,
+    showResponse: true,
   }
 
   componentDidMount() {
     this.props.handleNightMode();
+
+
 
     if (localStorage.chet !== "true") {
 			this.toggleAgreementModal();
@@ -63,9 +67,27 @@ export default class App extends Component {
 		}))
 	}
 
+  handleSubmit = (inputValue) => {
+    if (!inputValue) { return; }
+    this.setState({
+      showResponse: false,
+    })
+    const { goChet, handleLastResponse, generateResponse, profile, currentPhrasesId, responseId, currentPhrases } = this.props;
+    goChet( inputValue, currentPhrases, profile.babyChetMode )
+      .then(newPhrasesObject => {
+        if (responseId) {
+          handleLastResponse(newPhrasesObject, inputValue, responseId, currentPhrasesId);
+        }
+        generateResponse(newPhrasesObject, inputValue, currentPhrasesId);
+        this.setState({
+          showResponse: true,
+        });
+      })
+    }
+
   render() {
     const { response, profile, nightMode, offline, currentChat } = this.props;
-    const { showChat, delayChat, showAgreementModal } = this.state;
+    const { showChat, showResponse, delayChat, showAgreementModal } = this.state;
 
     const styles = StyleSheet.create({
       wrapper: {
@@ -78,6 +100,7 @@ export default class App extends Component {
       offline: {
         display: !offline ? "none" : "block", 
         position: "fixed", 
+        height: 20,
         top: 15, 
         right: 15
       },
@@ -111,8 +134,16 @@ export default class App extends Component {
         <div className={css(styles.container)}>
 
           <Form 
-            {...this.props} 
+            handleSubmit={this.handleSubmit}
+            response={response}
+          />
+
+          
+          <Response
             showChat={showChat}
+            response={response}
+            showResponse={showResponse}
+            profile={profile}
           />
 
           <Chat

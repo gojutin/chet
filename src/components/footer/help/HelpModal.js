@@ -16,7 +16,7 @@ const helpTabs = [
 const HelpTab = ( {toggleTab, tabNumber, activeTab, children} ) => (
 	<div className="nav-link">
 		<NavItem
-			className={tabNumber === activeTab && "active"}
+			className={tabNumber === activeTab ? "active" : ""}
 			onClick={() => { toggleTab(tabNumber) }}
 		>
 			{children}

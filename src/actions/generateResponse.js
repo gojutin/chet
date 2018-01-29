@@ -1,7 +1,7 @@
 import * as types from './types';
 import { saveChat, getStats } from './index';
 
-import firebase from 'firebase';
+import * as firebase from "firebase";
 
 const db = firebase.database();
 

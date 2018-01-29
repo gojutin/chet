@@ -17,7 +17,7 @@ export const goChet = (inputValue, phrases, babyChetMode) => {
       let phraseKey;
 
       if (!existingPhrase) {
-        // create our own id so that we can optomistically update the UI.
+        // create our own id so that we can optimistically update the UI.
         phraseKey = randomID();
         phrasesSlice.push({
           id: phraseKey,
@@ -40,8 +40,8 @@ export const goChet = (inputValue, phrases, babyChetMode) => {
 
       dispatch({
         type: babyChetMode
-            ? types.UPDATE_BABYCHET_PHRASES
-            : types.UPDATE_CHET_PHRASES,
+          ? types.UPDATE_BABYCHET_PHRASES
+          : types.UPDATE_CHET_PHRASES,
         payload: existingPhrase ? phrases : phrasesSlice,
       })
       resolve(newPhraseObject)

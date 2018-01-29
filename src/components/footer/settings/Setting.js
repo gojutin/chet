@@ -134,6 +134,7 @@ export default class Setting extends Component {
                 style={{textDecoration: "underline", cursor: "pointer"}}
                 onClick={this.handleChange}
               >
+        
                 {showConfirmForm ? "Nevermind": title}
               </p>
           }
@@ -155,7 +156,7 @@ export default class Setting extends Component {
      
           <Collapse isOpen={showConfirmForm }>
             <Form 
-              className={showConfirmForm &&  css(styles.fadeIn)}
+              className={showConfirmForm ? css(styles.fadeIn): ""}
               onSubmit={this.handleSubmit}
             >
               <Label>Please enter the email address associated with your account.</Label>

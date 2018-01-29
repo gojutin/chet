@@ -2,7 +2,7 @@ import { handleNightMode } from './nightMode';
 import { goChet } from './goChet';
 import { fetchData } from './firebase';
 import { updateSettings, handleBabyChet, wipeBabyChetsMind, toggleBabyChetMode } from './babyChet';
-import { getStats, getInitialStats } from './stats';
+import { getStats, getInitialStats, resetStats } from './stats';
 import { handleLastResponse } from './handleLastResponse';
 import { generateResponse } from './generateResponse';
 
@@ -38,5 +38,6 @@ export {
   handleLastResponse,
   generateResponse,
   getStats,
+  resetStats,
 
 };
